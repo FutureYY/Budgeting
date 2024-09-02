@@ -1,1 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Setting</title>
+    <style>
+        #gallery { 
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            column-gap: 20px;
+            row-gap: 20px;
+        }
+
+        #gallery img {
+            padding: 10px;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .item {
+            border: 1px blue solid;
+            border-radius: 10px;
+            height: 200px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #gallery h3 {
+            margin-top: 10px;
+        }
+
+        .add-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-button:hover {
+            background-color: #45a049;
+        }
+
+        #new-item-input {
+            display: none;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: 80%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .item.active #new-item-input {
+            display: block;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    {% extends "base.html" %}
+    {% block body %}
+    <div>
+        <h1>Setting up your budget</h1>
+        <h4>Choose what you will buy each month</h4>
+    </div>
+
+    <div id="gallery">
+        <div class="item item1"><img src="../images/Transport.png" alt="Transport" height="100" width="100"><h3>Transport</h3></div>
+        <div class="item item2"><img src="../images/Entertainment.png" alt="Entertainment" height="100" width="100"><h3>Entertainment</h3></div>
+        <div class="item item3"><img src="../images/Technology.png" alt="Technology" height="100" width="100"><h3>Technology</h3></div>
+        <div class="item item4"><img src="../images/Pets.png" alt="Pets" height="100" width="100"><h3>Pets</h3></div>
+        <div class="item item5"><img src="../images/F&B.png" alt="F&B" height="100" width="100"><h3>Food & Beverages</h3></div>
+        <div class="item item6"><img src="../images/Medicine.png" alt="Medical" height="100" width="100"><h3>Medical</h3></div>
+        <div class="item item7"><img src="../images/gifts.png" alt="Gifts" height="100" width="100"><h3>Gifts</h3></div>
+        <div class="item item8"><img src="../images/Books.png" alt="Books" height="100" width="100"><h3>Books</h3></div>
+        <div class="item item9"><img src="../images/Stationery.png" alt="Stationery" height="100" width="100"><h3>Stationery</h3></div>
+    </div>
+
+    <!-- The "Others" block is placed here at the end -->
+    <div class="item item10 others">
+        <img src="../images/Others.png" alt="Other" height="100" width="100">
+        <h3>Others</h3>
+        <button class="add-button">+</button>
+        <input type="text" id="new-item-input" placeholder="Add new item">
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Handle animation for existing items
+            const items = document.querySelectorAll('.item');
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, index * 200);
+            });
+
+            // Load saved items from local storage
+            loadCustomItems();
+
+            // Handle adding new custom items
+            const addButton = document.querySelector('.add-button');
+            const inputBox = document.getElementById('new-item-input');
+            const othersItem = document.querySelector('.others');
+
+            addButton.addEventListener('click', () => {
+                othersItem.classList.toggle('active');
+                inputBox.focus();
+            });
+
+            inputBox.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter' && inputBox.value.trim() !== '') {
+                    addNewItem(inputBox.value.trim());
+                    inputBox.value = '';
+                    othersItem.classList.remove('active');
+                }
+            });
+        });
+
+        function addNewItem(itemName) {
+            const gallery = document.getElementById('gallery');
+            const newItem = document.createElement('div');
+            newItem.className = 'item';
+            newItem.innerHTML = `
+                <img src="../images/Others.png" alt="${itemName}" height="100" width="100">
+                <h3>${itemName}</h3>
+                <button class="delete-button">×</button>
+            `;
+
+            // Append the new item to the gallery
+            gallery.appendChild(newItem);
+
+            // Trigger animation for new item
+            requestAnimationFrame(() => {
+                newItem.classList.add('visible');
+            });
+
+            // Add event listener for delete button
+            newItem.querySelector('.delete-button').addEventListener('click', () => {
+                newItem.remove();
+                removeItemFromLocalStorage(itemName);
+            });
+
+            // Move the "Others" block to the end
+            const othersItem = document.querySelector('.others');
+            gallery.appendChild(othersItem);
+
+            saveItemToLocalStorage(itemName);
+        }
+
+        function saveItemToLocalStorage(itemName) {
+            let customItems = JSON.parse(localStorage.getItem('customItems')) || [];
+            customItems.push(itemName);
+            localStorage.setItem('customItems', JSON.stringify(customItems));
+        }
+
+        function removeItemFromLocalStorage(itemName) {
+            let customItems = JSON.parse(localStorage.getItem('customItems')) || [];
+            customItems = customItems.filter(item => item !== itemName);
+            localStorage.setItem('customItems', JSON.stringify(customItems));
+        }
+
+        function loadCustomItems() {
+            const customItems = JSON.parse(localStorage.getItem('customItems')) || [];
+            const gallery = document.getElementById('gallery');
+            const othersItem = document.querySelector('.others');
+
+            customItems.forEach(item => {
+                const newItem = document.createElement('div');
+                newItem.className = 'item visible';  // Add the 'visible' class here
+                newItem.innerHTML = `
+                    <img src="../images/Others.png" alt="${item}" height="100" width="100">
+                    <h3>${item}</h3>
+                    <button class="delete-button">×</button>
+                `;
+                gallery.appendChild(newItem);
+
+                // Add event listener for delete button
+                newItem.querySelector('.delete-button').addEventListener('click', () => {
+                    newItem.remove();
+                    removeItemFromLocalStorage(item);
+                });
+            });
+
+            // Ensure the "Others" block is at the end
+            gallery.appendChild(othersItem);
+        }
+    </script>
+    {% endblock body %}
+</body>
+</html>
 
