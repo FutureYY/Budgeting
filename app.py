@@ -1,25 +1,30 @@
-from flask import Flask, render_template
+from os import path
+
+from flask import Flask
+from flask_wtf.csrf import CSRFProtect
 from app.config import Config
+from app.models import db
+from app import init_bp
 
-app = Flask(__name__)
-app.config.from_object(Config)
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
 
-@app.route('/')
-def home():
-    return "Hello, World!"
+    db.init_app(app)
+    csrf = CSRFProtect()
+    csrf.init_app(app)
 
-@app.route('/FT')
-def Expenditure_Tracking():
-    return render_template("FTest1.html")
+    with app.app_context():
+        # Create the tables in the database if they don't exist
+        if not path.exists(app.config['DATABASE_NAME']):
+            db.create_all()
+            print('Created Database!')
 
-@app.errorhandler(404)
-def not_found(error):
-    return "This page was not found!", 404
+    # Register blueprints
+    app.register_blueprint(init_bp)
 
-@app.errorhandler(500)
-def internal_error(error):
-    return "Internal server error!", 500
-
+    return app
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(port=5000, debug=True)
