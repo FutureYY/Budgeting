@@ -11,12 +11,24 @@
     {% extends "base.html" %}
     {% block body %}
     <br>
-
+    <h1>Welcome to Budgeting Airlines :) </h1>
     <form method="POST" action="login">
-         <div class="form-floating mb-3">
+        {{ form.csrf_token }}
+         <div class="Email_address">
              <label>Email address: </label>
              <input type="email" id=mail name="mail ">
+             {{ form.email }}
         </div>
+
+         <div class="Password">
+            <label>Password</label>
+            {{ form.password }}
+        </div>
+        <br>
+        <input type="radio" id="signin-checkbox">
+        <label for="signin-checkbox">Remember Me</label>
+        <br> <br>
+        <button type="submit" href="// Need a link to it" class="btn-signin">Sign In</button>
 
     </form>
 

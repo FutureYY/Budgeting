@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Educational Content</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    {% extends "base.html" %}
+    {% block body %}
+   <section id="information">
+       <div class="information container">
+          <div>
+          <h2>Curious on how to manage you finance?<span></span></h2>
+          <h2>Scroll down to find out more!<span></span></h2>
+          <br>
+          <h3>What Is Financial Literacy?</h3>
+          Financial literacy is the ability to understand and effectively use various financial skills, including personal financial management, budgeting, and investing.
+
+          When you are financially literate, you have the essential foundation for a smart relationship with money. This can help start a lifelong journey of learning about the financial aspects of your life. The earlier you start to become financially literate, the better off you'll be because education is the key to a successful financial future.
+          <h3>How does having financial literacy benefit you?</h3>
+             <div>Helps you to reach your goals, like buying your own laptop etc.</div>
+             <div>Prepares you for any financial emergencies.</div>
+             <div>Helps you avoid making mistakes with their personal finances.</div>
+          </div>
+          <div>
+
+          <a href="budget.html" type="button" class="cta">Budgeting</a>
+          <a href="saving.html" type="button" class="cta">Saving</a>
+          <a href="expenses.html" type="button" class="cta">Expenses</a>
+
+          </div>
+       </div>
+   </section>
+   {% end block body %}
+</body>
+</html>
