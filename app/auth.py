@@ -17,13 +17,10 @@ def signup():
     # insert code here
     return render_template("signup.html")
 
-
 @auth.route('/login', methods=['GET','POST'])
 def login():
     # insert code here
     return render_template('login.html')
-
-
 @auth.route('/logout')
 # @login_required
 def logout():
