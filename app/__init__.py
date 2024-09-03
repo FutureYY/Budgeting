@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-
 from datetime import datetime
 from .forms import SpendingForm
 from app.config import Config
@@ -10,6 +9,13 @@ db = SQLAlchemy()
 csrf = CSRFProtect()
 
 init_bp = Blueprint('init', __name__)
+
+
+
+#for yoshana's home route
+@init_bp.route('/')
+def index():
+    return "hello"
 
 @init_bp.route('/tracker', methods=['GET', 'POST'])
 def Expenditure_Tracking():
@@ -20,58 +26,98 @@ def Expenditure_Tracking():
         amount = form.amount.data
         date = form.date.data
 
-        if category in ['entertainment', 'food', 'travel', 'other-expense']:
-            expense = Expense(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
-            db.session.add(expense)
-        else:
-            income = Income(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
-            db.session.add(income)
-
+        transaction_type = 'expense' if category in ['entertainment', 'food', 'travel', 'other-expense'] else 'income'
+        transaction = Transaction(
+            category=category,
+            amount=float(amount),
+            date=datetime.strptime(date, '%Y-%m-%d'),
+            type=transaction_type,
+            user_id=1  # Assume logged in user ID is 1 for this example
+        )
+        db.session.add(transaction)
         db.session.commit()
         flash("Spending recorded successfully!")
         return redirect(url_for('init.Expenditure_Tracking'))
 
-    incomes = Income.query.all()
-    expenses = Expense.query.all()
-    savings_goal = SavingsGoal.query.order_by(SavingsGoal.date.desc()).first()
+    # Fetch goals for the current month
+    current_date = datetime.now()
+    current_month = current_date.strftime('%Y-%m')
+    budget = Budget.query.filter_by(user_id=1, month=current_month).first()
 
-    total_income = sum([income.amount for income in incomes]) if incomes else 0
-    total_expenses = sum([expense.amount for expense in expenses]) if expenses else 0
-    savings_goal_amount = savings_goal.amount if savings_goal else 0
-
-    return render_template('FTest1.html', form=form, total_income=total_income, total_expenses=total_expenses,
-                           savings_goal=savings_goal_amount)
-
-
-@init_bp.route('/submit-spending', methods=['POST'])
-def submit_spending():
-    category = request.form.get('category')
-    amount = request.form.get('amount')
-    date = request.form.get('date')
-
-    if not category or not amount or not date:
-        flash("All fields are required!")
-        return redirect(url_for('init.Expenditure_Tracking'))
-
-    # Determine if it's an expense or income based on the category
-    if category in ['entertainment', 'food', 'travel', 'other-expense']:
-        expense = Expense(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
-        db.session.add(expense)
+    if budget:
+        income_goal = budget.income_goal
+        expense_goal = budget.expense_goal
+        savings_goal = budget.savings_goal
     else:
-        income = Income(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
-        db.session.add(income)
+        income_goal = expense_goal = savings_goal = 0
 
-    db.session.commit()
-    flash("Spending recorded successfully!")
-    return redirect(url_for('init.Expenditure_Tracking'))
+    # Calculate current income and expenses for the month
+    current_income = db.session.query(db.func.sum(Transaction.amount)).filter_by(
+        user_id=1, type='income').filter(db.func.strftime('%Y-%m', Transaction.date) == current_month).scalar() or 0
 
-@init_bp.route('/')
-def index():
-    return "hello"
+    current_expenses = db.session.query(db.func.sum(Transaction.amount)).filter_by(
+        user_id=1, type='expense').filter(db.func.strftime('%Y-%m', Transaction.date) == current_month).scalar() or 0
 
-@init_bp.route('/static/<path:educating>')
-def static_files(educating):
-    return send_from_directory('static', educating)
+    remaining_savings = savings_goal - current_expenses if savings_goal else 0
+
+    return render_template('FTest1.html', form=form, income_goal=income_goal, expense_goal=expense_goal,
+                           savings_goal=savings_goal, current_income=current_income,
+                           current_expenses=current_expenses, remaining_savings=remaining_savings)
+
+
+# @init_bp.route('/tracker', methods=['GET', 'POST'])
+# def Expenditure_Tracking():
+#     form = SpendingForm()
+#
+#     if form.validate_on_submit():
+#         category = form.category.data
+#         amount = form.amount.data
+#         date = form.date.data
+#
+#         if category in ['entertainment', 'food', 'travel', 'other-expense']:
+#             expense = Expense(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
+#             db.session.add(expense)
+#         else:
+#             income = Income(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
+#             db.session.add(income)
+#
+#         db.session.commit()
+#         flash("Spending recorded successfully!")
+#         return redirect(url_for('init.Expenditure_Tracking'))
+#
+#     incomes = Income.query.all()
+#     expenses = Expense.query.all()
+#     savings_goal = SavingsGoal.query.order_by(SavingsGoal.date.desc()).first()
+#
+#     total_income = sum([income.amount for income in incomes]) if incomes else 0
+#     total_expenses = sum([expense.amount for expense in expenses]) if expenses else 0
+#     savings_goal_amount = savings_goal.amount if savings_goal else 0
+#
+#     return render_template('FTest1.html', form=form, total_income=total_income, total_expenses=total_expenses,
+#                            savings_goal=savings_goal_amount)
+#
+#
+# @init_bp.route('/submit-spending', methods=['POST'])
+# def submit_spending():
+#     category = request.form.get('category')
+#     amount = request.form.get('amount')
+#     date = request.form.get('date')
+#
+#     if not category or not amount or not date:
+#         flash("All fields are required!")
+#         return redirect(url_for('init.Expenditure_Tracking'))
+#
+#     # Determine if it's an expense or income based on the category
+#     if category in ['entertainment', 'food', 'travel', 'other-expense']:
+#         expense = Expense(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
+#         db.session.add(expense)
+#     else:
+#         income = Income(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
+#         db.session.add(income)
+#
+#     db.session.commit()
+#     flash("Spending recorded successfully!")
+#     return redirect(url_for('init.Expenditure_Tracking'))
 
 @init_bp.route('/educate')
 def educate():
@@ -97,4 +143,5 @@ def not_found(error):
 def internal_error(error):
     return "Internal server error!", 500
 
-from app.models import Income, Expense, SavingsGoal  # Import models here
+
+from .models import Income, Expense, Budget, Transaction
