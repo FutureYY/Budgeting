@@ -17,14 +17,14 @@ def home():
     return render_template("home_page.html")
 
 
-@init_bp.route('/Signup_page')
-def signup():
-    return render_template("Signup_page.html")
-
-
 @init_bp.route('/Login_page')
 def login():
     return render_template("Login_page.html")
+
+
+@init_bp.route('/Signup_page')
+def signup():
+    return render_template("Signup_page.html")
 
 
 @init_bp.route('/Features')
