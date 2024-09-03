@@ -28,30 +28,37 @@
             font-size: 1.1em;
         }
 
+        .pros h3{
+            margin-bottom: 30px;
+        }
+
         .benefits{
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
             justify-content: space-evenly;
+            padding: 20px;
         }
 
         .tip{
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
-            background-color: darkslategrey;
-            color: beige;
             text-align: center;
             padding: 30px;
             width: 250px;
             border-radius: 20px;
             margin: 10px;
+            background-color: darkslategrey;
+            color: beige;
+        }
+
+        .press h3 {
+            margin-bottom: 30px;
         }
 
         .press{
             background-color: seagreen;
             padding-bottom: 40px;
-            padding: 20px;
+            padding: 40px;
             text-align: center;
             font-size: 1.1em;
         }
@@ -61,6 +68,7 @@
             flex-direction: row;
             flex-wrap: wrap;
             justify-content: space-evenly;
+            padding: 20px;
         }
 
         .cta{
@@ -107,7 +115,7 @@
         </div>
 
         <div class="press">
-            <h3>Press to learn more about the different pillars of financial literacy!</h3>
+            <h4>Press to learn more about the different pillars of financial literacy!</h4>
             <div class="call">
                 <a href="{{ url_for('init.budget') }}" type="button" class="cta c1">Budgeting</a>
                 <a href="{{ url_for('init.saving') }}" type="button" class="cta c2">Saving</a>
