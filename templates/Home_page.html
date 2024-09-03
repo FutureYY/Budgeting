@@ -3,37 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome to Budgeting</title>
+    <style>
+       * {
+            margin: 0; padding: 0; }
+
+       body {
+           width: 1024px; margin-left: auto; margin-right: auto;
+           background-color: beige; }
+
+       a{
+            text-decoration: none; list-style-type: none; }
+
+       button {
+            width: 80px; height: 50px; border: none;
+            background-color: lightskyblue; border-radius: 20px; }
+
+       .Grid_Container {
+        display: grid; grid-template-rows: 120px; }
+
+    </style>
 </head>
 <body>
     {% extends "base.html" %}
     {% block body %}
-    <h1>Welcome to Budgeting Express!</h1>
-    <p>
-        Need help in managing your budgets! Say no more
-        Here we help you to keep track of your budget and give you more heartache!
-    </p>
-    <h1>Join Us on the Journey TODAY!!!</h1>
+    <div class="Grid_Container">
+        <div class="C1">
+            <h1>Welcome to Budgeting Express!</h1>
+            <p>
+                Need help in managing your budgets! Say no more <3
+                Here we help you to keep track of your budget and give you more heartache!
+            </p>
+        </div>
 
-    <div>
-        <a href="login_page.html"> Log In </a>
-    </div>
-    <br>
-    <div>
-        <a href="Signup_page.html"> Sign Up </a>
-    </div>
+        <div class="C2">
+            <h1>Join us on the Journey TODAY!!!</h1>
+            <div>
+                <button id="Log_Button"><a href="login_page.html"> Log In </a></button>
+                <button><a href="Signup_page.html"> Sign Up </a></button>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="C3">
+            <div>for overview of features</div>
+            <a href="Features.html">Features</a>
 
-    <br>
-    <br>
-    <div>
-        <div>for overview of features</div>
-        <a href="Features.html">Features</a>
-
-    </div>
-    <br>
-    <div>
-        <div> summary of financial profile </div>
-        <a href="Financial_Profile.html">Profile</a>
-        
+        </div>
+        <br>
+        <div class="C4">
+            <div> summary of financial profile </div>
+            <a href="Financial_Profile.html">Profile</a>
+        </div>
     </div>
 
     {% endblock body %}
