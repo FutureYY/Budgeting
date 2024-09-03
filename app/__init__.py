@@ -27,16 +27,6 @@ def signup():
     return render_template("Signup_page.html")
 
 
-@init_bp.route('/Features')
-def features():
-    return render_template("Features.html")
-
-
-@init_bp.route('/Financial_Profile')
-def profile():
-    return render_template("Financial_Profile.html")
-
-
 @init_bp.route('/tracker', methods=['GET', 'POST'])
 def Expenditure_Tracking():
     form = SpendingForm()
