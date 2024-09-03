@@ -12,7 +12,7 @@ init_bp = Blueprint('init', __name__)
 
 
 # for yoshana's home route - thank you :)
-@init_bp.route('/home_page')
+@init_bp.route('/')
 def home_page():
     return render_template("home_page.html")
 
