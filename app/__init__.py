@@ -2,14 +2,33 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime
+from .forms import SpendingForm
 
 db = SQLAlchemy()
 csrf = CSRFProtect()
 
 init_bp = Blueprint('init', __name__)
 
-@init_bp.route('/tracker')
+@init_bp.route('/tracker', methods=['GET', 'POST'])
 def Expenditure_Tracking():
+    form = SpendingForm()
+
+    if form.validate_on_submit():
+        category = form.category.data
+        amount = form.amount.data
+        date = form.date.data
+
+        if category in ['entertainment', 'food', 'travel', 'other-expense']:
+            expense = Expense(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
+            db.session.add(expense)
+        else:
+            income = Income(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
+            db.session.add(income)
+
+        db.session.commit()
+        flash("Spending recorded successfully!")
+        return redirect(url_for('init.Expenditure_Tracking'))
+
     incomes = Income.query.all()
     expenses = Expense.query.all()
     savings_goal = SavingsGoal.query.order_by(SavingsGoal.date.desc()).first()
@@ -18,7 +37,9 @@ def Expenditure_Tracking():
     total_expenses = sum([expense.amount for expense in expenses]) if expenses else 0
     savings_goal_amount = savings_goal.amount if savings_goal else 0
 
-    return render_template('FTest1.html', total_income=total_income, total_expenses=total_expenses, savings_goal=savings_goal_amount)
+    return render_template('FTest1.html', form=form, total_income=total_income, total_expenses=total_expenses,
+                           savings_goal=savings_goal_amount)
+
 
 @init_bp.route('/submit-spending', methods=['POST'])
 def submit_spending():

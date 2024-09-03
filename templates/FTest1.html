@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track your expenditure!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -51,12 +52,11 @@
     {% extends "base.html" %}
     {% block body %}
     <br>
-
     <div class="goals">
         <h2>Monthly Goals Overview</h2>
-        <p id="income">Income: </p>
-        <p id="expenses">Expenses: </p>
-        <p id="savings">Savings Goal: </p>
+        <p id="income">Income: ${{ total_income }}</p>
+        <p id="expenses">Expenses: ${{ total_expenses }}</p>
+        <p id="savings">Savings Goal: ${{ savings_goal }}</p>
     </div>
 
     <div class="calendar-container">
@@ -66,150 +66,143 @@
     </div>
 
     <div class="input-form">
-        <h3>Input Spending for <span id="selected-date"></span></h3>
-        <form id="spending-form">
-            <label for="category">Category:</label>
-            <select id="category">
-                <option value="entertainment">Entertainment</option>
-                <option value="food">Food</option>
-                <option value="travel">Travel</option>
-                <option value="other-expense">Other Expense</option>
-                <option value="allowance">Allowance</option>
-                <option value="salary">Salary</option>
-                <option value="other-income">Other Income</option>
-            </select>
-            <br><br>
-            <label for="amount">Amount:</label>
-            <input type="number" id="amount" step="0.10" required>
-            <br><br>
-            <button type="submit">Submit</button>
+        <form method="POST" action="{{ url_for('init.Expenditure_Tracking') }}">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.category.label }}<br>
+                {{ form.category() }}
+            </div>
+            <br>
+            <div>
+                {{ form.amount.label }}<br>
+                {{ form.amount() }}
+            </div>
+            <br>
+            {{ form.date() }}
+            <div>
+                {{ form.submit() }}
+            </div>
         </form>
     </div>
 
     <script>
-        // Dummy Data
-        const goals = {
-            expenses: {
-                entertainment: 50.00,
-                food: 200.00,
-                travel: 100.00,
-                other: 150.00
-            },
-            income: {
-                allowance: 100.00,
-                salary: 500.00,
-                other: 100.00
-            },
-            savings: 250.00
-        };
+        document.addEventListener('DOMContentLoaded', function () {
+            // Dummy Data
+            const goals = {
+                expenses: {
+                    entertainment: 50.00,
+                    food: 200.00,
+                    travel: 100.00,
+                    other: 150.00
+                },
+                income: {
+                    allowance: 100.00,
+                    salary: 500.00,
+                    other: 100.00
+                },
+                savings: 250.00
+            };
 
-        // Calculate totals
-        const totalIncome = Object.values(goals.income).reduce((a, b) => a + b, 0).toFixed(2);
-        const totalExpenses = Object.values(goals.expenses).reduce((a, b) => a + b, 0).toFixed(2);
-        const savingsGoal = goals.savings.toFixed(2);3
+            // Calculate totals
+            const totalIncome = Object.values(goals.income).reduce((a, b) => a + b, 0).toFixed(2);
+            const totalExpenses = Object.values(goals.expenses).reduce((a, b) => a + b, 0).toFixed(2);
+            const savingsGoal = goals.savings.toFixed(2);
 
-        // Display Goals Overview
-        document.getElementById('income').textContent = `Income: $${totalIncome}`;
-        document.getElementById('expenses').textContent = `Expenses: $${totalExpenses}`;
-        document.getElementById('savings').textContent = `Savings Goal: $${savingsGoal}`;
+            // Display Goals Overview
+            document.getElementById('income').textContent = `Income: $${totalIncome}`;
+            document.getElementById('expenses').textContent = `Expenses: $${totalExpenses}`;
+            document.getElementById('savings').textContent = `Savings Goal: $${savingsGoal}`;
 
-        // Generate month and year options for the last 12 months
-        const monthSelect = document.getElementById('month-select');
-        const currentDate = new Date();
-        const currentMonth = currentDate.getMonth();
-        const currentYear = currentDate.getFullYear();
+            // Generate month and year options for the last 12 months
+            const monthSelect = document.getElementById('month-select');
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
 
-        for (let i = 0; i < 12; i++) {
-            const date = new Date(currentYear, currentMonth - i, 1);
-            const month = date.toLocaleString('default', { month: 'long' });
-            const year = date.getFullYear();
-            const option = document.createElement('option');
-            option.value = `${year}-${date.getMonth() + 1}`;
-            option.textContent = `${month} ${year}`;
-            monthSelect.appendChild(option);
-        }
-
-        // Initialize the calendar
-        function generateCalendar(year, month) {
-            const calendar = document.getElementById('calendar');
-            calendar.innerHTML = '';
-
-            // Day labels
-            const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            daysOfWeek.forEach(day => {
-                const dayLabel = document.createElement('div');
-                dayLabel.textContent = day;
-                dayLabel.classList.add('day-label');
-                calendar.appendChild(dayLabel);
-            });
-
-            const firstDay = new Date(year, month - 1, 1).getDay();
-            const daysInMonth = new Date(year, month, 0).getDate();
-
-            // Calculate the starting position (shift to Monday)
-            const startDay = firstDay === 0 ? 6 : firstDay - 1;
-
-            // Clear previous selection
-            let selectedDateDiv = null;
-
-            // Fill initial empty cells
-            for (let i = 0; i < startDay; i++) {
-                const emptyCell = document.createElement('div');
-                calendar.appendChild(emptyCell);
+            for (let i = 0; i < 12; i++) {
+                const date = new Date(currentYear, currentMonth - i, 1);
+                const month = date.toLocaleString('default', { month: 'long' });
+                const year = date.getFullYear();
+                const option = document.createElement('option');
+                option.value = `${year}-${date.getMonth() + 1}`;
+                option.textContent = `${month} ${year}`;
+                monthSelect.appendChild(option);
             }
 
-            // Add the days of the month
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateDiv = document.createElement('div');
-                dateDiv.textContent = day;
-                dateDiv.classList.add('day');
+            // Initialize the calendar
+            function generateCalendar(year, month) {
+                const calendar = document.getElementById('calendar');
+                calendar.innerHTML = '';
 
-                // Highlight today's date
-                if (year === currentDate.getFullYear() && month === currentDate.getMonth() + 1 && day === currentDate.getDate()) {
-                    dateDiv.classList.add('today');
-                }
-
-                // Handle date selection
-                dateDiv.addEventListener('click', function () {
-                    if (selectedDateDiv) {
-                        selectedDateDiv.classList.remove('selected');
-                    }
-                    dateDiv.classList.add('selected');
-                    selectedDateDiv = dateDiv;
-
-                    selectDate(day, month, year);
+                // Day labels
+                const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                daysOfWeek.forEach(day => {
+                    const dayLabel = document.createElement('div');
+                    dayLabel.textContent = day;
+                    dayLabel.classList.add('day-label');
+                    calendar.appendChild(dayLabel);
                 });
 
-                calendar.appendChild(dateDiv);
+                const firstDay = new Date(year, month - 1, 1).getDay();
+                const daysInMonth = new Date(year, month, 0).getDate();
+
+                // Calculate the starting position (shift to Monday)
+                const startDay = firstDay === 0 ? 6 : firstDay - 1;
+
+                // Clear previous selection
+                let selectedDateDiv = null;
+
+                // Fill initial empty cells
+                for (let i = 0; i < startDay; i++) {
+                    const emptyCell = document.createElement('div');
+                    calendar.appendChild(emptyCell);
+                }
+
+                // Add the days of the month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateDiv = document.createElement('div');
+                    dateDiv.textContent = day;
+                    dateDiv.classList.add('day');
+
+                    // Highlight today's date
+                    if (year === currentDate.getFullYear() && month === currentDate.getMonth() + 1 && day === currentDate.getDate()) {
+                        dateDiv.classList.add('today');
+                    }
+
+                    // Handle date selection
+                    dateDiv.addEventListener('click', function () {
+                        if (selectedDateDiv) {
+                            selectedDateDiv.classList.remove('selected');
+                        }
+                        dateDiv.classList.add('selected');
+                        selectedDateDiv = dateDiv;
+
+                        selectDate(day, month, year);
+                    });
+
+                    calendar.appendChild(dateDiv);
+                }
             }
-        }
 
-        // Handle Date Selection
-        function selectDate(day, month, year) {
-            const selectedDate = `${year}-${month}-${day}`;
-            document.getElementById('selected-date').textContent = selectedDate;
-            document.querySelector('.input-form').style.display = 'block';
-        }
+            // Handle Date Selection
+            function selectDate(day, month, year) {
+                const selectedDate = `${year}-${month}-${day}`;
+                document.querySelector('[name="date"]').value = selectedDate;
+                document.querySelector('.input-form').style.display = 'block';
+            }
 
-        // Handle Form Submission
-        document.getElementById('spending-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const category = document.getElementById('category').value;
-            const amount = parseFloat(document.getElementById('amount').value).toFixed(2);
-            alert(`Spent $${amount} on ${category} for ${document.getElementById('selected-date').textContent}`);
+            // Handle Month Change
+            monthSelect.addEventListener('change', function() {
+                const [year, month] = this.value.split('-');
+                generateCalendar(year, month);
+            });
+
+            // Initialize with the current month
+            monthSelect.value = `${currentYear}-${currentMonth + 1}`;
+            generateCalendar(currentYear, currentMonth + 1);
         });
-
-        // Handle Month Change
-        monthSelect.addEventListener('change', function() {
-            const [year, month] = this.value.split('-');
-            generateCalendar(year, month);
-        });
-
-        // Initialize with the current month
-        monthSelect.value = `${currentYear}-${currentMonth + 1}`;
-        generateCalendar(currentYear, currentMonth + 1);
-
     </script>
-{% endblock body %}
+    {% endblock body %}
+
 </body>
 </html>
