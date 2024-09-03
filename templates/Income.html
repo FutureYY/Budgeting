@@ -21,13 +21,230 @@
         }
 
         .close-button:hover {
-            color: white; /* Change text color to white when hovered */
-            background-color: red; /* Red background on hover */
+            color: white;
+            background-color: red;
+        }
+
+        .container {
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            column-gap: 20px;
+            row-gap: 20px;
+            position: relative;
+        }
+
+        .container img {
+            padding: 10px;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .section {
+            border: 1px blue solid;
+            border-radius: 10px;
+            height: 200px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .section h3 {
+            margin-top: 10px;
+        }
+
+        .add-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-button:hover {
+            background-color: #45a049;
+        }
+
+        #new-item-input {
+            display: none;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: 80%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .active #new-item-input {
+            display: block;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background-color: darkred;
         }
     </style>
 </head>
 <body>
-    <h1>This is the income page</h1>
+    {% extends "base.html" %}
+    {% block body %}
     <a href="GoalHome.html" class="close-button">&times;</a>
+
+    <h1>Income</h1>
+
+    <!-- Income Section -->
+    <div id="income" class="container">
+        <div class="section"><img src="../app/static/images/Pocket Money.png" alt="Allowance" height="100" width="100"><h3>Allowance from parents</h3></div>
+        <div class="section"><img src="../app/static/images/Salary.png" alt="Salary" height="100" width="100"><h3>Salary</h3></div>
+        <div class="section"><img src="../app/static/images/angpao.png" alt="Angpao" height="100" width="100"><h3>Angpao money</h3></div>
+        <!-- Others Section with Add Option -->
+        <div class="section others">
+            <img src="../app/static/images/Money.png" alt="Other" height="100" width="100">
+            <h3>Others</h3>
+            <button class="add-button">+</button>
+            <input type="text" id="new-item-input" placeholder="Add new item">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Handle animation for existing items
+            const sections = document.querySelectorAll('.section');
+            animateItemsSequentially(sections);
+
+            // Load saved items from local storage
+            loadCustomItems();
+
+            // Handle adding new custom items
+            const addButton = document.querySelector('.add-button');
+            const inputBox = document.getElementById('new-item-input');
+            const othersSection = document.querySelector('.others');
+
+            addButton.addEventListener('click', () => {
+                othersSection.classList.toggle('active');
+                inputBox.focus();
+            });
+
+            inputBox.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter' && inputBox.value.trim() !== '') {
+                    addNewItem(inputBox.value.trim());
+                    inputBox.value = '';
+                    othersSection.classList.remove('active');
+                }
+            });
+        });
+
+        function animateItemsSequentially(items) {
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, index * 100);
+            });
+        }
+
+        function addNewItem(itemName) {
+            const incomeContainer = document.getElementById('income');
+            const newSection = document.createElement('div');
+            newSection.className = 'section';
+            newSection.innerHTML = `
+                <img src="../images/Others.png" alt="${itemName}" height="100" width="100">
+                <h3>${itemName}</h3>
+                <button class="delete-button">×</button>
+            `;
+
+            // Insert the new item before the "Others" section
+            const othersSection = document.querySelector('.others');
+            incomeContainer.insertBefore(newSection, othersSection);
+
+            // Re-animate all items including the newly added one
+            const allSections = document.querySelectorAll('.section');
+            animateItemsSequentially(allSections);
+
+            // Add event listener for delete button
+            newSection.querySelector('.delete-button').addEventListener('click', () => {
+                newSection.remove();
+                removeItemFromLocalStorage(itemName);
+            });
+
+            saveItemToLocalStorage(itemName);
+        }
+
+        function saveItemToLocalStorage(itemName) {
+            let customItems = JSON.parse(localStorage.getItem('customItems')) || [];
+            customItems.push(itemName);
+            localStorage.setItem('customItems', JSON.stringify(customItems));
+        }
+
+        function removeItemFromLocalStorage(itemName) {
+            let customItems = JSON.parse(localStorage.getItem('customItems')) || [];
+            customItems = customItems.filter(item => item !== itemName);
+            localStorage.setItem('customItems', JSON.stringify(customItems));
+        }
+
+        function loadCustomItems() {
+            const customItems = JSON.parse(localStorage.getItem('customItems')) || [];
+            const incomeContainer = document.getElementById('income');
+            const othersSection = document.querySelector('.others');
+
+            customItems.forEach(item => {
+                const newSection = document.createElement('div');
+                newSection.className = 'section';
+                newSection.innerHTML = `
+                    <img src="../app/static/images/Others.png" alt="${item}" height="100" width="100">
+                    <h3>${item}</h3>
+                    <button class="delete-button">×</button>
+                `;
+                // Insert the new item before the "Others" section
+                incomeContainer.insertBefore(newSection, othersSection);
+
+                // Add event listener for delete button
+                newSection.querySelector('.delete-button').addEventListener('click', () => {
+                    newSection.remove();
+                    removeItemFromLocalStorage(item);
+                });
+            });
+
+            // Re-animate all items including the loaded ones
+            const allSections = document.querySelectorAll('.section');
+            animateItemsSequentially(allSections);
+        }
+    </script>
+    {% endblock body %}
 </body>
 </html>
