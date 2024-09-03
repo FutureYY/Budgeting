@@ -17,6 +17,26 @@ def home_page():
     return render_template("home_page.html")
 
 
+@init_bp.route('/')
+def signup_page():
+    return render_template("Signup_page.html")
+
+
+@init_bp.route('/')
+def login_page():
+    return render_template("login_page.html")
+
+
+@init_bp.route('/')
+def features_page():
+    return render_template("Features.html")
+
+
+@init_bp.route('/')
+def profile_page():
+    return render_template("Financial_Profile.html")
+
+
 @init_bp.route('/tracker', methods=['GET', 'POST'])
 def Expenditure_Tracking():
     form = SpendingForm()
