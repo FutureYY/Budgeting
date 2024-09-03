@@ -35,37 +35,40 @@
 <body>
     {% extends "base.html" %}
     {% block body %}
-    <br>
-    <h1>Please Sign in to your Account :) </h1>
-    <div class="Signing_in_Page">
-        <form method="POST" action="login">
-<!--            {{ form.csrf_token }}-->
-            <div class="Login_Header">
-                <p>Welcome to Budgeting :)</p>
-            </div>
+    <div>
+        <br>
+        <h1>Please Sign in to your Account :) </h1>
+        <div class="Login_Page">
+            <form method="POST" action="login">
+    <!--            {{ form.csrf_token }}-->
+                <div class="Login_Header">
+                    <p>Welcome to Budgeting :)</p>
+                </div>
 
-             <div class="Login_Input">
-                 <label>Email address </label>
-                 <br>
-                 <input type="email" id=mail name="mail" class="line-input" placeholder="_________">
-<!--                 {{ form.email }}-->
-            </div>
-            <br>
-             <div class="Login_Input">
-                <label>Password </label>
-                 <br>
-                 <input type="Password" id=password name="password" class="line-input" placeholder="_________">
-<!--                {{ form.password }}-->
-            </div>
+                 <div class="Login_Input">
+                     <label>Email address </label>
+                     <br>
+                     <input type="email" id=mail name="mail" class="line-input" placeholder="_________">
+    <!--                 {{ form.email }}-->
+                </div>
+                <br>
+                 <div class="Login_Input">
+                    <label>Password </label>
+                     <br>
+                     <input type="Password" id=password name="password" class="line-input" placeholder="_________">
+    <!--                {{ form.password }}-->
+                </div>
 
-            <br>
-            
-            <input type="radio" id="signin-checkbox">
-            <label for="signin-checkbox">Remember Me</label>
-            <br> <br>
-            <button type="submit" class="btn-signin">Sign In</button>
-        </form>
+                <br>
+
+                <input type="radio" id="signin-checkbox">
+                <label for="signin-checkbox">Remember Me</label>
+                <br> <br>
+                <button type="submit" class="btn-signin">Sign In</button>
+            </form>
+        </div>
     </div>
+
     {% endblock body %}
 </body>
 </html>

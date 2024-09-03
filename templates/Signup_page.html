@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
+        * {
+            margin: 0; padding: 0; }
+
         .line-input {
             border: none;
             border-bottom: 1px solid grey;
@@ -20,9 +23,17 @@
         .line-input:focus {
             border-bottom: 2px solid black; /* Optional: to make the line thicker when focused */
         }
-        .Sign_Input{
-        padding: 10px;
-        }
+
+        .Sign_Header{
+            position: relative;
+            left: 300px; }
+
+        .Sign_Input{ padding: 10px; }
+
+        .Signing{
+            position: relative;
+            left: 300px; }
+
 
     </style>
 </head>
@@ -30,13 +41,13 @@
 <body>
     {% extends "base.html" %}
     {% block body %}
-    <div class="Signing-Up">
-        <div>
+    <div class="SignUp">
+        <div class="Sign_Header">
             <h1>Ready to Start your Budgeting Experience!</h1>
-            <h3>Please proceed to create your account</h3>
         </div>
 
-        <form method="POST">
+        <form method="POST" class="Signing">
+            <h3>Please proceed to create your account</h3>
             <div class="Sign_Input">
                 <label for="username">Username</label>
                 <br>
@@ -82,3 +93,4 @@
 
 </body>
 </html>
+
