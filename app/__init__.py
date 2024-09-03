@@ -8,20 +8,14 @@ csrf = CSRFProtect()
 
 init_bp = Blueprint('init', __name__)
 
-@init_bp.route('/')
-def home():
-    return "Hello, World!"
-
 @init_bp.route('/tracker')
 def Expenditure_Tracking():
-    # Fetch data from the database
     incomes = Income.query.all()
     expenses = Expense.query.all()
     savings_goal = SavingsGoal.query.order_by(SavingsGoal.date.desc()).first()
 
-    # Calculate totals
-    total_income = sum([income.amount for income in incomes])
-    total_expenses = sum([expense.amount for expense in expenses])
+    total_income = sum([income.amount for income in incomes]) if incomes else 0
+    total_expenses = sum([expense.amount for expense in expenses]) if expenses else 0
     savings_goal_amount = savings_goal.amount if savings_goal else 0
 
     return render_template('FTest1.html', total_income=total_income, total_expenses=total_expenses, savings_goal=savings_goal_amount)
@@ -47,6 +41,10 @@ def submit_spending():
     db.session.commit()
     flash("Spending recorded successfully!")
     return redirect(url_for('init.Expenditure_Tracking'))
+
+@init_bp.route('/educate')
+def educate():
+    return render_template("educate.html")
 
 @init_bp.errorhandler(404)
 def not_found(error):
