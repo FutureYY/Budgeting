@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime
@@ -64,60 +64,39 @@ def Expenditure_Tracking():
                            savings_goal=savings_goal, current_income=current_income,
                            current_expenses=current_expenses, remaining_savings=remaining_savings)
 
+@init_bp.route('/get_overview/<month>', methods=['GET'])
+def get_overview(month):
+    # Assume user_id = 1 for simplicity
+    user_id = 1
 
-# @init_bp.route('/tracker', methods=['GET', 'POST'])
-# def Expenditure_Tracking():
-#     form = SpendingForm()
-#
-#     if form.validate_on_submit():
-#         category = form.category.data
-#         amount = form.amount.data
-#         date = form.date.data
-#
-#         if category in ['entertainment', 'food', 'travel', 'other-expense']:
-#             expense = Expense(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
-#             db.session.add(expense)
-#         else:
-#             income = Income(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
-#             db.session.add(income)
-#
-#         db.session.commit()
-#         flash("Spending recorded successfully!")
-#         return redirect(url_for('init.Expenditure_Tracking'))
-#
-#     incomes = Income.query.all()
-#     expenses = Expense.query.all()
-#     savings_goal = SavingsGoal.query.order_by(SavingsGoal.date.desc()).first()
-#
-#     total_income = sum([income.amount for income in incomes]) if incomes else 0
-#     total_expenses = sum([expense.amount for expense in expenses]) if expenses else 0
-#     savings_goal_amount = savings_goal.amount if savings_goal else 0
-#
-#     return render_template('FTest1.html', form=form, total_income=total_income, total_expenses=total_expenses,
-#                            savings_goal=savings_goal_amount)
-#
-#
-# @init_bp.route('/submit-spending', methods=['POST'])
-# def submit_spending():
-#     category = request.form.get('category')
-#     amount = request.form.get('amount')
-#     date = request.form.get('date')
-#
-#     if not category or not amount or not date:
-#         flash("All fields are required!")
-#         return redirect(url_for('init.Expenditure_Tracking'))
-#
-#     # Determine if it's an expense or income based on the category
-#     if category in ['entertainment', 'food', 'travel', 'other-expense']:
-#         expense = Expense(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
-#         db.session.add(expense)
-#     else:
-#         income = Income(category=category, amount=float(amount), date=datetime.strptime(date, '%Y-%m-%d'))
-#         db.session.add(income)
-#
-#     db.session.commit()
-#     flash("Spending recorded successfully!")
-#     return redirect(url_for('init.Expenditure_Tracking'))
+    # Fetch budget for the selected month
+    budget = Budget.query.filter_by(user_id=user_id, month=month).first()
+    if budget:
+        income_goal = budget.income_goal
+        expense_goal = budget.expense_goal
+        savings_goal = budget.savings_goal
+    else:
+        income_goal = expense_goal = savings_goal = 0
+
+    # Calculate current income and expenses for the selected month
+    current_income = db.session.query(db.func.sum(Transaction.amount)).filter_by(
+        user_id=user_id, type='income').filter(db.func.strftime('%Y-%m', Transaction.date) == month).scalar() or 0
+
+    current_expenses = db.session.query(db.func.sum(Transaction.amount)).filter_by(
+        user_id=user_id, type='expense').filter(db.func.strftime('%Y-%m', Transaction.date) == month).scalar() or 0
+
+    remaining_savings = savings_goal - current_expenses if savings_goal else 0
+
+    # Return the data as JSON
+    return jsonify({
+        'income_goal': float(income_goal),
+        'expense_goal': float(expense_goal),
+        'savings_goal': float(savings_goal),
+        'current_income': float(current_income),
+        'current_expenses': float(current_expenses),
+        'remaining_savings': float(remaining_savings)
+    })
+
 
 @init_bp.route('/educate')
 def educate():
