@@ -12,9 +12,9 @@ init_bp = Blueprint('init', __name__)
 
 
 # for yoshana's home route - thank you :)
-@init_bp.route('/Home_page')
-def index():
-    return render_template("Home_page.html")
+@init_bp.route('/home_page')
+def home_page():
+    return render_template("home_page.html")
 
 
 @init_bp.route('/tracker', methods=['GET', 'POST'])
