@@ -137,6 +137,17 @@ def saving():
 def expenses():
     return render_template("expenses.html")
 
+@init_bp.route('/goal')
+def goal(): 
+    return render_template("GoalHome.html")
+
+@init_bp.route('/income')
+def income():
+    return render_template("Income.html")
+
+@init_bp.route('/goalsetting')
+def goalsetting():
+    return render_template("GoalSetting.html")
 
 @init_bp.errorhandler(404)
 def not_found(error):
