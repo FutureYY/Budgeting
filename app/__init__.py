@@ -67,7 +67,7 @@ def submit_spending():
 
 @init_bp.route('/')
 def index():
-    return "hello"
+    return render_template('index.html')  # Ensure 'index.html' is in the 'templates' folder
 
 @init_bp.route('/educate')
 def educate():
