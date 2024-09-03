@@ -3,45 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>Budgeting</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/app/static/CSS/educating.css">
 </head>
 
 <body>
     {% extends "base.html" %}
     {% block body %}
 
-    <section id="budget">
-    <div class="budget info">
-       <div>
-       <h1>Budgeting<span></span></h1>
-       Budgeting is one of the most important part in financial management.
-       <h2>Video on how to budget</h2>
-       <iframe width="450" height="280"
-          src="https://www.youtube.com/embed/CbhjhWleKGE?si=IqhudnxyxesfdBBz">
-       </iframe>
-
-       <div class="budget summary">
-         <h2>So, what are the main points of budgeting?</h2>
-         <div class="budget rule1"><h3>The "50 30 20" rule</h3></div>
-         <div> Splitting your allowance into three portions: 50% for needs, 30% for wants and 20% for savings. </div>
-         <div>Ideally, this is the perfect ratio for budgeting your allowance as it put one's savings apart before spending on anything else.</div>
-         <div>However, it is ultimately up to you to change the ratio depending on your requirements. </div>
-         <div>The most important part of this method is to put one's savings apart before spending on anything else. </div>
-
-         <div class="budget rule2"><h3>Prioritizing your needs and wants</h3></div>
-         <div>Identify all the "needs" first and ensure that your allowance/income can cover that and the remaining money can be used for some "wants". </div>
-         <div>Before you spend on any "wants", just ensure that you've covered your priorities first.</div>
-         <div>A "need" is something that is needed to survive while a "want" is something that an individual desires, but would be able to live without. </div>
-         <div class="budget addinfo">For example: <br> Say you already have a laptop, but you convince yourself that a tablet is a "need" because it can make studying easier. This is another example of transforming a "want" into a "need"</div>
-
-         <div>This method enables you to prioritize and figure out what expenses are necessary and which ones can be deferred.</div>
-         </div>
-
-         <a href="" type="button" class="cta">Start budgeting now!</a>
-
-       </div>
+    <div class="budget int">
+        <h1>Budgeting</h1>
+        Budgeting is one of the most important part in financial management.
     </div>
-    </section>
+
+    <div class="budget video">  
+      <h2>Video on how to budget</h2>
+      <iframe width="700" height="430"
+        src="https://www.youtube.com/embed/CbhjhWleKGE?si=IqhudnxyxesfdBBz">
+      </iframe>
+    </div> 
+      
+    <div class="budget summary">
+      <h2>So, what are the main points of budgeting?</h2>
+      
+      <div class="rule1">
+        <h3>The "50 30 20" rule</h3>
+        <div class="point1 component1"> Splitting your allowance into three portions:<br> 50% for needs, 30% for wants and 20% for savings. </div>
+        <div class="point1 component2">Ideally, this is the perfect ratio for budgeting your allowance as it put one's savings apart before spending on anything else.</div>
+        <div class="point1 component3">It is ultimately up to you to change the ratio depending on your requirements. </div>
+        <div class="point1 component4">The most important part of this method is to put one's savings apart before spending on anything else. </div>
+      </div>
+
+      <div class="rule2">
+        <h3>Prioritizing your needs and wants</h3>
+        <div class="point2 need1">A "need" is something that is needed to survive while a "want" is something that an individual desires, but would be able to live without. </div>
+        <div class="point2 need3">Before you spend on any "wants", ensure that you've covered your priorities first.</div>
+        <div class="point2 adddneed1">For example: You already have a laptop, but you convince yourself that a tablet is a "need" because it can make studying easier. This is another example of transforming a "want" into a "need"</div>
+        <div class="point2 need2">Identify all the "needs" first and ensure that your allowance/income can cover that and the remaining money can be used for some "wants". </div>
+      </div>
+    </div>
+
+    <div class="point sum">
+      This method enables you to prioritize and figure out what expenses are necessary and which ones can be deferred.
+      <div class="route">
+      <a href="" type="button" class="feature">Start budgeting now!</a>
+    </div>
+    </div>
+
+    
+        
     {% end block body %}
 </body>
 </html>

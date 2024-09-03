@@ -3,29 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Expenses</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/app/static/CSS/educating.css">
 </head>
 
 <body>
-  <section>
-     <h1>Expenses<span></span></h1>
+  {% extends "base.html" %}
+  {% block body %}
+
+  <div class="expenses int">
+    <h1>Expenses</h1>
      Expenses management is one of the most important part in budgeting.
      <h2>Learn how to prioritise your expenses in the video below!</h2>
-     <iframe width="450" height="280"
-        src="https://www.youtube.com/embed/QO4q_Sl6c34?si=K97o8s6baiptF95z">
-     </iframe>
+  </div>
+  
+  <div class="expenses video">
+    <iframe width="450" height="280"
+      src="https://www.youtube.com/embed/QO4q_Sl6c34?si=K97o8s6baiptF95z">
+    </iframe>
+  </div>
+     
 
-     <div class="expenses summary">
-       <h2>To summarise on how to manage expenses:</h2>
-       <div class="expenses rule1"><h3>Tracking money flow</h3></div>
-         <div>Writing down what you spend for a week gives you a clearer idea of how your money is coming in and going out.</div>
-         <div>Allow you to evaluate your financial habits over time to see what kinds of patterns emerge.</div>
+  <div class="expenses summary">
+    <h2>To summarise on how to manage expenses:</h2>
+    <div class="expenses rule1"><h3>Tracking money flow</h3></div>
+      <div>Writing down what you spend for a week gives you a clearer idea of how your money is coming in and going out.</div>
+      <div>Allow you to evaluate your financial habits over time to see what kinds of patterns emerge.</div>
 
-       <div class="expenses rule2"><h3>Lowering monthly expenses</h3></div>
-         <div>Recurring monthly costs like subscriptions can add up in the long run.</div>
-         <div>Make a list to see if there is anything that you are willing to put on hold.</div>
-     </div>
-  </section>
-  {% end block body %}
+    <div class="expenses rule2"><h3>Lowering monthly expenses</h3></div>
+      <div>Recurring monthly costs like subscriptions can add up in the long run.</div>
+      <div>Make a list to see if there is anything that you are willing to put on hold.</div>
+  </div>
+
+{% end block body %}
 </body>
 </html>

@@ -3,32 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Saving</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/app/static/CSS/educating.css">
 </head>
 
 <body>
     {% extends "base.html" %}
     {% block body %}
-    <div>
-        <h1>Saving<span></span></h1>
+
+    <div class="saving int">
+        <h1>Saving</h1>
         Saving money allows you to create a safety net for your future expenses as well as unplanned financial needs.
+    </div>  
+    
+    <div class="saving video">
         <h2>How do we save money?</h2>
         <iframe width="450" height="280"
             src="https://www.youtube.com/embed/TdOWNpO46aU?si=IWtNEpnbX4CwaEVE">
         </iframe>
-        <div class="saving summary">
-            <h2>Key ideas for saving money</h2>
-            <div class="saving rule1"><h3>Recording your expenses</h3></div>
-            Keep track of all expenses allows you to figure out what you spend on, giving you a clear view on where your money is going. From here, you will be able to cut back on non-essentials, like entertainment or dining out, to allow you to save more.
-            <div class="saving rule2"><h3>Take advantage of student discounts</h3></div>
-            <div>Many places provide student discounts so bring along your student ID to enjoy those discounts!</div>
-            <div>not only are you able to enjoy</div>
+    </div>
+        
+    <div class="saving summary">
+        <h2>Key ideas for saving money</h2>
 
-            <div class="saving rule3"><h3>Do not buy items impulsively!</h3></div>
-            <div>It is easy to succumb to urges to buy certain items maybe because it is trending, but is it really a need?</div>
-            <div>Take time to consider before purchasing and determine whether a certain item is worth its price or if it is needede.</div>
-
+        <div class="key1">
+            <h3>Recording your expenses</h3>
+            <div class="idea1 part1">Keeping track of all expenses allows you to figure out what you spend on, giving you a clear view on where your money is going.</div>
+            <div class="idea1 part2">From here, you will be able to cut back on non-essentials, like entertainment or dining out, to allow you to save more.</div>
         </div>
+        
+        <div class="key2">
+            <h3>Take advantage of student discounts</h3>
+            <div class="idea2 advantage1">Many places provide student discounts so bring along your student ID to enjoy those discounts!</div>
+        </div>
+        
+
+        <div class="key3">
+            <h3>Do not buy items impulsively!</h3>
+            <div class="idea3 think1">It is easy to succumb to urges to buy certain items maybe because it is trending, but is it really a need?</div>
+            <div class="idea3 think2">Take time to consider before purchasing and determine whether a certain item is worth its price or if it is neededed.</div>
+        </div>
+        
+
+    </div>
     </div>
    {% end block body %}
 </body>
