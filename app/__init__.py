@@ -13,27 +13,27 @@ init_bp = Blueprint('init', __name__)
 
 # for yoshana's home route - thank you :)
 @init_bp.route('/')
-def home_page():
+def home():
     return render_template("home_page.html")
 
 
-@init_bp.route('/')
-def signup_page():
+@init_bp.route('/Signup_page')
+def signup():
     return render_template("Signup_page.html")
 
 
-@init_bp.route('/')
-def login_page():
-    return render_template("login_page.html")
+@init_bp.route('/Login_page')
+def login():
+    return render_template("Login_page.html")
 
 
-@init_bp.route('/')
-def features_page():
+@init_bp.route('/Features')
+def features():
     return render_template("Features.html")
 
 
-@init_bp.route('/')
-def profile_page():
+@init_bp.route('/Financial_Profile')
+def profile():
     return render_template("Financial_Profile.html")
 
 
