@@ -11,8 +11,7 @@ csrf = CSRFProtect()
 init_bp = Blueprint('init', __name__)
 
 
-
-#for yoshana's home route - thank you :)
+# for yoshana's home route - thank you :)
 @init_bp.route('Home_page.html')
 def index():
     return render_template("Home_page.html")
@@ -124,21 +123,26 @@ def Expenditure_Tracking():
 def educate():
     return render_template("educate.html")
 
+
 @init_bp.route('/budget')
 def budget():
     return render_template("budget.html")
+
 
 @init_bp.route('/saving')
 def saving():
     return render_template("saving.html")
 
+
 @init_bp.route('/expenses')
 def expenses():
     return render_template("expenses.html")
 
+
 @init_bp.errorhandler(404)
 def not_found(error):
     return "This page was not found!", 404
+
 
 @init_bp.errorhandler(500)
 def internal_error(error):
