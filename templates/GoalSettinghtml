@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goal Setting</title>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover {
+            color: white; /* Change text color to white when hovered */
+            background-color: red; /* Red background on hover */
+        }
         #gallery { 
             width: 70%;
             margin-left: auto;
@@ -13,6 +32,7 @@
             grid-template-columns: 1fr 1fr 1fr;
             column-gap: 20px;
             row-gap: 20px;
+            position: relative;
         }
 
         #gallery img {
@@ -96,8 +116,9 @@
         }
 
         .delete-button:hover {
-            background-color: red;
+            background-color: darkred;
         }
+        
     </style>
 </head>
 <body>
@@ -105,6 +126,7 @@
     {% block body %}
     <div>
         <h1>Setting up your budget</h1>
+        <a href="GoalHome.html" class="close-button">&times;</a>
         <h4>Choose what you will buy each month</h4>
     </div>
 
@@ -132,11 +154,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             // Handle animation for existing items
             const items = document.querySelectorAll('.item');
-            items.forEach((item, index) => {
-                setTimeout(() => {
-                    item.classList.add('visible');
-                }, index * 200);
-            });
+            animateItemsSequentially(items);
 
             // Load saved items from local storage
             loadCustomItems();
@@ -160,6 +178,14 @@
             });
         });
 
+        function animateItemsSequentially(items) {
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, index * 200);
+            });
+        }
+
         function addNewItem(itemName) {
             const gallery = document.getElementById('gallery');
             const newItem = document.createElement('div');
@@ -173,10 +199,9 @@
             // Append the new item to the gallery
             gallery.appendChild(newItem);
 
-            // Trigger animation for new item
-            requestAnimationFrame(() => {
-                newItem.classList.add('visible');
-            });
+            // Re-animate all items including the newly added one
+            const allItems = document.querySelectorAll('.item');
+            animateItemsSequentially(allItems);
 
             // Add event listener for delete button
             newItem.querySelector('.delete-button').addEventListener('click', () => {
@@ -208,9 +233,9 @@
             const gallery = document.getElementById('gallery');
             const othersItem = document.querySelector('.others');
 
-            customItems.forEach(item => {
+            customItems.forEach((item, index) => {
                 const newItem = document.createElement('div');
-                newItem.className = 'item visible';  // Add the 'visible' class here
+                newItem.className = 'item';
                 newItem.innerHTML = `
                     <img src="../images/Others.png" alt="${item}" height="100" width="100">
                     <h3>${item}</h3>
@@ -227,9 +252,12 @@
 
             // Ensure the "Others" block is at the end
             gallery.appendChild(othersItem);
+
+            // Re-animate all items including the loaded ones
+            const allItems = document.querySelectorAll('.item');
+            animateItemsSequentially(allItems);
         }
     </script>
     {% endblock body %}
 </body>
 </html>
-
