@@ -142,10 +142,6 @@ def goal():
 def income():
     return render_template("Income.html")
 
-@init_bp.route('/expenses')
-def expenses():
-    return render_template("expenses.html")
-
 @init_bp.route('/savings')
 def savings():
     return render_template("savings.html")
@@ -153,6 +149,11 @@ def savings():
 @init_bp.route('/goalsetting')
 def goalsetting():
     return render_template("GoalSetting.html")
+
+@init_bp.route('/books')
+def books():
+    return render_template("GoalSetting.html")
+
 
 # YENYI'S ROUTES (END)
 
