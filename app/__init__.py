@@ -112,6 +112,7 @@ def get_overview(month):
 def educate():
     return render_template("educate.html")
 
+
 # JIAWEN'S ROUTES (START)
 
 @init_bp.route('/budget')
@@ -143,7 +144,7 @@ def income():
 
 @init_bp.route('/expenses')
 def expenses():
-    return render_template("expensescontent.html")
+    return render_template("expenses.html")
 
 @init_bp.route('/savings')
 def savings():
@@ -154,6 +155,7 @@ def goalsetting():
     return render_template("GoalSetting.html")
 
 # YENYI'S ROUTES (END)
+
 
 @init_bp.errorhandler(404)
 def not_found(error):
