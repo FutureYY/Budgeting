@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
+
 from datetime import datetime
 from .forms import SpendingForm
+from app.config import Config
 
 db = SQLAlchemy()
 csrf = CSRFProtect()
@@ -63,9 +65,29 @@ def submit_spending():
     flash("Spending recorded successfully!")
     return redirect(url_for('init.Expenditure_Tracking'))
 
+@init_bp.route('/')
+def index():
+    return render_template('index.html')  # Ensure 'index.html' is in the 'templates' folder
+
+@init_bp.route('/static/<path:educating>')
+def static_files(educating):
+    return send_from_directory('static', educating)
+
 @init_bp.route('/educate')
 def educate():
     return render_template("educate.html")
+
+@init_bp.route('/budget')
+def budget():
+    return render_template("budget.html")
+
+@init_bp.route('/saving')
+def saving():
+    return render_template("saving.html")
+
+@init_bp.route('/expenses')
+def expenses():
+    return render_template("expenses.html")
 
 @init_bp.errorhandler(404)
 def not_found(error):

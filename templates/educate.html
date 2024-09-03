@@ -3,7 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <title>Educational Content</title>
-    <link rel="stylesheet" href="/app/static/CSS/educating.css">
+    <style>
+
+        .introduction{
+            margin: 0px;
+            text-align: center;
+            background-color: midnightblue; /*add url for bg image*/
+            padding: 100px;
+            color: rgb(219, 237, 253);
+        }
+
+        .explanation{
+            background-color: rgb(162, 223, 162);
+            text-align: center;
+            padding-top: 80px;
+            padding-bottom: 80px;
+            background-color: rgb(162, 223, 162);
+            font-size: 1.1em;
+        }
+
+        .pros{
+            background-color: darkseagreen;
+            padding: 40px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .benefits {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+        }
+
+        .tip{
+            background-color: darkslategrey;
+            color: beige;
+            text-align: center;
+            padding: 30px;
+            width: 250px;
+            border-radius: 20px;
+            margin: 10px;
+        }
+
+        .press{
+            background-color: seagreen;
+            padding-bottom: 40px;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .call{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+        }
+
+        .cta{
+            text-align: center;
+            padding: 30px;
+            width: 250px;
+            border-radius: 20px;
+            margin: 10px;
+            background-color: lightgreen;
+            color: black;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,9 +104,9 @@
         <div class="press">
             <h3>Press to learn more about the different pillars of financial literacy!</h3>
             <div class="call">
-                <a href="templates/budget.html" type="button" class="cta c1">Budgeting</a>
-                <a href="templates/saving.html" type="button" class="cta c2">Saving</a>
-                <a href="templates/expenses.html" type="button" class="cta c3">Expenses</a>
+                <a href="{{ url_for('init.budget') }}" type="button" class="cta c1">Budgeting</a>
+                <a href="{{ url_for('init.saving') }}" type="button" class="cta c2">Saving</a>
+                <a href="{{ url_for('init.expenses') }}" type="button" class="cta c3">Expenses</a>
             </div>
 
         </div>
