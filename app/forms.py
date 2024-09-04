@@ -58,6 +58,14 @@ class SignUp(FlaskForm):
     repeat_password = PasswordField('Confirm Password*', validators=[DataRequired(), EqualTo(fieldname="password", message="Passwords must match")])
     submit = SubmitField('Sign Up')
 
+    def validate_email(self, email):
+        user = Users.query.filter_by(email=email.data.lower()).first
+        raise ValidationError("Email is already in use, please use a different one.")
+
+    def validate_password(self, password):
+        if not re.fullmatch("^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$", password.data):
+            raise ValidationError("Password needs to contain at least one letter, number, and special character.")
+
 class CustomIncomeForm(FlaskForm):
     income_type = StringField('Income Type', validators=[Optional()])
     amount = DecimalField('Amount', validators=[Optional()])
