@@ -4,7 +4,6 @@ from flask_wtf.csrf import CSRFProtect
 from datetime import datetime
 from .forms import SpendingForm
 from app.config import Config
-# from .models import Users
 
 db = SQLAlchemy()
 csrf = CSRFProtect()
@@ -12,7 +11,7 @@ csrf = CSRFProtect()
 init_bp = Blueprint('init', __name__)
 
 
-# YOSHANA's ROUTE START!!!
+# for yoshana's home route - thank you :)
 @init_bp.route('/')
 def home():
     return render_template("home_page.html")
@@ -28,28 +27,6 @@ def signup():
     return render_template("Signup_page.html")
 
 
-# with app.app_context():
-#     db.init_app(app)
-#     if not path.exists(app.config['DATABASE_NAME']):
-#         db.create_all()
-#         print('Created Database!')
-#         csrf.init_app(app)
-#
-#     Manager_Login = LoginManager()
-#     Manager_Login.login_view = "auth.login"
-#     Manager_Login.init_app(app)
-#
-#     @Manager_Login.user_loader
-#     def user_load(id):
-#         return Users.query.get(id)
-#
-#     from app.auth import auth
-#     from app.views import views
-
-# YOSHANA ROUTE END!!!
-
-
-# ZAKEERAH ROUTE START!!
 @init_bp.route('/tracker', methods=['GET', 'POST'])
 def Expenditure_Tracking():
     form = SpendingForm()
