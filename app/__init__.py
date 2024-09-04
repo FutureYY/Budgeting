@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime
-from .forms import SpendingForm, SignUp, Login, IncomeForm
+from .forms import SpendingForm, SignUp, Login, IncomeForm, ExpensesForm
 from app.config import Config
 from flask import Blueprint, flash, render_template, request, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
@@ -177,16 +177,46 @@ def income():
 def savings():
     return render_template("savings.html")
 
-@init_bp.route('/goalsetting')
+@init_bp.route('/goalsetting' , methods=['GET', 'POST'])
 def goalsetting():
-    return render_template("GoalSetting.html")
+    form = ExpensesForm()
+    if form.validate_on_submit():
+        salary = form.salary_expense.data
+        allowance = form.allowance_expense.data
+        transport = form.transport_expense.data
+        entertainment = form.entertainment_expense.data
+        technology = form.technology_expense.data
+        medical = form.medical_expense.data
+        food_beverages = form.food_beverages_expense.data
+        books = form.books_expense.data
+        stationary = form.stationary_expense.data
+        gifts = form.gifts_expense.data
+        pets = form.pets_expense.data
 
-@init_bp.route('/books')
-def books():
-    return render_template("GoalSetting.html")
+        # Handle custom incomes
+        custom_expenses = []
+        for custom_expenses in form.custom_expenses:
+            expenses_type = custom_expenses.expenses_type.data
+            amount = custom_expenses.amount.data
+            if expenses_type and amount:
+                custom_expenses.append({'expenses_type': expenses_type, 'amount': amount})
+
+        return redirect(url_for('init.goal'))
+    return render_template('goalsetting.html', form=form)
 
 
 # YENYI'S ROUTES (END)
+
+
+# CHRISTEL'S ROUTES (START)
+
+@init_bp.route('/forum')
+def forum():
+    return render_template("forum.html")
+
+
+# CHRISTEL'S ROUTES (END)
+
 
 
 @init_bp.errorhandler(404)

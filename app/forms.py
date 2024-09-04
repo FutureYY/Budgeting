@@ -75,3 +75,21 @@ class IncomeForm(FlaskForm):
     amount_from_salary = DecimalField('Salary', validators=[Optional()])
     amount_from_angpao = DecimalField('Angpao', validators=[Optional()])
     custom_incomes = FieldList(FormField(CustomIncomeForm), min_entries=0)
+
+class CustomExpensesForm(FlaskForm):
+    expense_type = StringField('Expense Type', validators=[Optional()])
+    amount = DecimalField('Amount', validators=[Optional()])
+
+class ExpensesForm(FlaskForm):
+    salary_expense = DecimalField('Salary', validators=[Optional()])
+    allowance_expense = DecimalField('Allowance', validators=[Optional()])
+    transport_expense = DecimalField('Transport', validators=[Optional()])
+    entertainment_expense = DecimalField('Entertainment', validators=[Optional()])
+    technology_expense = DecimalField('Technology', validators=[Optional()])
+    medical_expense = DecimalField('Medical', validators=[Optional()])
+    food_beverages_expense = DecimalField('Food & Beverages', validators=[Optional()])
+    books_expense = DecimalField('Books', validators=[Optional()])
+    stationary_expense = DecimalField('Stationary', validators=[Optional()])
+    gifts_expense = DecimalField('Gifts', validators=[Optional()])
+    pets_expense = DecimalField('Pets', validators=[Optional()])
+    custom_expenses = FieldList(FormField(CustomExpensesForm), min_entries=0)

@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goal Setting</title>
+    <title>Income</title>
     <style>
         body {
             margin: 0;
             padding: 0;
         }
+
         .close-button {
             position: absolute;
             top: 10px;
@@ -21,10 +23,11 @@
         }
 
         .close-button:hover {
-            color: white; /* Change text color to white when hovered */
-            background-color: red; /* Red background on hover */
+            color: white;
+            background-color: red;
         }
-        #gallery { 
+
+        #expenses {
             width: 70%;
             margin-left: auto;
             margin-right: auto;
@@ -35,12 +38,12 @@
             position: relative;
         }
 
-        #gallery img {
+        .container img {
             padding: 10px;
             transition: transform 0.5s ease, opacity 0.5s ease;
         }
 
-        .item {
+        .section {
             border: 1px blue solid;
             border-radius: 10px;
             height: 200px;
@@ -60,7 +63,7 @@
             transform: scale(1);
         }
 
-        #gallery h3 {
+        .section h3 {
             margin-top: 10px;
         }
 
@@ -96,7 +99,7 @@
             font-size: 16px;
         }
 
-        .item.active #new-item-input {
+        .active #new-item-input {
             display: block;
         }
 
@@ -118,54 +121,127 @@
         .delete-button:hover {
             background-color: darkred;
         }
-        
     </style>
 </head>
+
 <body>
     {% extends "base.html" %}
     {% block body %}
-    <div>
-        <h1>Setting up your budget</h1>
-        <a href="GoalHome.html" class="close-button">&times;</a>
-        <h4>Choose what you will buy each month</h4>
-    </div>
+    <a href="GoalHome.html" class="close-button">&times;</a>
 
-    <div id="gallery">
-        <div class="item item1"><img src="../app/static/images/Transport.png" alt="Transport" height="100" width="100"><h3>Transport</h3></div>
-        <div class="item item2"><img src="../app/static/images/Entertainment.png" alt="Entertainment" height="100" width="100"><h3>Entertainment</h3></div>
-        <div class="item item3"><img src="../app/static/images/Technology.png" alt="Technology" height="100" width="100"><h3>Technology</h3></div>
-        <div class="item item4"><img src="../app/static/images/Pets.png" alt="Pets" height="100" width="100"><h3>Pets</h3></div>
-        <div class="item item5"><img src="../app/static/images/F&B.png" alt="F&B" height="100" width="100"><h3>Food & Beverages</h3></div>
-        <div class="item item6"><img src="../app/static/images/Medicine.png" alt="Medical" height="100" width="100"><h3>Medical</h3></div>
-        <div class="item item7"><img src="../app/static/images/gifts.png" alt="Gifts" height="100" width="100"><h3>Gifts</h3></div>
-        <div class="item item8"><img src="../app/static/images/Books.png" alt="Books" height="100" width="100"><h3>Books</h3></div>
-        <div class="item item9"><img src="../app/static/images/Stationery.png" alt="Stationery" height="100" width="100"><h3>Stationery</h3></div>
-    </div>
+    <h1>Expenses</h1>
 
-    <!-- The "Others" block is placed here at the end -->
-    <div class="item item10 others">
-        <img src="../app/static/images/Others.png" alt="Other" height="100" width="100">
-        <h3>Others</h3>
-        <button class="add-button">+</button>
-        <input type="text" id="new-item-input" placeholder="Add new item">
-    </div>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <fieldset id="expenses" class="container">
+
+            <div class="section">
+                <img src="/app/static/images/Salary.png" alt="salary" width="300" height="320">
+                <label>Salary</label><br>
+                {{ form.salary_expense(size=20) }}<br>
+            </div>
+
+            <div class="section">
+                <img src="/app/static/images/Allowance.png" alt="allowance" width="300" height="320">
+                <label>Salary</label><br>
+                {{ form.allowance_expense(size=20) }}<br>
+            </div>
+
+            <div class="section">
+                <img src="/app/static/images/Transport.png" alt="transport" width="300" height="320">
+                <label>Salary</label><br>
+                {{ form.transport_expense(size=20) }}<br>
+            </div>
+
+            <div class="section">
+                <img src="/app/static/images/Entertainment.png" alt="entertainment" width="300" height="320">
+                <label>Salary</label><br>
+                {{ form.entertainment_expense(size=20) }}<br>
+            </div>
+
+            <div class="section">
+                <img src="/app/static/images/Technology.png" alt="Technology" width="300" height="320">
+                <label>Salary</label><br>
+                {{ form.technology_expense(size=20) }}<br>
+            </div>
+
+            <div class="section">
+                <img src="/app/static/images/Medical.png" alt="medical" width="300" height="320">
+                <label>Salary</label><br>
+                {{ form.medical_expense(size=20) }}<br>
+            </div>
+
+            <div class="section">
+                <img src="/app/static/images/F&B.png" alt="food&beverages" width="300" height="320">
+                <label>Salary</label><br>
+                {{ form.food_beverages_expense(size=20) }}<br>
+            </div>
+
+            <div class="section">
+                <img src="/app/static/images/Gifts.png" alt="gifts" width="300" height="320">
+                <label>Salary</label><br>
+                {{ form.gifts_expense(size=20) }}<br>
+            </div>
+
+            <div class="section">
+                <img src="/app/static/images/Pets.png" alt="pets" width="300" height="320">
+                <label>Salary</label><br>
+                {{ form.pets_expense(size=20) }}<br>
+            </div>
+
+            <!-- Displaying dynamic income fields -->
+            {% for custom_expenses in form.custom_expenses %}
+            <div class="section">
+                <label>{{ custom_expenses.expenses_type.label }}:</label>
+                {{ custom_expenses.expenses_type(size=20) }}<br>
+                <label>{{ custom_expenses.expenses.label }}:</label>
+                {{ custom_expenses.amount(size=20) }}<br>
+            </div>
+            {% endfor %}
+
+            <!-- Add new custom income field -->
+            <div class="section others">
+                <button type="button" class="add-button">+</button>
+            </div>
+        </fieldset>
+        <button type="submit">Save</button>
+    </form>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
+            let customExpensesCounter = document.querySelectorAll('.section').length - 3;
+
+            const addButton = document.querySelector('.add-button');
+            addButton.addEventListener('click', function () {
+                const expensesContainer = document.getElementById('income');
+                const newSection = document.createElement('div');
+                newSection.className = 'section';
+                newSection.innerHTML = `
+                    <label>New Expense Type:</label>
+                    <input type="text" name="custom_expenses-${customExpensesCounter}-expenses_type" size="20">
+                    <label>Amount:</label>
+                    <input type="number" name="custom_incomes-${customExpensesCounter}-amount" min="0" size="20">
+                `;
+
+                const othersSection = document.querySelector('.others');
+                expensesContainer.insertBefore(newSection, othersSection);
+                customExpensesCounter++;
+                animateItemsSequentially(document.querySelectorAll('.section'));
+            });
+
             // Handle animation for existing items
-            const items = document.querySelectorAll('.item');
-            animateItemsSequentially(items);
+            const sections = document.querySelectorAll('.section');
+            animateItemsSequentially(sections);
 
             // Load saved items from local storage
             loadCustomItems();
 
             // Handle adding new custom items
-            const addButton = document.querySelector('.add-button');
             const inputBox = document.getElementById('new-item-input');
-            const othersItem = document.querySelector('.others');
+            const othersSection = document.querySelector('.others');
 
             addButton.addEventListener('click', () => {
-                othersItem.classList.toggle('active');
+                othersSection.classList.toggle('active');
                 inputBox.focus();
             });
 
@@ -173,7 +249,7 @@
                 if (event.key === 'Enter' && inputBox.value.trim() !== '') {
                     addNewItem(inputBox.value.trim());
                     inputBox.value = '';
-                    othersItem.classList.remove('active');
+                    othersSection.classList.remove('active');
                 }
             });
         });
@@ -182,36 +258,32 @@
             items.forEach((item, index) => {
                 setTimeout(() => {
                     item.classList.add('visible');
-                }, index * 200);
+                }, index * 100);
             });
         }
 
         function addNewItem(itemName) {
-            const gallery = document.getElementById('gallery');
-            const newItem = document.createElement('div');
-            newItem.className = 'item';
-            newItem.innerHTML = `
-                <img src="../images/Others.png" alt="${itemName}" height="100" width="100">
+            const expensesContainer = document.getElementById('income');
+            const newSection = document.createElement('div');
+            newSection.className = 'section';
+            newSection.innerHTML = `
+                <img src="../app/static/images/Others.png" alt="${itemName}" height="100" width="100">
                 <h3>${itemName}</h3>
                 <button class="delete-button">×</button>
             `;
 
-            // Append the new item to the gallery
-            gallery.appendChild(newItem);
+            // Insert the new item before the "Others" section
+            const othersSection = document.querySelector('.others');
+            expensesContainer.insertBefore(newSection, othersSection);
 
             // Re-animate all items including the newly added one
-            const allItems = document.querySelectorAll('.item');
-            animateItemsSequentially(allItems);
+            animateItemsSequentially(document.querySelectorAll('.section'));
 
             // Add event listener for delete button
-            newItem.querySelector('.delete-button').addEventListener('click', () => {
-                newItem.remove();
+            newSection.querySelector('.delete-button').addEventListener('click', () => {
+                newSection.remove();
                 removeItemFromLocalStorage(itemName);
             });
-
-            // Move the "Others" block to the end
-            const othersItem = document.querySelector('.others');
-            gallery.appendChild(othersItem);
 
             saveItemToLocalStorage(itemName);
         }
@@ -230,34 +302,32 @@
 
         function loadCustomItems() {
             const customItems = JSON.parse(localStorage.getItem('customItems')) || [];
-            const gallery = document.getElementById('gallery');
-            const othersItem = document.querySelector('.others');
+            const expensesContainer = document.getElementById('income');
+            const othersSection = document.querySelector('.others');
 
-            customItems.forEach((item, index) => {
-                const newItem = document.createElement('div');
-                newItem.className = 'item';
-                newItem.innerHTML = `
+            customItems.forEach(item => {
+                const newSection = document.createElement('div');
+                newSection.className = 'section';
+                newSection.innerHTML = `
                     <img src="../app/static/images/Others.png" alt="${item}" height="100" width="100">
                     <h3>${item}</h3>
                     <button class="delete-button">×</button>
                 `;
-                gallery.appendChild(newItem);
+                // Insert the new item before the "Others" section
+                expensesContainer.insertBefore(newSection, othersSection);
 
                 // Add event listener for delete button
-                newItem.querySelector('.delete-button').addEventListener('click', () => {
-                    newItem.remove();
+                newSection.querySelector('.delete-button').addEventListener('click', () => {
+                    newSection.remove();
                     removeItemFromLocalStorage(item);
                 });
             });
 
-            // Ensure the "Others" block is at the end
-            gallery.appendChild(othersItem);
-
             // Re-animate all items including the loaded ones
-            const allItems = document.querySelectorAll('.item');
-            animateItemsSequentially(allItems);
+            animateItemsSequentially(document.querySelectorAll('.section'));
         }
     </script>
     {% endblock body %}
 </body>
 </html>
+
