@@ -1,6 +1,10 @@
 from flask_wtf import FlaskForm
+from pyexpat.errors import messages
 from wtforms import SelectField, DecimalField, DateField, SubmitField, HiddenField
-from wtforms.validators import DataRequired, NumberRange, ValidationError
+from wtforms.fields.simple import EmailField, PasswordField, StringField
+from wtforms.validators import DataRequired, NumberRange, ValidationError, Email, Optional, Length, EqualTo
+# from .models import Users
+import re
 
 class SpendingForm(FlaskForm):
     category = SelectField(
@@ -41,3 +45,15 @@ class SpendingForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class Login(FlaskForm):
+    email = EmailField('Email', validators=[DataRequired(), Email(message='Invalid Email')])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Log In')
+
+class SignUp(FlaskForm):
+    name = StringField('Email', validators=[Optional(), Length(min=8, max=32)])
+    email = EmailField('Email*', validators=[DataRequired(), Email(message='Invalid Email')])
+    # phone
+    password = PasswordField('Password*', validators=[DataRequired(), Length(min=8, max=24)])
+    repeat_password = PasswordField('Confirm Password*', validators=[DataRequired(), EqualTo(fieldname="password", message="Passwords must match")])
+    submit = SubmitField('Sign Up')
