@@ -249,7 +249,15 @@ def savings():
 @init_bp.route('/goalsetting' , methods=['GET', 'POST'])
 def goalsetting():
     form = ExpensesForm()
+
+    if not current_user.is_authenticated:
+        # Redirect to login page or handle unauthenticated access
+        return redirect(url_for('init.login'))
+
     if form.validate_on_submit():
+
+        user_id = current_user.id
+
         salary = form.salary_expense.data
         allowance = form.allowance_expense.data
         transport = form.transport_expense.data
@@ -262,15 +270,56 @@ def goalsetting():
         gifts = form.gifts_expense.data
         pets = form.pets_expense.data
 
-        # Handle custom incomes
         custom_expenses = []
-        for custom_expenses in form.custom_expenses:
-            expenses_type = custom_expenses.expenses_type.data
-            amount = custom_expenses.amount.data
+        for custom_expense in form.custom_expenses:
+            expenses_type = custom_expense.expenses_type.data
+            amount = custom_expense.amount.data
             if expenses_type and amount:
                 custom_expenses.append({'expenses_type': expenses_type, 'amount': amount})
 
+        # Handle predefined expenses
+        expenses_to_add = []
+        # user_id = current_user.id
+
+        if salary:
+            expenses_to_add.append(Expense(category='Salary', amount=salary))
+        if allowance:
+            expenses_to_add.append(Expense(category='Allowance', amount=allowance))
+        if transport:
+            expenses_to_add.append(Expense(category='Transport', amount=transport))
+        if entertainment:
+            expenses_to_add.append(Expense(category='Entertainment', amount=entertainment))
+        if technology:
+            expenses_to_add.append(Expense(category='Technology', amount=technology))
+        if medical:
+            expenses_to_add.append(Expense(category='Medical', amount=medical))
+        if food_beverages:
+            expenses_to_add.append(Expense(category='Food & Beverages', amount=food_beverages))
+        if books:
+            expenses_to_add.append(Expense(category='Books', amount=books))
+        if stationary:
+            expenses_to_add.append(Expense(category='Stationary', amount=stationary))
+        if gifts:
+            expenses_to_add.append(Expense(category='Gifts', amount=gifts))
+        if pets:
+            expenses_to_add.append(Expense(category='Pets', amount=pets))
+
+        # Handle custom expenses
+        for custom in custom_expenses:
+            expenses_to_add.append(Expense(category=custom['expenses_type'], amount=custom['amount']))
+
+        # Add all expenses to the session
+        for expense in expenses_to_add:
+            db.session.add(expense)
+
+        try:
+            db.session.commit()
+            flash('Expenses added successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()  # Rollback if there is an error
+            flash(f'An error occurred: {str(e)}', 'danger')
         return redirect(url_for('init.goal'))
+
     return render_template('goalsetting.html', form=form)
 
 
