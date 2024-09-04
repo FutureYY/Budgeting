@@ -3,40 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <title>Community Forum</title>
+        <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        body{
+            width:1024px ;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 50px;
+        }
+        header{
+            text-align: center;
+            padding: 20px;
+        }
+        div{
+            border: 1px, maroon solid;
+            padding: 20px 50px 20px 50px;
+            border-radius: 10px;
+        }
+        #first, #second{
+            padding: 20px 50px 20px 50px;
+            margin: 20px 50px;
+        }
+        #one,#two{
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        ul{
+            list-style-type: none;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        li{
+            border: 1px solid maroon;
+            padding: 20px;
+            border-radius: 20px;
+
+        }
+        a{
+            text-decoration: none;
+        }
+        li:hover {
+            background-color: beige;
+
+
+        }
+        .comments-container{
+            padding: 30px;
+        }
+        #commentInput{
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        #publishBtn{
+            margin-bottom:20px ;
+        }
+        textarea{
+            width: 500px;
+            height: 300px;
+        }
+        #commentsList{
+            border: 2px, white, solid;
+            padding-top: 50px;
+            margin-bottom: 50px;
+        }
+    </style>
 </head>
 <body>
-<!-- {% extends "base.html" %}
-{% block body %} -->
-<header>  <h1> Welcome to the Forum</h1></header>
+{% extends "base.html" %}
+    {% block body %}
+    <header><h1>Welcome to the Forum</h1></header>
+    <div id="one">
+        <h2>How to start a savings account?</h2>
+        <p id="first">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat quidem aut veniam inventore cum veritatis ipsam id cumque consequatur earum doloremque distinctio laboriosam fuga molestiae rem cupiditate, corporis omnis mollitia. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Accusantium quam quae, magnam quos, iste rerum illo beatae expedita perferendis, est reiciendis pariatur. Magnam consequatur quam saepe, veniam rem incidunt tempore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae dolores exercitationem facere error totam aut necessitatibus iure porro! Suscipit numquam reiciendis animi, eos nostrum voluptate eveniet similique quos quidem adipisci?
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. At fugit quae aut laboriosam suscipit perferendis qui quos, quas dolorum velit ratione rerum maxime quo enim ullam assumenda accusamus? Eveniet, laborum!
+        </p>
+        <ul>
+            <li><a href="dummydata.html">comments</a></li>
+            <li>like</li>
+            <li><a href="https://www.instagram.com/">share</a></li>
+        </ul>
+    </div>
+    <div id="two">
+        <h2>How do I open up a bank account?</h2>
+        <p id="second">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur quos voluptas provident repellat vero a praesentium, dicta dolores temporibus eius laborum nam aspernatur qui atque non asperiores corrupti, laudantium sequi! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates error et rem, quasi maiores doloremque perspiciatis. Unde doloremque voluptatibus ipsum sapiente autem odio cum nesciunt optio, voluptates praesentium ea nobis! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eos dicta magni assumenda consequuntur nihil accusantium dolor magnam iste possimus eius dolorem fuga molestiae tempore porro quas nulla atque, sunt est? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur rem sed perspiciatis sit recusandae, eligendi fuga magnam. Dolores consequatur culpa, provident, cumque soluta distinctio maxime delectus rem voluptas praesentium deserunt.</p>
+        <ul>
+            <li>comments</li>
+            <li>like</li>
+            <li>share</li>
+        </ul>
+    </div>
+    <div class="comments-container">
+        <h2>Question</h2>
+
+        <textarea name="comment" id="commentInput" placeholder="write your comment here..."></textarea>
+        <button id="publishBtn">post</button>
 
 
-<div id="one">
-    <h2>How do I set up a savings account?</h2>
-    <div class="header"><P class="content1">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatum officiis exercitationem mollitia vitae, ad quaerat sit magni molestias nihil delectus sint deserunt ducimus blanditiis nisi dolorem suscipit incidunt quod numquam!Lorem </P></div>
-    <ul class="bottom">
-
-        <li><button><a href="dummydata.html">25 comments</a></button></li>
-        <li>likes</li>
-        <li>share</li>
-    </ul>
-
-
-</div>
-<div id="two">
-    <h2>How do I create a bank account?</h2>
-    <div class="header"><P class="content2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit cum assumenda quos totam quidem fugit quisquam ab quasi! Est architecto hic beatae veniam porro nobis delectus amet ullam nam enim.</P></div>
-    <ul class="bottom">
-        <li><button><a href="">45 comments</a></button></li>
-        <li>likes</li>
-        <li>share</li>
-
-    </ul>
-
-</div>
-<h2>Add comments</h2>
-<textarea> </textarea>
-<button>Publish</button>
-
- {% endblock body %}
+    </div>
+    <div id="commentsList"></div>
+    <script src="testing.js"></script>
+    {% endblock body %}
 </body>
 </html>
