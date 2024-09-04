@@ -38,13 +38,6 @@
             position: relative;
             left: 300px; }
 
-        button {
-            width: 80px; height: 50px;
-            border-radius: 20px; border: none;  }
-
-        a {
-            text-decoration: none; list-style-type: none;
-        }
 
     </style>
 </head>
@@ -79,6 +72,12 @@
             </div>
 
             <div class="Sign_Input">
+                <label for="age">Age</label>
+                <br>
+                <input id=age type="number" class="line-input" placeholder="_________">
+            </div>
+
+            <div class="Sign_Input">
                 <label for="password">Password</label>
                 <br>
                 <input id=password type="password" class="line-input" placeholder="_________">
@@ -91,14 +90,7 @@
             </div>
 
             <button type="submit">Sign Up</button>
-
-            <br>
-            <br>
-
-            <div id="exist">
-                <a href="Login_page.html">Already created an account, Sign In →</a>
-            </div>
-
+<!--            <button type="reset">Reset</button>-->
         </form>
     </div>
     {% endblock body %}
