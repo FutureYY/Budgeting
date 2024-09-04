@@ -7,12 +7,13 @@
        * {
             margin: 0; padding: 0; }
 
-       a{
+       a {
             text-decoration: none; list-style-type: none; }
 
-       button {
+      .Log_Button {
             width: 80px; height: 50px; border: none;
-            background-color: lightskyblue; border-radius: 20px; }
+            background-color: lightskyblue; border-radius: 20px;
+            text-decoration: none; list-style-type: none; }
 
        .Grid_Container {
         display: grid; grid-template-rows: 120px; }
@@ -33,9 +34,9 @@
 
         <div class="C2">
             <h1>Join us on the Journey TODAY!!!</h1>
-            <div>
-                <button id="Log_Button"><a href="{{ url_for('init.login') }}"> Log In </a></button>
-                <button><a href="{{ url_for('init.signup') }}"> Sign Up </a></button>
+            <div >
+                <button class="Log_Button"><a href="{{ url_for('init.login') }}"> Log In </a></button>
+                <button class="Log_Button" ><a href="{{ url_for('init.signup') }}"> Sign Up </a></button>
             </div>
         </div>
         <br>

@@ -1,3 +1,5 @@
+from enum import unique
+
 from app import db
 from datetime import datetime
 from decimal import Decimal
@@ -12,6 +14,9 @@ from decimal import Decimal
 
 #yoshana and yy :)
 #User: Stores user details and establishes relationships with income and expense entries.
+class Users(db.Model):
+    email = db.Column(db.string(100), primary_key=True, unique=True, nullable=False)
+
 # Income: Tracks income amounts and their categories, with an optional custom category for the "others" option.
 # Expense: Similar to Income, but for expenses, with predefined categories and a custom option.
 # Budget: Holds monthly goals for income, savings, and expenses.
