@@ -10,21 +10,12 @@ from decimal import Decimal
 # custom_category: Allows for a user-defined category if "others" is selected.
 # budget_id: (Optional) Links a transaction to a specific budget for more detailed reporting.
 
-
-class SignUp(db.Model):
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    phone_number = db.Column(db.String(8), nullable=False, )
-    password = db.Column(db.String(150), nullable=False)
-
 #yoshana and yy :)
 #User: Stores user details and establishes relationships with income and expense entries.
 # Income: Tracks income amounts and their categories, with an optional custom category for the "others" option.
 # Expense: Similar to Income, but for expenses, with predefined categories and a custom option.
 # Budget: Holds monthly goals for income, savings, and expenses.
 # Budget Model: Tracks the monthly goals for income, savings, and expenses, unchanged from the previous implementation.
-
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
