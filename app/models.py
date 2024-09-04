@@ -14,9 +14,6 @@ from decimal import Decimal
 
 #yoshana and yy :)
 #User: Stores user details and establishes relationships with income and expense entries.
-class Users(db.Model):
-    email = db.Column(db.string(100), primary_key=True, unique=True, nullable=False)
-
 # Income: Tracks income amounts and their categories, with an optional custom category for the "others" option.
 # Expense: Similar to Income, but for expenses, with predefined categories and a custom option.
 # Budget: Holds monthly goals for income, savings, and expenses.
@@ -24,6 +21,8 @@ class Users(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
+    def get_id(self):
+        return self.email
     email = db.Column(db.String(120), unique=True, nullable=False)
     incomes = db.relationship('Income', backref='user', lazy=True)
     expenses = db.relationship('Expense', backref='user', lazy=True)
