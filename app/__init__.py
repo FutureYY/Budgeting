@@ -2,8 +2,12 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime
-from .forms import SpendingForm
+from .forms import SpendingForm, SignUp, Login
 from app.config import Config
+from flask import Blueprint, flash, render_template, request, url_for, redirect
+from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 db = SQLAlchemy()
 csrf = CSRFProtect()
@@ -25,6 +29,57 @@ def login():
 @init_bp.route('/Signup_page')
 def signup():
     return render_template("Signup_page.html")
+
+@init_bp.route('/')
+def home():
+    if current_user.is_active:
+        return redirect((url_for("#")))
+    return render_template("home_page.html")
+
+@init_bp.route('/signup', methods=['GET','POST'])
+def signup():
+    if current_user.is_active:
+        return redirect(url_for("#"))
+        form = SignUp(request.form)
+        if form.validate_on_submit():
+            name = form,name.data.strip()
+            new_user = Users(name=name, email=form.email.data.lower(), password=generate_password_hash(form.password.date))
+            db.session.add(new_user)
+            db.session.commit()
+
+            flash('Account created successfully!', category='success')
+
+        return render_template("signup.html", form=form)
+
+@init_bp.route('/login', methods=['GET','POST'])
+def login():
+    if current_user.us_active:
+        return redirect(url_for("#"))
+
+    form = Login(request.form)
+    if form.validate_on_submit():
+        user = Users.query.filter_by(email=form.email.lower()).first()
+
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                flash('Logged in successfully', category='success')
+                login_user(user, remember=True)
+                return redirect(url_for('views.show_expenses'))
+
+            else:
+                flash('Incorrect password, please try again.', category='error')
+        else:
+            flash('No account with that email address.', category='error')
+
+    return render_template('login.html', form=form)
+
+@init_bp.route('/logout')
+# @login_required
+def logout():
+    logout_user()
+    return redirect(url_for('auth.home'))
+
+# Route ends here
 
 
 @init_bp.route('/tracker', methods=['GET', 'POST'])
