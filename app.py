@@ -5,6 +5,7 @@ from flask_wtf.csrf import CSRFProtect
 from app.config import Config
 from app.models import db
 from app import init_bp
+from flask_login import LoginManager
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -22,6 +23,16 @@ def create_app(config_class=Config):
 
     # Register blueprints
     app.register_blueprint(init_bp)
+
+    from app.models import User
+
+    manager_login = LoginManager()
+    manager_login.login_view = "auth.login"
+    manager_login.init_app(app)
+
+    @manager_login.user_loader
+    def user_load(id):
+        return User.query.get(id)
 
     return app
 
