@@ -20,16 +20,24 @@ def signup():
     if current_user.is_active:
         return redirect(url_for("#"))
         form = SignUp(request.form)
-        if form.validate_on_submission():
+        if form.validate_on_submit():
             name = form,name.data.strip()
             new_user = Users(name=name, email=form.email.data.lower(), password=generate_password_hash(form.password.date))
+            db.session.add(new_user)
+            db.session.commit()
 
+            flash('Account created successfully!', category='success')
 
-        return render_template("signup.html")
+        return render_template("signup.html", form=form)
 
 @auth.route('/login', methods=['GET','POST'])
 def login():
-    # insert code here
+    if current_user.us_active:
+        return redirect(url_for("#"))
+
+    form = Login(request.form)
+    if form.validate_on_submit():
+        user = Users.query.filter_by(email=form.email.lower()).first()
     return render_template('login.html')
 
 @auth.route('/logout')
