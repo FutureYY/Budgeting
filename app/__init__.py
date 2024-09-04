@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime
-from .forms import SpendingForm, SignUp, Login
+from .forms import SpendingForm, SignUp, Login, IncomeForm
 from app.config import Config
 from flask import Blueprint, flash, render_template, request, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
@@ -189,13 +189,38 @@ def expensescontent():
 
 # YENYI'S ROUTES (START)
 
-@init_bp.route('/goal')
-def goal(): 
-    return render_template("GoalHome.html")
+@init_bp.route('/goal', methods=['GET', 'POST'])
+def goal():
+    selected_section = None
+    amount = None
 
-@init_bp.route('/income')
+    if request.method == 'POST':
+        # Assuming your form has fields 'section' and 'amount'
+        selected_section = request.form.get('section')
+        amount = request.form.get('amount')
+
+    return render_template('GoalHome.html', selected_section=selected_section, amount=amount)
+
+@init_bp.route('/income', methods=['GET', 'POST'])
 def income():
-    return render_template("Income.html")
+    form = IncomeForm()
+    if form.validate_on_submit():
+        allowance = form.amount_from_allowance.data
+        salary = form.amount_from_salary.data
+        angpao = form.amount_from_angpao.data
+
+        # Handle custom incomes
+        custom_incomes = []
+        for custom_income in form.custom_incomes:
+            income_type = custom_income.income_type.data
+            amount = custom_income.amount.data
+            if income_type and amount:
+                custom_incomes.append({'income_type': income_type, 'amount': amount})
+
+
+        return redirect(url_for('init.goal'))
+
+    return render_template('income.html', form=form)
 
 @init_bp.route('/savings')
 def savings():

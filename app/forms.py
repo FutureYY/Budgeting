@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from pyexpat.errors import messages
-from wtforms import SelectField, DecimalField, DateField, SubmitField, HiddenField
+from wtforms import SelectField, DecimalField, DateField, SubmitField, HiddenField, FieldList, FormField
 from wtforms.fields.simple import EmailField, PasswordField, StringField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email, Optional, Length, EqualTo
 # from .models import Users
@@ -57,3 +57,13 @@ class SignUp(FlaskForm):
     password = PasswordField('Password*', validators=[DataRequired(), Length(min=8, max=24)])
     repeat_password = PasswordField('Confirm Password*', validators=[DataRequired(), EqualTo(fieldname="password", message="Passwords must match")])
     submit = SubmitField('Sign Up')
+
+class CustomIncomeForm(FlaskForm):
+    income_type = StringField('Income Type', validators=[Optional()])
+    amount = DecimalField('Amount', validators=[Optional()])
+
+class IncomeForm(FlaskForm):
+    amount_from_allowance = DecimalField('Allowance from parents', validators=[Optional()])
+    amount_from_salary = DecimalField('Salary', validators=[Optional()])
+    amount_from_angpao = DecimalField('Angpao', validators=[Optional()])
+    custom_incomes = FieldList(FormField(CustomIncomeForm), min_entries=0)

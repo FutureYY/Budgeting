@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
             margin: 0;
             padding: 0;
         }
+
         .close-button {
             position: absolute;
             top: 10px;
@@ -25,7 +27,7 @@
             background-color: red;
         }
 
-        .container {
+        #income {
             width: 70%;
             margin-left: auto;
             margin-right: auto;
@@ -121,6 +123,7 @@
         }
     </style>
 </head>
+
 <body>
     {% extends "base.html" %}
     {% block body %}
@@ -128,22 +131,65 @@
 
     <h1>Income</h1>
 
-    <!-- Income Section -->
-    <div id="income" class="container">
-        <div class="section"><img src="../app/static/images/Pocket Money.png" alt="Allowance" height="100" width="100"><h3>Allowance from parents</h3></div>
-        <div class="section"><img src="../app/static/images/Salary.png" alt="Salary" height="100" width="100"><h3>Salary</h3></div>
-        <div class="section"><img src="../app/static/images/angpao.png" alt="Angpao" height="100" width="100"><h3>Angpao money</h3></div>
-        <!-- Others Section with Add Option -->
-        <div class="section others">
-            <img src="../app/static/images/Money.png" alt="Other" height="100" width="100">
-            <h3>Others</h3>
-            <button class="add-button">+</button>
-            <input type="text" id="new-item-input" placeholder="Add new item">
-        </div>
-    </div>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <fieldset id="income" class="container">
+            <div class="section">
+                <img src="../app/static/images/Pocket Money.png" alt="allowance" width="300" height="320">
+                <label>Allowance from parents</label><br>
+                {{ form.amount_from_allowance(size=20) }}<br>
+            </div>
+            <div class="section">
+                <img src="../app/static/images/Salary.png" alt="salary" width="300" height="320">
+                <label>Salary</label><br>
+                {{ form.amount_from_salary(size=20) }}<br>
+            </div>
+            <div class="section">
+                <img src="../app/static/images/angpao.png" alt="angpao" width="300" height="320">
+                <label>Angpao</label><br>
+                {{ form.amount_from_angpao(size=20) }}<br>
+            </div>
+
+            <!-- Displaying dynamic income fields -->
+            {% for custom_income in form.custom_incomes %}
+            <div class="section">
+                <label>{{ custom_income.income_type.label }}:</label>
+                {{ custom_income.income_type(size=20) }}<br>
+                <label>{{ custom_income.amount.label }}:</label>
+                {{ custom_income.amount(size=20) }}<br>
+            </div>
+            {% endfor %}
+
+            <!-- Add new custom income field -->
+            <div class="section others">
+                <button type="button" class="add-button">+</button>
+            </div>
+        </fieldset>
+        <button type="submit">Save</button>
+    </form>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
+            let customIncomeCounter = document.querySelectorAll('.section').length - 3;
+
+            const addButton = document.querySelector('.add-button');
+            addButton.addEventListener('click', function () {
+                const incomeContainer = document.getElementById('income');
+                const newSection = document.createElement('div');
+                newSection.className = 'section';
+                newSection.innerHTML = `
+                    <label>New Income Type:</label>
+                    <input type="text" name="custom_incomes-${customIncomeCounter}-income_type" size="20">
+                    <label>Amount:</label>
+                    <input type="number" name="custom_incomes-${customIncomeCounter}-amount" min="0" size="20">
+                `;
+
+                const othersSection = document.querySelector('.others');
+                incomeContainer.insertBefore(newSection, othersSection);
+                customIncomeCounter++;
+                animateItemsSequentially(document.querySelectorAll('.section'));
+            });
+
             // Handle animation for existing items
             const sections = document.querySelectorAll('.section');
             animateItemsSequentially(sections);
@@ -152,7 +198,6 @@
             loadCustomItems();
 
             // Handle adding new custom items
-            const addButton = document.querySelector('.add-button');
             const inputBox = document.getElementById('new-item-input');
             const othersSection = document.querySelector('.others');
 
@@ -183,7 +228,7 @@
             const newSection = document.createElement('div');
             newSection.className = 'section';
             newSection.innerHTML = `
-                <img src="../images/Others.png" alt="${itemName}" height="100" width="100">
+                <img src="../app/static/images/Others.png" alt="${itemName}" height="100" width="100">
                 <h3>${itemName}</h3>
                 <button class="delete-button">×</button>
             `;
@@ -193,8 +238,7 @@
             incomeContainer.insertBefore(newSection, othersSection);
 
             // Re-animate all items including the newly added one
-            const allSections = document.querySelectorAll('.section');
-            animateItemsSequentially(allSections);
+            animateItemsSequentially(document.querySelectorAll('.section'));
 
             // Add event listener for delete button
             newSection.querySelector('.delete-button').addEventListener('click', () => {
@@ -241,10 +285,10 @@
             });
 
             // Re-animate all items including the loaded ones
-            const allSections = document.querySelectorAll('.section');
-            animateItemsSequentially(allSections);
+            animateItemsSequentially(document.querySelectorAll('.section'));
         }
     </script>
     {% endblock body %}
 </body>
 </html>
+

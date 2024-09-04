@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
         }
-        #template { 
+        #template {
             width: 70%;
             margin-left: auto;
             margin-right: auto;
@@ -17,25 +17,25 @@
             grid-template-columns: 1fr 1fr 1fr;
         }
 
-        .section{
+        .section {
             border: 1px blue solid;
         }
 
-        h2{
+        h2 {
             text-align: center;
         }
 
-        .section4, .section5, .section6{
+        .section4, .section5, .section6 {
             height: 1000px;
         }
 
-        a{
+        a {
             text-decoration: none;
         }
-        a:link, a:visited{
+        a:link, a:visited {
             color: black;
         }
-        a:hover, a:active{
+        a:hover, a:active {
             color: blue;
         }
 
@@ -70,7 +70,13 @@
         <a href="{{ url_for('init.income') }}"><div class="section section1"><h2>Income</h2></div></a>
         <a href="{{ url_for('init.goalsetting') }}"><div class="section section2"><h2>Expenses</h2></div></a>
         <div class="section section3"><h2>Savings</h2></div>
-        <div class="section section4"><section></section></div>
+        <div class="section section4">
+            {% if selected_section and amount %}
+            <p>{{ selected_section }}: ${{ amount }}</p>
+            {% else %}
+            <p>No data selected yet.</p>
+            {% endif %}
+        </div>
         <div class="section section5"><section></section></div>
         <div class="section section6"><section></section></div>
     </div>
