@@ -3,7 +3,6 @@ from pyexpat.errors import messages
 from wtforms import SelectField, DecimalField, DateField, SubmitField, HiddenField, FieldList, FormField
 from wtforms.fields.simple import EmailField, PasswordField, StringField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email, Optional, Length, EqualTo
-# from .models import Users
 import re
 
 class SpendingForm(FlaskForm):
@@ -58,13 +57,13 @@ class SignUp(FlaskForm):
     repeat_password = PasswordField('Confirm Password*', validators=[DataRequired(), EqualTo(fieldname="password", message="Passwords must match")])
     submit = SubmitField('Sign Up')
 
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data.lower()).first
-        raise ValidationError("Email is already in use, please use a different one.")
-
-    def validate_password(self, password):
-        # if not re.fullmatch("^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$", password.data):
-            raise ValidationError("Password needs to contain at least one letter, number, and special character.")
+    # def validate_email(self, email):
+    #     user = User.query.filter_by(email=email.data.lower()).first
+    #     raise ValidationError("Email is already in use, please use a different one.")
+    #
+    # def validate_password(self, password):
+    #     if not re.fullmatch(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$', password.data):
+    #         raise ValidationError("Password needs to contain at least one letter, number, and special character.")
 
 class CustomIncomeForm(FlaskForm):
     income_type = StringField('Income Type', validators=[Optional()])

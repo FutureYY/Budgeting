@@ -30,76 +30,56 @@ def login():
 def signup():
     return render_template("Signup_page.html")
 
-# @init_bp.route('/')
-# def home_2():
-#     if current_user.is_active:
-#         return redirect((url_for("#")))
-#     return render_template("home_page.html")
-#
-# @init_bp.route('/signup', methods=['GET','POST'])
-# def signup():
-#     if current_user.is_active:
-#         return redirect(url_for("#"))
-#         form = SignUp(request.form)
-#         if form.validate_on_submit():
-#             name = form,name.data.strip()
-#             new_user = User(name=name, email=form.email.data.lower(), password=generate_password_hash(form.password.date))
-#             db.session.add(new_user)
-#             db.session.commit()
-#
-#             flash('Account created successfully!', category='success')
-#
-#         return render_template("signup.html", form=form)
-#
-# @init_bp.route('/login', methods=['GET','POST'])
-# def login():
-#     if current_user.us_active:
-#         return redirect(url_for("#"))
-#
-#     form = Login(request.form)
-#     if form.validate_on_submit():
-#         user = User.query.filter_by(email=form.email.lower()).first()
-#
-#         if user:
-#             if check_password_hash(user.password, form.password.data):
-#                 flash('Logged in successfully', category='success')
-#                 login_user(user, remember=True)
-#                 return redirect(url_for('views.show_expenses'))
-#
-#             else:
-#                 flash('Incorrect password, please try again.', category='error')
-#         else:
-#             flash('No account with that email address.', category='error')
-#
-#     return render_template('login.html', form=form)
-#
-# @init_bp.route('/logout')
-# # @login_required
-# def logout():
-#     logout_user()
-#     return redirect(url_for('#'))
+@init_bp.route('/')
+def home_auth():
+    if current_user.is_active:
+        return redirect((url_for("#")))
+    return render_template("home_page.html")
 
+@init_bp.route('/signup', methods=['GET','POST'])
+def signup_auth():
+    if current_user.is_active:
+        return redirect(url_for("#"))
 
-# with app.app_context():
-#     db.init_app(app)
-#     if not path.exists(app.config['DATABASE_NAME']):
-#         db.create_all()
-#         print('Created Database!')
-#         csrf.init_app(app)
-#
-#     Manager_Login = LoginManager()
-#     Manager_Login.login_view = "auth.login"
-#     Manager_Login.init_app(app)
-#
-#     @Manager_Login.user_loader
-#     def user_load(id):
-#         return Users.query.get(id)
-#
-#     from app.auth import auth
-#     from app.views import views
+    form = SignUp(request.form)
+    if form.validate_on_submit():
+        name = form.name.data.strip()
+        new_user = User(name=name, email=form.email.data.lower(), password=generate_password_hash(form.password.date))
+        db.session.add(new_user)
+        db.session.commit()
 
+        flash('Account created successfully!', category='success')
+        return render_template("#", form=form)
 
+    return render_template("signup.html", form=form)
 
+@init_bp.route('/login', methods=['GET','POST'])
+def login_auth():
+    if current_user.us_active:
+        return redirect(url_for("#"))
+
+    form = Login(request.form)
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.lower()).first()
+
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                flash('Logged in successfully', category='success')
+                login_user(user, remember=True)
+                return redirect(url_for('views.show_expenses'))
+
+            else:
+                flash('Incorrect password, please try again.', category='error')
+        else:
+            flash('No account with that email address.', category='error')
+
+    return render_template('login.html', form=form)
+
+@init_bp.route('/logout')
+@login_required
+def logout_auth():
+    logout_user()
+    return redirect(url_for('#'))
 
 
 @init_bp.route('/tracker', methods=['GET', 'POST'])
@@ -347,4 +327,4 @@ def internal_error(error):
     return "Internal server error!", 500
 
 
-from .models import Income, Expense, Budget, Transaction
+from .models import Income, Expense, Budget, Transaction, User
