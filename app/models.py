@@ -32,9 +32,9 @@ class User(db.Model):
 class Income(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
-    category = db.Column(db.String(50), nullable=False)  # e.g., 'salary', 'allowance', or 'others'
+    category = db.Column(db.String(50), nullable=False)  # e.g., 'Salary', 'Allowance', 'Others'
+    custom_category = db.Column(db.String(100))  # Used if category is 'Others'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    custom_category = db.Column(db.String(100))  # Only used if category is 'others'
 
 class Expense(db.Model):
     id = db.Column(db.Integer, primary_key=True)

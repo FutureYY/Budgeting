@@ -8,13 +8,13 @@
             margin: 0; padding: 0; }
 
         a {
-        text-decoration: none; list-style-type: none;}
+            text-decoration: none; list-style-type: none;}
 
-         .line-input {
-            border: none; border-bottom: 1px solid grey; padding: 5px;
-            width: 300px; /* Adjust the width as needed */
-            font-size: 16px; /* Adjust font size as needed */
-            outline: none; /* Removes the outline when clicking on the input */ }
+        .line-input {
+           border: none; border-bottom: 1px solid grey; padding: 5px;
+           width: 300px; /* Adjust the width as needed */
+           font-size: 16px; /* Adjust font size as needed */
+           outline: none; /* Removes the outline when clicking on the input */ }
 
         .line-input::placeholder {
             color: transparent; /* Hide the placeholder text */ }
@@ -38,30 +38,40 @@
     <div class="Login_Container">
         <h1>Please sign in to your Account :) </h1>
         <br>
+         <div class="Login_Header">
+            <p>Welcome to Budgeting :)</p>
+         </div>
+
         <div class="Login_Page">
-            <form method="POST" action="login">
-                <div class="Login_Header">
-                    <p>Welcome to Budgeting :)</p>
-                </div>
+            <form method="post" action="{{ url_for('auth.login') }}">
+                {{ form.csrf_token }}
 
                  <div class="Login_Input">
                      <label>Email address </label>
                      <br>
                      <input type="email" id=mail name="mail" class="line-input" placeholder="_________">
+                     {{ form.email }}
                 </div>
 
                  <div class="Login_Input">
                     <label>Password </label>
                      <br>
                      <input type="Password" id=password name="password" class="line-input" placeholder="_________">
+                     {{ form.password }}
                 </div> <br>
 
                 <input type="radio" id="signin-checkbox"> <label for="signin-checkbox">Remember Me</label>
                 <br><br>
                 <div>
-                    <button type="submit" class="btn-signin"><a href="GoalHome.html">Sign In</a></button>
+                    <a href="user_home.html" type="button" class="btn-signin"><button>Log In</button></a>
                 </div>
-
+                 {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+                <br>
+                <a href="{{ url_for('auth.signup') }}" >Not a member yet? Click here to sign up → </a>
             </form>
         </div>
     </div>

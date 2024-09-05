@@ -82,7 +82,7 @@
         Lorem ipsum dolor sit amet consectetur adipisicing elit. At fugit quae aut laboriosam suscipit perferendis qui quos, quas dolorum velit ratione rerum maxime quo enim ullam assumenda accusamus? Eveniet, laborum!
         </p>
         <ul>
-            <li><a href="dummydata.html">comments</a></li>
+            <li><a href="{{url_for('init.comments')}}" type="button" >comments</a></li>
             <li>like</li>
             <li><a href="https://www.instagram.com/">share</a></li>
         </ul>
@@ -105,7 +105,25 @@
 
     </div>
     <div id="commentsList"></div>
-    <script src="testing.js"></script>
+    <script>
+        const publishBtn = document.getElementById("publishBtn");
+                const commentInput = document.getElementById("commentInput");
+                const commentList = document.getElementById("commentsList");
+
+                publishBtn.addEventListener("click", function() {
+                     const commenttext = commentInput.value.trim();  // Use 'value' instead of 'ariaValueMax'
+
+                if (commenttext !== "") {
+                    const newcomment = document.createElement("div");
+                    newcomment.classList.add("comment");
+                    newcomment.textContent = commenttext;
+
+                    commentList.appendChild(newcomment);
+
+                    commentInput.value = "";  // Clear the input field after publishing
+                     }
+                    });
+    </script>
     {% endblock body %}
 </body>
 </html>
