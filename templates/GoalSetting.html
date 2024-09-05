@@ -136,60 +136,48 @@
         <fieldset id="expenses" class="container">
 
             <div class="section">
-                <img src="/app/static/images/Salary.png" alt="salary" width="300" height="320">
-                <label>Salary</label><br>
-                {{ form.salary_expense(size=20) }}<br>
-            </div>
-
-            <div class="section">
-                <img src="/app/static/images/Allowance.png" alt="allowance" width="300" height="320">
-                <label>Salary</label><br>
-                {{ form.allowance_expense(size=20) }}<br>
-            </div>
-
-            <div class="section">
                 <img src="/app/static/images/Transport.png" alt="transport" width="300" height="320">
-                <label>Salary</label><br>
+                <label>Transport</label><br>
                 {{ form.transport_expense(size=20) }}<br>
             </div>
 
             <div class="section">
                 <img src="/app/static/images/Entertainment.png" alt="entertainment" width="300" height="320">
-                <label>Salary</label><br>
+                <label>Entertainment</label><br>
                 {{ form.entertainment_expense(size=20) }}<br>
             </div>
 
             <div class="section">
                 <img src="/app/static/images/Technology.png" alt="Technology" width="300" height="320">
-                <label>Salary</label><br>
+                <label>Technology</label><br>
                 {{ form.technology_expense(size=20) }}<br>
             </div>
 
             <div class="section">
                 <img src="/app/static/images/Medical.png" alt="medical" width="300" height="320">
-                <label>Salary</label><br>
+                <label>Medical</label><br>
                 {{ form.medical_expense(size=20) }}<br>
             </div>
 
             <div class="section">
                 <img src="/app/static/images/F&B.png" alt="food&beverages" width="300" height="320">
-                <label>Salary</label><br>
+                <label>Food & Beverages</label><br>
                 {{ form.food_beverages_expense(size=20) }}<br>
             </div>
 
             <div class="section">
                 <img src="/app/static/images/Gifts.png" alt="gifts" width="300" height="320">
-                <label>Salary</label><br>
+                <label>Gifts</label><br>
                 {{ form.gifts_expense(size=20) }}<br>
             </div>
 
             <div class="section">
                 <img src="/app/static/images/Pets.png" alt="pets" width="300" height="320">
-                <label>Salary</label><br>
+                <label>Pets</label><br>
                 {{ form.pets_expense(size=20) }}<br>
             </div>
 
-            <!-- Displaying dynamic income fields -->
+            <!-- Displaying dynamic expense fields -->
             {% for custom_expenses in form.custom_expenses %}
             <div class="section">
                 <label>{{ custom_expenses.expenses_type.label }}:</label>
@@ -199,7 +187,7 @@
             </div>
             {% endfor %}
 
-            <!-- Add new custom income field -->
+            <!-- Add new custom expense field -->
             <div class="section others">
                 <button type="button" class="add-button">+</button>
             </div>

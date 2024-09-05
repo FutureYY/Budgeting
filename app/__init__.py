@@ -184,13 +184,17 @@ def saving():
 def expensescontent():
     return render_template("expensescontent.html")
 
-# JIAWEN'S ROUTES (START)
+# JIAWEN'S ROUTES (END)
 
 
 # YENYI'S ROUTES (START)
 
 @init_bp.route('/goal', methods=['GET', 'POST'])
 def goal():
+    # if not current_user.is_authenticated:
+    #     # Redirect to login page or handle unauthenticated access
+    #     return redirect(url_for('init.login'))
+
     selected_section = None
     amount = None
 
@@ -230,13 +234,7 @@ def savings():
 def goalsetting():
     form = ExpensesForm()
 
-    if not current_user.is_authenticated:
-        # Redirect to login page or handle unauthenticated access
-        return redirect(url_for('init.login'))
-
     if form.validate_on_submit():
-
-        user_id = current_user.id
 
         salary = form.salary_expense.data
         allowance = form.allowance_expense.data
@@ -259,32 +257,28 @@ def goalsetting():
 
         # Handle predefined expenses
         expenses_to_add = []
-        # user_id = current_user.id
+        user_id = 1
 
-        if salary:
-            expenses_to_add.append(Expense(category='Salary', amount=salary))
-        if allowance:
-            expenses_to_add.append(Expense(category='Allowance', amount=allowance))
         if transport:
-            expenses_to_add.append(Expense(category='Transport', amount=transport))
+            expenses_to_add.append(Expense(user_id=user_id, category='Transport', amount=transport))
         if entertainment:
-            expenses_to_add.append(Expense(category='Entertainment', amount=entertainment))
+            expenses_to_add.append(Expense(user_id=user_id, category='Entertainment', amount=entertainment))
         if technology:
-            expenses_to_add.append(Expense(category='Technology', amount=technology))
+            expenses_to_add.append(Expense(user_id=user_id, category='Technology', amount=technology))
         if medical:
-            expenses_to_add.append(Expense(category='Medical', amount=medical))
+            expenses_to_add.append(Expense(user_id=user_id, category='Medical', amount=medical))
         if food_beverages:
-            expenses_to_add.append(Expense(category='Food & Beverages', amount=food_beverages))
+            expenses_to_add.append(Expense(user_id=user_id, category='Food & Beverages', amount=food_beverages))
         if books:
-            expenses_to_add.append(Expense(category='Books', amount=books))
+            expenses_to_add.append(Expense(user_id=user_id, category='Books', amount=books))
         if stationary:
-            expenses_to_add.append(Expense(category='Stationary', amount=stationary))
+            expenses_to_add.append(Expense(user_id=user_id, category='Stationary', amount=stationary))
         if gifts:
-            expenses_to_add.append(Expense(category='Gifts', amount=gifts))
+            expenses_to_add.append(Expense(user_id=user_id, category='Gifts', amount=gifts))
         if pets:
-            expenses_to_add.append(Expense(category='Pets', amount=pets))
+            expenses_to_add.append(Expense(user_id=user_id, category='Pets', amount=pets))
 
-        # Handle custom expenses
+        #Handle custom expenses
         for custom in custom_expenses:
             expenses_to_add.append(Expense(category=custom['expenses_type'], amount=custom['amount']))
 
@@ -298,9 +292,15 @@ def goalsetting():
         except Exception as e:
             db.session.rollback()  # Rollback if there is an error
             flash(f'An error occurred: {str(e)}', 'danger')
-        return redirect(url_for('init.goal'))
 
-    return render_template('goalsetting.html', form=form)
+            # Fetch all expenses for the current user
+        expenses_data = Expense.query.filter_by(user_id=user_id).all()
+        return render_template('GoalHome.html', form=form, expenses_data=expenses_data)
+
+        # Fetch all expenses for the current user if the form is not submitted
+    user_id = 1  # Adjust this as needed
+    expenses_data = Expense.query.filter_by(user_id=user_id).all()
+    return render_template('goalsetting.html', form=form, expenses_data=expenses_data)
 
 
 # YENYI'S ROUTES (END)

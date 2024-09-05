@@ -24,7 +24,7 @@ def create_app(config_class=Config):
     # Register blueprints
     app.register_blueprint(init_bp)
 
-    from app.models import User
+    # from app.models import User
 
     manager_login = LoginManager()
     manager_login.login_view = "auth.login"

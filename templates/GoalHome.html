@@ -65,7 +65,7 @@
 <body>
     {% extends "base.html" %}
     {% block body %}
-    <h1>Budgeting with us! </h1>
+    <h1>Budgeting with us!</h1>
     <div id="template">
         <a href="{{ url_for('init.income') }}"><div class="section section1"><h2>Income</h2></div></a>
         <a href="{{ url_for('init.goalsetting') }}"><div class="section section2"><h2>Expenses</h2></div></a>
@@ -77,7 +77,15 @@
             <p>No data selected yet.</p>
             {% endif %}
         </div>
-        <div class="section section5"><section></section></div>
+        <div class="section section5">
+            {% if expenses_data %}
+                {% for expense in expenses_data %}
+                    <p>{{ expense.type }}: ${{ expense.amount }}</p>
+                {% endfor %}
+            {% else %}
+                <p>No data selected yet.</p>
+            {% endif %}
+        </div>
         <div class="section section6"><section></section></div>
     </div>
     {% endblock body %}
