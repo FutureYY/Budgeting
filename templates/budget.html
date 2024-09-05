@@ -104,7 +104,7 @@
             font-size: 1.2em;
             padding: 50px;
             background-color: teal;
-            color: black
+            color: white;
         }
 
         .route{
@@ -112,12 +112,20 @@
             padding-top: 50px;
             padding-bottom: 20px;
         }
+
         .route a{
             padding: 20px;
             background-color: cornsilk;
             border-radius: 20px;
             text-decoration: none;
+            box-shadow: 10px 10px black;
+            margin-left: 10px;
+
         }
+
+
+
+
     </style>
 </head>
 
@@ -164,10 +172,11 @@
     </div>
 
     <div class="point sum">
-      This method enables you to prioritize and figure out what expenses are necessary and which ones can be deferred.
+      <b>This method enables you to prioritize and figure out what expenses are necessary and which ones can be deferred.</b>
       <div class="route">
-      <a href="{{ url_for('init.goal') }}" type="button" class="feature">Start budgeting here!</a>
-        </div>
+        <a href="{{ url_for('init.educate') }}" type="button">Click here to go back</a>
+        <a href="{{ url_for('init.goal') }}" type="button">Start budgeting here!</a>
+      </div>
     </div>
     {% endblock body %}
 </body>

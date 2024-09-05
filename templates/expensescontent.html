@@ -100,11 +100,13 @@
             radius: 2px solid red;
         }
 
-         .thishere {
+         .last a {
             padding: 40px;
             background-color: lightblue;
             border-radius: 20px;
             text-decoration: none;
+            box-shadow: 10px 10px black;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -148,7 +150,8 @@
     </div>
 
     <div class="last">
-      <a href="{{ url_for('init.goal') }}" type="button" class="thishere">Manage your expenses here!</a>
+      <a href="{{ url_for('init.educate') }}" type="button">Click here to go back</a>
+      <a href="{{ url_for('init.goal') }}" type="button">Manage your expenses here!</a>
     </div>
 
   </div>
