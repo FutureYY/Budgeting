@@ -44,30 +44,30 @@ def create_app(config_class=Config):
     return app
 
 
-# def insert_dummy_data():
-#     # Check if the user already exists
-#     existing_user = User.query.filter_by(email='testuser@example.com').first()
-#
-#     if not existing_user:
-#         user = User(username='testuser', email='testuser@example.com')
-#         db.session.add(user)
-#         db.session.commit()
-#
-#
-#         budget = Budget(month='2024-09', income_goal=1500.00, savings_goal=500.00, expense_goal=1000.00,
-#                         user_id=user.id)
-#         db.session.add(budget)
-#
-#         transaction1 = Transaction(amount=1000.00, category='salary', type='income', date=date.today(), user_id=user.id,
-#                                    budget_id=budget.id)
-#         transaction2 = Transaction(amount=50.00, category='food_beverages', type='expense', date=date.today(),
-#                                    user_id=user.id, budget_id=budget.id)
-#         db.session.add_all([transaction1, transaction2])
-#
-#         db.session.commit()
-#         print('Inserted Dummy Data!')
-#     else:
-#         print('User already exists, skipping dummy data insertion.')
+def insert_dummy_data():
+    # Check if the user already exists
+    existing_user = User.query.filter_by(email='testuser@example.com').first()
+
+    if not existing_user:
+        user = User(username='testuser', email='testuser@example.com')
+        db.session.add(user)
+        db.session.commit()
+
+
+        budget = Budget(month='2024-09', income_goal=1500.00, savings_goal=500.00, expense_goal=1000.00,
+                        user_id=user.id)
+        db.session.add(budget)
+
+        transaction1 = Transaction(amount=1000.00, category='salary', type='income', date=date.today(), user_id=user.id,
+                                   budget_id=budget.id)
+        transaction2 = Transaction(amount=50.00, category='food_beverages', type='expense', date=date.today(),
+                                   user_id=user.id, budget_id=budget.id)
+        db.session.add_all([transaction1, transaction2])
+
+        db.session.commit()
+        print('Inserted Dummy Data!')
+    else:
+        print('User already exists, skipping dummy data insertion.')
 
 if __name__ == '__main__':
     app = create_app()
