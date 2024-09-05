@@ -212,7 +212,13 @@ def goal():
 
     expenses_now = db.session.query(db.func.sum(Expense.amount)).filter_by(user_id=user_id).scalar() or 0
     income_now = db.session.query(db.func.sum(Income.amount)).filter_by(user_id=user_id).scalar() or 0
-    savings_now = income_now - expenses_now if income_now and expenses_now else 0
+
+    if income_now == 0 and expenses_now !=0:
+        savings_now = - expenses_now
+    elif income_now!=0 and expenses_now == 0:
+        savings_now = income_now
+    else:
+        savings_now = income_now - expenses_now if income_now and expenses_now else 0
 
     income_data = Income.query.filter_by(user_id=user_id).all()
     expenses_data = Expense.query.filter_by(user_id=user_id).all()

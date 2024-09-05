@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, render_template, request, url_for, redirect
+from flask import Blueprint, flash, render_template, request, url_for, redirect, session
 from . import db
 from .models import User
 from .forms import SignUp, Login
@@ -9,28 +9,36 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/')
 def home():
-    return render_template("user_home.html")
+    if current_user.is_authenticated:
+        return render_template("user_home.html")
+    else:
+        return render_template("main_home.html")
 
-@auth_bp.route('/go_home')
-def go_home():
-    return render_template("main_home.html")
+@auth_bp.route('/guest')
+def guest_home():
+    return render_template("main_home.html")  # If not logged in, show main home
 
-@auth_bp.route('/login', methods=['GET','POST'])
+from flask_login import login_user
+from . import db
+from .models import User
+
+@auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = Login()
-
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data.lower()).first()
+    if request.method == 'POST':
+        email = request.form.get('email').lower()
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
         if user:
-            if check_password_hash(user.password, form.password.data):
+            if check_password_hash(user.password, password):
+                login_user(user)
                 flash('Logged in successfully', category='success')
                 return redirect(url_for('auth.home'))
             else:
                 flash('Incorrect password, please try again.', category='error')
         else:
-            flash('No account with that email address.', category='error')
-
-    return render_template("login.html", form=form)
+            flash('Email does not exist, please try again.', category='error')
+    return render_template('login.html', form = form)
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -39,7 +47,7 @@ def register():
     if request.method == 'POST':
         if form.validate_on_submit():
             name = form.name.data
-            email = form.email.data
+            email = form.email.data.lower()
             password = form.password.data
             hashed_password = generate_password_hash(password)
             user = User(name=name, email=email, password=hashed_password)
@@ -56,4 +64,6 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('auth.go_home'))
+    flash('You have been logged out successfully.', category='success')
+    session.modified = True
+    return redirect(url_for('auth.home'))

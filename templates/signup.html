@@ -113,11 +113,11 @@
                 {% endfor %}
             {% endif %}
 
-            <button type="submit"><a href="">Sign Up</a></button>
+            <button type="submit"><a href="{{ url_for('auth.login') }}">Sign Up</a></button>
 <!--            {{ url_for('auth.register') }}-->
             <br><br>
             <div>
-                <a href="/login">Already have an existing account? Click here to Sign In → </a>
+                <a href="{{ url_for('auth.login') }}">Already have an existing account? Click here to Sign In → </a>
             </div>
         </form>
     </div>
