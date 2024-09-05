@@ -26,9 +26,9 @@
             border-bottom: 2px solid black; /* Optional: to make the line thicker when focused */
         }
 
-        .Sign_Header{
-            position: relative;
-            left: 300px; }
+<!--        .Sign_Header{-->
+<!--            position: relative;-->
+<!--            left: 300px; }-->
 
         .Sign_Input{ padding: 10px; }
 
@@ -51,13 +51,15 @@
             <h1>Ready to Start your Budgeting Experience!</h1>
         </div>
 
-        <form method="POST" class="Signing">
+        <form method="POST" class="Signing" action="{{ url_for('auth.signup') }}">
             {{ form.csrf_token }}
             <h3>Please proceed to create your account</h3>
             <div class="Sign_Input">
-                <label for="username">Username</label>
+<!--                <label for="username">Username</label>-->
+                <label>Username</label>
+
                 <br>
-                <input id=username type="text" class="line-input" placeholder="_________">
+<!--                <input id=username type="text" class="line-input" placeholder="_________">-->
                 {{ form.name }}
             </div>
             {% if form.name.errors %}
@@ -67,9 +69,11 @@
             {% endif %}
 
             <div class="Sign_Input">
-                <label for="Email">Email Address</label>
+<!--                <label for="Email">Email Address</label>-->
+                <label>Email Address</label>
+
                 <br>
-                <input  id="Email" type="email" class="line-input" placeholder="_________">
+<!--                <input  id="Email" type="email" class="line-input" placeholder="_________">-->
                 {{ form.email }}
             </div>
 
@@ -80,9 +84,11 @@
             {% endif %}
 
             <div class="Sign_Input">
-                <label for="password">Password</label>
+<!--                <label for="password">Password</label>-->
+                <label>Password</label>
+
                 <br>
-                <input id=password type="password" class="line-input" placeholder="_________">
+<!--                <input id=password type="password" class="line-input" placeholder="_________">-->
                 {{ form.password }}
             </div>
 
@@ -93,9 +99,11 @@
             {% endif %}
 
             <div class="Sign_Input">
-                <label for="R_password">Repeat Password</label>
+<!--                <label for="R_password">Repeat Password</label>-->
+                <label>Repeat Password</label>
+
                 <br>
-                <input id=R_password type="password" class="line-input" placeholder="_________">
+<!--                <input id=R_password type="password" class="line-input" placeholder="_________">-->
                 {{ form.repeat_password }}
             </div>
 
@@ -105,10 +113,10 @@
                 {% endfor %}
             {% endif %}
 
-            <button type="submit"><a href="user_home.html">Sign Up</a></button>
+            <button type="submit"><a href="{{ url_for('auth.signup') }}">Sign Up</a></button>
             <br><br>
             <div>
-                <a href="login.html">Already have an existing account? Click here to Sign In → </a>
+                <a href="{{ url_for('auth.login') }}">Already have an existing account? Click here to Sign In → </a>
             </div>
         </form>
     </div>

@@ -43,8 +43,8 @@
         <footer class="Container C4">
             <p>Join us on the Journey TODAY!!</p>
             <div>
-                 <button class="Log_Button"><a href="/login"> Log In </a></button>
-                <button class="Log_Button" ><a href="/signup"> Sign Up </a></button>
+                 <button class="Log_Button"><a href="{{ url_for('auth.login') }}"> Log In </a></button>
+                <button class="Log_Button" ><a href="{{ url_for('auth.signup') }}"> Sign Up </a></button>
             </div>
 
           <section>
