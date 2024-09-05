@@ -85,9 +85,6 @@ class Reply(db.Model):
 
 
 
-
-
-
     # class Income(db.Model):
 #     __tablename__ = 'incomes'
 #     id = db.Column(db.Integer, primary_key=True)
