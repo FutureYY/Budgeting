@@ -57,9 +57,9 @@
     </head>
     <body>
         {% if current_user.is_authenticated %}
-          {% include "navbar/navbar.html" %}
+          {% include "includes/navbar.html" %}
         {% else %}
-          {% include "navbar/navbar.html" %}
+          {% include "includes/navbar.html" %}
         {% endif %}
 
         {% with messages = get_flashed_messages(with_categories=true)%}
