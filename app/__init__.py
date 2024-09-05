@@ -14,73 +14,22 @@ csrf = CSRFProtect()
 
 init_bp = Blueprint('init', __name__)
 
-
-# for yoshana's home route - thank you :)
+# Yoshana's Routing :)
 @init_bp.route('/')
-def home():
+def main_home():
+    return render_template("main_home.html")
+
+@init_bp.route('/user')
+def user_home():
     return render_template("user_home.html")
 
-
-@init_bp.route('/Login_page')
+@init_bp.route('/login')
 def login():
     return render_template("login.html")
 
-
-@init_bp.route('/Signup_page')
+@init_bp.route('/signup')
 def signup():
     return render_template("signup.html")
-
-@init_bp.route('/')
-def home_auth():
-    if current_user.is_active:
-        return redirect((url_for("#")))
-    return render_template("user_home.html")
-
-@init_bp.route('/signup', methods=['GET','POST'])
-def signup_auth():
-    if current_user.is_active:
-        return redirect(url_for("#"))
-
-    form = SignUp(request.form)
-    if form.validate_on_submit():
-        name = form.name.data.strip()
-        new_user = User(name=name, email=form.email.data.lower(), password=generate_password_hash(form.password.date))
-        db.session.add(new_user)
-        db.session.commit()
-
-        flash('Account created successfully!', category='success')
-        return render_template("#", form=form)
-
-    return render_template("signup.html", form=form)
-
-@init_bp.route('/login', methods=['GET','POST'])
-def login_auth():
-    if current_user.us_active:
-        return redirect(url_for("#"))
-
-    form = Login(request.form)
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.lower()).first()
-
-        if user:
-            if check_password_hash(user.password, form.password.data):
-                flash('Logged in successfully', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('views.show_expenses'))
-
-            else:
-                flash('Incorrect password, please try again.', category='error')
-        else:
-            flash('No account with that email address.', category='error')
-
-    return render_template('login.html', form=form)
-
-@init_bp.route('/logout')
-@login_required
-def logout_auth():
-    logout_user()
-    return redirect(url_for('#'))
-
 
 #ZAK'S ROUTES START
 @init_bp.route('/tracker', methods=['GET', 'POST'])

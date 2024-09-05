@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link text-white" href="{{ url_for('init.home') }}">Home</a>
+          <a class="nav-link text-white" href="{{ url_for('init.main_home') }}">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="{{ url_for('init.goal') }}">Budgeting</a>
@@ -22,7 +22,7 @@
           <a class="nav-link text-white" href="{{ url_for('init.forum') }}">Discussion Forum</a>
         </li>
           <li class="nav-item">
-          <a class="nav-link text-white" href="#">Logout</a>
+          <a class="nav-link text-white" href="{{ url_for('auth.home') }}">Logout</a>
         </li>
       </ul>
     </div>

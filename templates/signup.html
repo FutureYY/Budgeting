@@ -79,16 +79,6 @@
                 {% endfor %}
             {% endif %}
 
-
-            <div class="Sign_Input">
-                <label for="P_number">Phone Number</label>
-                <br>
-                <input id=P_number type="number" class="line-input" placeholder="_________">
-                {{ form.password }}
-            </div>
-
-<!--            need phone number-->
-
             <div class="Sign_Input">
                 <label for="password">Password</label>
                 <br>
@@ -115,10 +105,10 @@
                 {% endfor %}
             {% endif %}
 
-            <button type="submit"><a href="GoalHome.html">Sign Up</a></button>
+            <button type="submit"><a href="user_home.html">Sign Up</a></button>
             <br><br>
             <div>
-                <a href="{{ url_for('init.login') }}">Already have an existing account? Click here to Sign In → </a>
+                <a href="login.html">Already have an existing account? Click here to Sign In → </a>
             </div>
         </form>
     </div>
