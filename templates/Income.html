@@ -90,21 +90,22 @@
         <fieldset id="income" class="container">
             <!-- Section for Allowance -->
             <div class="section">
-                <img src="{{ url_for('static', filename='images/Allowance.png') }}" alt="Salary" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/Allowance.png') }}" alt="Salary" width="100" height="120">
                 <label>Allowance from parents</label><br>
                 {{ form.amount_from_allowance(size=20) }}<br>
             </div>
 
             <!-- Section for Salary -->
             <div class="section">
-                <img src="{{ url_for('static', filename='images/Salary.png') }}" alt="salary" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/Salary.png') }}" alt="salary" width="100" height="120">
                 <label>Salary</label><br>
                 {{ form.amount_from_salary(size=20) }}<br>
             </div>
 
             <!-- Section for Angpao -->
             <div class="section">
-                <img src="{{ url_for('static', filename='images/angpao.png') }}" alt="angpao" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/angpao.png') }}" alt="Angpao" width="100" height="120">
+
                 <label>Angpao</label><br>
                 {{ form.amount_from_angpao(size=20) }}<br>
             </div>
@@ -121,6 +122,8 @@
 
             <!-- Add new custom income field dynamically -->
             <div class="section others">
+                <img src="{{ url_for('static', filename='images/Money.png') }}" alt="money" width="100" height="120">
+                <label>Others</label><br>
                 <button type="button" class="add-button">+</button>
             </div>
         </fieldset>

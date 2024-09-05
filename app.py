@@ -10,7 +10,7 @@ from app.models import User,Budget,Transaction,Income,Expense
 from app import init_bp
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='app/static')
     app.config.from_object(config_class)
 
     db.init_app(app)
@@ -71,7 +71,6 @@ def insert_dummy_data():
         print('Inserted Dummy Data!')
     else:
         print('User already exists, skipping dummy data insertion.')
-
 
 if __name__ == '__main__':
     app = create_app()
