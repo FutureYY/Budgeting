@@ -5,9 +5,47 @@
     <title>Welcome to Budgeting</title>
     <style>
         .Main_Container {
-            display: grid; grid-template-rows: 200px 200px 200px 200px;}
-        .Container {
-            border: 2px black solid, }
+            display: grid; grid-template-rows: 170px 220px auto; }
+
+        .Log_Button a {
+            text-decoration: none; list-style-type: none;
+            border-radius: 10px; }
+
+        .Log_Button {
+            border-radius: 20px;}
+
+        button {
+            width: 80px; height: 50px;
+            border-radius: 20px; border: none; }
+
+        .intro {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            color: }
+
+        .C3 {
+            background-color: darkseagreen;
+            position: absolute;
+            width: 100%;
+            bottom:0;
+            height: 100px; }
+
+        .C1 {
+            position: absolute;
+            left: 10px; }
+
+        .C2 {
+            position: absolute;
+            left: 10px;
+            bottom: 100px;
+            padding-bottom: 10px;        }
+
+        .size{
+        font-size: 1.5em;
+        }
+
+<!--        section .Container {-->
+<!--            display: flex}-->
+
     </style>
 </head>
 <body>
@@ -15,44 +53,42 @@
     {% block body %}
     <div class=" Main_Container">
         <section class="Container C1">
-            <h1>Welcome to Budgeting Express!</h1>
-            <p>
-                GUEST HOMEPAGE
-
-                Need help in managing your budgets! Say no more <3
-                Here we help you to keep track of your budget and give you more heartache!
+            <h1>Welcome to Budget4You</h1>
+            <p class="intro">
+                HEY TEENS! Need help in managing your budgets! Say no more <3
+                <br>
+                Here we help you to keep track of your budget, monitor you savings and many more to come!
             </p>
         </section>
-
-        <section class="Container C2">
-          overview of our company!
-          we are very nice people YEAH!
-
-        </section>
-
-        <section class="Container C3">
-          features that we have!
-          comment forum
-          expenses check
-          tracking
-          income
-          goalsetting
-          goal home
-          educational content for our teenagers <3!
-
-        </section>
-
-        <footer class="Container C4">
-            <p>Join us on the Journey TODAY!!</p>
+        <br>
+        <p></p>
+        <br>
+        <section class=" Container C2">
+            <div><b><h3>OUR FEATURES! </h3></b></div>
             <div>
-                 <button class="Log_Button"><a href="/login"> Log In </a></button>
-                <button class="Log_Button" ><a href="/register"> Sign Up </a></button>
+                <li> A Goal Set</li>
+                <li> A Financial Tracker </li>
+                <li> Educational content for our teenagers <3! </li>
+                <li> Community Forum </li>
             </div>
 
-          <section>
-            contact us bar!
-
-          </section>
+            <div><b><h3>OUR FINANCIAL PROFILE! </h3></b></div>
+            <div>
+                Here we cultivate savings habit in our teens regardless of it being the allowance received from parents or money earned from part-time jobs for teenagers above 16.
+                <br> We would demonstrate the importance of saving via our Educational Content
+                <br> For Example:
+                <li>Savings = Income - Expenses</li>
+            </div>
+        </section>
+        <br>
+        <br>
+        <footer class=" C3">
+            <p class="size">Join us on the Journey TODAY!!</p>
+            <div>
+<!--                 <button class="Log_Button"><a href="/login"> Log In </a></button>-->
+<!--                <button class="Log_Button" ><a href="/register"> Sign Up </a></button>-->
+                    @CopyRights By TEAM 1! ALL RIGHTS RESERVED!
+            </div>
         </footer>
     </div>
 

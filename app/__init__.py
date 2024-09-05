@@ -1,3 +1,4 @@
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime, date
@@ -10,7 +11,6 @@ db = SQLAlchemy()
 csrf = CSRFProtect()
 
 init_bp = Blueprint('init', __name__)
-
 
 #ZAK'S ROUTES START
 @init_bp.route('/tracker', methods=['GET', 'POST'])
@@ -73,7 +73,6 @@ def Expenditure_Tracking():
                            savings_goal=savings_goal, current_income=current_income,
                            current_expenses=current_expenses, remaining_savings=remaining_savings)
 
-
 def load_categories(user_id, month):
     categories = [
         ('salary', 'Salary'),
@@ -92,8 +91,7 @@ def load_categories(user_id, month):
     ]
 
     #Retrieve custom categories
-    custom_income = Income.query.filter_by(user_id=user_id).filter(Income.category == 'other-income',
-                                                                   Income.custom_category.isnot(None)).all()
+    custom_income = Income.query.filter_by(user_id=user_id).filter(Income.category=='other-income', Income.custom_category.isnot(None)).all()
     custom_expenses = Expense.query.filter_by(user_id=user_id).filter(
         Expense.category == 'other-expense',
         Expense.custom_category != None  # This checks if custom_category is NOT NULL
@@ -310,6 +308,7 @@ def income():
     income_data = Income.query.filter_by(user_id=user_id).all()
 
     return render_template('income.html', form=form, income_data=income_data)
+
 
 
 # YENYI'S ROUTES (END)

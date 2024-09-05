@@ -7,14 +7,19 @@
         body{
             margin-left: auto;
             margin-right: auto;
-           
+            background-color: darkcyan;
+            font-size:150%;
+
+        }
 
         }
         header{
             margin-top:50px;
             margin-left:20px;
+            background-color: darkcyan;
+            color: aliceblue;
+        }
 
-            }
         div{
             border: blue solid 1px;
             margin-top: 50px;
@@ -22,27 +27,30 @@
             padding: 50px;
             border-radius: 10px;
             background-color:lightblue;
+
         }
         ul{
             margin-top: 20px;
             margin-bottom: 20px;
             display: flex;
             justify-content: end;
-
         }
         li{
-            border: 2px, red, solid;
+            border: 2px, darkblue, solid;
             list-style-type: none;
             padding: 10px;
+            background-color:lightblue;
         }
         li:hover{
-            background-color: beige;
+            background-color: white;
+            color:white;
+
 
         }
         a{
             text-decoration: none;
         }
-        htlm{
+        html{
             scroll-behavior: smooth;
         }
         #replies{
@@ -53,12 +61,24 @@
         }
         textarea{
             width: 500px;
-            height: 300px;
+            height: 100px;
             padding: 20px;
+            display: block;
+            margin-bottom: 10px;
         }
-
+        button{
+            padding: 10px 20px;
+        }
+        .comments-container{
+            margin-top: 20px;
+            background-color: darkcyan;
+            border:none;
+        }
+        #anonymous,#random9,#account2{
+        background-color:darkcyan;
+        color:white;
+        }
     </style>
-
 </head>
 <body>
 <header><h1>Question</h1></header>
@@ -66,58 +86,74 @@
     <div>
 
        <h1>How do I Set up a savings account?</h1>by plshelpimsolost1
-        <h2>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis, ab temporibus dolorum ducimus illum nesciunt placeat culpa fugit. Saepe quos, voluptatem assumenda asperiores eligendi nemo quis dolores ut itaque unde! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Alias nam hic, itaque quisquam, in maiores quidem accusamus obcaecati voluptates eaque quos est adipisci maxime reprehenderit aut magnam repellendus. Recusandae, soluta!    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel rem, ex quo enim veniam iure necessitatibus a possimus. Harum facilis modi alias. Iusto quaerat, officiis reiciendis atque adipisci totam eum.</h2>
+        <h2></h2>
 
-        <div id=" anonymous">
+        <!-- First comment block -->
+        <div id="anonymous">
             <h4>anonymous</h4>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Hic asperiores unde inventore cumque sunt nulla, aut placeat nesciunt cupiditate ab blanditiis ipsam quae, molestiae maiores odio eius quo eaque repellendus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit provident perferendis exercitationem quae numquam. Deleniti, delectus sit. Voluptates voluptatum consequuntur culpa, vero asperiores distinctio exercitationem, at error possimus porro nam. Lorem, ipsum dolor sit amet consectetur adipisicing elit. A hic illum ut expedita nesciunt eveniet sint quae dicta esse quidem dolores aliquid explicabo, culpa quisquam totam! Quos ullam blanditiis provident. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repudiandae eaque iure ad autem soluta odit modi harum expedita adipisci, obcaecati similique, tempora aspernatur, et in sequi rerum vel? Perferendis, maiores?
+
             <ul>
-                <li>
-                    <a href="#replies">Reply</a>
-                </li>
+                <li><a href="#reply-anonymous">Reply</a></li>
             </ul>
 
-
+            <!-- Replies container for anonymous -->
+            <div class="comments-container" id="comments-anonymous"></div>
         </div>
 
-        <div id=" random9">
+        <!-- Second comment block -->
+        <div id="random9">
             <h4>random9</h4>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem mollitia necessitatibus tempore. Neque delectus omnis reiciendis architecto, saepe nam velit quod odio quae in atque, non optio nisi dolorum debitis? Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia aliquid optio dicta doloribus rerum, rem atque facilis consectetur tempora quia voluptatibus ratione quae debitis, ipsum sequi ipsa repellendus accusamus obcaecati. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam iste quas quae possimus magnam quo molestias iusto esse praesentium dignissimos pariatur officia, alias modi nisi quod veritatis. Debitis, adipisci inventore!
+
             <ul>
-                <li>
-                    <a href="#replies">Reply</a>
-                </li>
+                <li><a href="#reply-random9">Reply</a></li>
             </ul>
 
+            <!-- Replies container for random9 -->
+            <div class="comments-container" id="comments-random9"></div>
         </div>
 
-        <div id="account2  ">
+        <!-- Third comment block -->
+        <div id="account2">
             <h5>account2</h5>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto delectus eveniet debitis sequi sapiente, accusantium ipsa dolorem reprehenderit, molestiae totam sit assumenda hic. Delectus accusamus deleniti, magnam eaque tempora enim!
+
             <ul>
-                <li>
-                    <a href="#replies">Reply</a>
-                </li>
+                <li><a href="#reply-account2">Reply</a></li>
             </ul>
 
+            <!-- Replies container for account2 -->
+            <div class="comments-container" id="comments-account2"></div>
         </div>
-        <div id="replies" class="comments-container">
-            <div class="comments-container">
-                <h1>Reply</h1>
 
-                <textarea name="comment" id="commentInput" placeholder="write your comment here..."></textarea>
-                <button id="publishBtn">post</button>
+        <!-- Universal reply section -->
+        <div id="reply-anonymous" class="comments-container">
+            <h3>Reply to anonymous</h3>
+            <textarea name="comment-anonymous" id="commentInput-anonymous" placeholder="Write your reply..."></textarea>
+            <button id="publishBtn-anonymous">Post</button>
+        </div>
 
+        <div id="reply-random9" class="comments-container">
+            <h3>Reply to random9</h3>
+            <textarea name="comment-random9" id="commentInput-random9" placeholder="Write your reply..."></textarea>
+            <button id="publishBtn-random9">Post</button>
+        </div>
 
-            </div>
-            <div id="commentsList"></div>
-            <script>
-                const publishBtn = document.getElementById("publishBtn");
-                const commentInput = document.getElementById("commentInput");
-                const commentList = document.getElementById("commentsList");
+        <div id="reply-account2" class="comments-container">
+            <h3>Reply to account2</h3>
+            <textarea name="comment-account2" id="commentInput-account2" placeholder="Write your reply..."></textarea>
+            <button id="publishBtn-account2">Post</button>
+        </div>
 
-                publishBtn.addEventListener("click", function() {
-                     const commenttext = commentInput.value.trim();  // Use 'value' instead of 'ariaValueMax'
+    </div>
+
+    <script>
+        // Function to handle posting replies
+        function handlePostReply(commentId, inputId, listId) {
+            const publishBtn = document.getElementById(commentId);
+            const commentInput = document.getElementById(inputId);
+            const commentList = document.getElementById(listId);
+
+            publishBtn.addEventListener("click", function() {
+                const commenttext = commentInput.value.trim();
 
                 if (commenttext !== "") {
                     const newcomment = document.createElement("div");
@@ -125,14 +161,15 @@
                     newcomment.textContent = commenttext;
 
                     commentList.appendChild(newcomment);
-
                     commentInput.value = "";  // Clear the input field after publishing
-                     }
-                    });
-            </script>
-        </div>
+                }
+            });
+        }
 
-    </div>
-
+        // Attach event listeners to each reply section
+        handlePostReply("publishBtn-anonymous", "commentInput-anonymous", "comments-anonymous");
+        handlePostReply("publishBtn-random9", "commentInput-random9", "comments-random9");
+        handlePostReply("publishBtn-account2", "commentInput-account2", "comments-account2");
+    </script>
 </body>
 </html>

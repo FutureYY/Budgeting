@@ -9,12 +9,18 @@
             margin: 0;
             padding: 0;
         }
+        h1, h5 {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            text-align: center;
+        }
         #template {
             width: 70%;
             margin-left: auto;
             margin-right: auto;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
+            column-gap: 10px;
         }
 
         .section {
@@ -27,22 +33,23 @@
 
         .section4, .section5, .section6 {
             height: 1000px;
+            margin-bottom: 20px;
         }
 
         a {
-            text-decoration: none;
-        }
-        a:link, a:visited {
-            color: black;
-        }
-        a:hover, a:active {
-            color: blue;
+            text-decoration: none; /* Remove underline for default state */
         }
 
-        body {
-            margin: 0;
-            padding: 0;
+        a:link, a:visited {
+            text-decoration: none; /* Ensure no underline for unvisited/visited links */
+            color: black; /* Keep the color black */
         }
+
+        a:hover, a:active {
+            text-decoration: none; /* No underline on hover or active */
+            color: blue; /* Change the color to blue on hover or active */
+        }
+
         .close-button {
             position: absolute;
             top: 10px;
@@ -60,12 +67,24 @@
             color: red; /* Change color on hover */
         }
 
+        .section4 p, .section5 p, .section6 p {
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px ;
+        }
+
+        .section1, .section2, .section3{
+            background-color: rgb(108, 192, 195);
+        }
+
     </style>
 </head>
 <body>
     {% extends "base.html" %}
     {% block body %}
     <h1>Budgeting with us!</h1>
+    <h5>Fill up table below to start with implementing saving goals! </h5>
     <div id="template">
         <a href="{{ url_for('init.income') }}"><div class="section section1"><h2>Income</h2></div></a>
         <a href="{{ url_for('init.new_expense') }}"><div class="section section2"><h2>Expenses</h2></div></a>
