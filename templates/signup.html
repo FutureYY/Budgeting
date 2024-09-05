@@ -52,7 +52,7 @@
         <div class="Sign_Header">
             <h1>Ready to Start your Budgeting Experience!</h1>
         </div>
-        <form method="POST" class="Signing" action="{{ url_for('auth.login') }}">
+        <form method="POST" class="Signing" action="{{ url_for('auth.register') }}">
             {{ form.csrf_token }}
             <div class="Sign_Input">
                 <label>Username</label>
