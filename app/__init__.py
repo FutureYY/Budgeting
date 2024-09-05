@@ -168,9 +168,7 @@ def get_transactions(month):
         }
         for transaction in transactions
     ]
-
     return jsonify(transactions_data)
-
 
 @init_bp.route('/get_categories/<month>', methods=['GET'])
 def get_categories(month):
