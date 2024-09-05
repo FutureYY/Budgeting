@@ -196,7 +196,7 @@
 
                 // Handle Date Selection
                 function selectDate(day, month, year) {
-                    const selectedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;  // Ensure day and month are two digits
+                    const selectedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
                     document.querySelector('[name="date"]').value = selectedDate;
                     document.querySelector('.input-form').style.display = 'block';
                 }
