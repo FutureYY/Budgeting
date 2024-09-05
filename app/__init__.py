@@ -398,7 +398,9 @@ def forum():
 
 
 # CHRISTEL'S ROUTES (END)
-
+@init_bp.route('/commentsforforum')
+def commentsforforum():
+    return render_template("commentsforforum.html")
 
 
 @init_bp.errorhandler(404)
