@@ -125,11 +125,13 @@
             radius: 2px solid red;
         }
 
-         .presshere {
+         .bottom a {
             padding: 40px;
             background-color: lightpink;
             border-radius: 20px;
             text-decoration: none;
+            box-shadow: 10px 10px black;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -180,7 +182,8 @@
         </div>
 
         <div class="bottom">
-            <a href="{{ url_for('init.goal') }}" type="button" class="presshere">Start saving here!</a>
+            <a href="{{ url_for('init.educate') }}" type="button">Click here to go back</a>
+            <a href="{{ url_for('init.goal') }}" type="button" >Start saving here!</a>
         </div>
 
     </div>
