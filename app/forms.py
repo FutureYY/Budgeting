@@ -9,6 +9,7 @@ from wtforms.validators import DataRequired
 
 import re
 
+
 #ZAK'S FORMS
 class SpendingForm(FlaskForm):
     category = SelectField(
@@ -35,20 +36,23 @@ class Login(FlaskForm):
     submit = SubmitField('Log In')
 
 class SignUp(FlaskForm):
-    name = StringField('Email', validators=[Optional(), Length(min=8, max=32)])
+    name = StringField('name', validators=[Optional(), Length(min=8, max=32)])
     email = EmailField('Email*', validators=[DataRequired(), Email(message='Invalid Email')])
-    # phone
     password = PasswordField('Password*', validators=[DataRequired(), Length(min=8, max=24)])
     repeat_password = PasswordField('Confirm Password*', validators=[DataRequired(), EqualTo(fieldname="password", message="Passwords must match")])
     submit = SubmitField('Sign Up')
 
-    # def validate_email(self, email):
-    #     user = User.query.filter_by(email=email.data.lower()).first
-    #     raise ValidationError("Email is already in use, please use a different one.")
-    #
-    # def validate_password(self, password):
-    #     if not re.fullmatch(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$', password.data):
-    #         raise ValidationError("Password needs to contain at least one letter, number, and special character.")
+    def validate_email(self, email):
+        from .models import User
+        user = User.query.filter_by(email=email.data.lower()).first()
+        if user:
+            raise ValidationError("Email is already in use, please use a different one.")
+
+    def validate_password(self, password):
+        if not re.fullmatch(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$', password.data):
+            raise ValidationError(
+                "Password must contain at least 8 characters, including one letter, one number, and one special character.")
+
 
 class CustomIncomeForm(FlaskForm):
     income_type = StringField('Income Type', validators=[Optional()])

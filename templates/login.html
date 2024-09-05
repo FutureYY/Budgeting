@@ -43,27 +43,25 @@
          </div>
 
         <div class="Login_Page">
-            <form method="post" action="{{ url_for('auth.login') }}">
+            <form method="post" action="">
                 {{ form.csrf_token }}
 
                  <div class="Login_Input">
-                     <label>Email address </label>
+                     <label>Email address</label>
                      <br>
-                     <input type="email" id=mail name="mail" class="line-input" placeholder="_________">
                      {{ form.email }}
                 </div>
 
                  <div class="Login_Input">
-                    <label>Password </label>
+                    <label>Password</label>
                      <br>
-                     <input type="Password" id=password name="password" class="line-input" placeholder="_________">
                      {{ form.password }}
                 </div> <br>
 
                 <input type="radio" id="signin-checkbox"> <label for="signin-checkbox">Remember Me</label>
                 <br><br>
                 <div>
-                    <a href="user_home.html" type="button" class="btn-signin"><button>Log In</button></a>
+                    <a href="/login" type="button" class="btn-signin"><button>Log In</button></a>
                 </div>
                  {% if form.email.errors %}
                     {% for error in form.email.errors %}
@@ -71,7 +69,7 @@
                     {% endfor %}
                 {% endif %}
                 <br>
-                <a href="{{ url_for('auth.signup') }}" >Not a member yet? Click here to sign up → </a>
+                <a href="/register" >Not a member yet? Click here to sign up → </a>
             </form>
         </div>
     </div>

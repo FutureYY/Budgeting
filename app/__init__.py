@@ -15,23 +15,6 @@ csrf = CSRFProtect()
 
 init_bp = Blueprint('init', __name__)
 
-# Yoshana's Routing :)
-# @init_bp.route('/')
-# def main_home():
-#     return render_template("main_home.html")
-#
-# @init_bp.route('/user')
-# def user_home():
-#     return render_template("user_home.html")
-#
-# @init_bp.route('/login')
-# def login():
-#     return redirect(url_for("auth.login"))
-#
-# @init_bp.route('/signup')
-# def signup():
-#     return render_template("signup.html")
-
 #ZAK'S ROUTES START
 @init_bp.route('/tracker', methods=['GET', 'POST'])
 def Expenditure_Tracking():
