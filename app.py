@@ -1,4 +1,5 @@
 from os import path
+<<<<<<< Updated upstream
 from datetime import date
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
@@ -8,6 +9,16 @@ from flask_login import LoginManager
 from app.models import User,Budget,Transaction,Income,Expense
 
 from app import init_bp
+=======
+
+from flask import Flask, render_template
+from flask_wtf.csrf import CSRFProtect
+from app.config import Config
+from app.models import db, User
+# from app import init_bp
+from flask_login import LoginManager
+from app.forms import LoginIn
+>>>>>>> Stashed changes
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -15,23 +26,40 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     csrf = CSRFProtect()
-    csrf.init_app(app)
+    # csrf.init_app(app)
 
     with app.app_context():
         if not path.exists(app.config['DATABASE_NAME']):
             db.create_all()
             print('Created Database!')
+<<<<<<< Updated upstream
             insert_dummy_data()
+=======
+        csrf.init_app(app)
 
-    from app.models import User
+        manager_login = LoginManager()
+        manager_login.login_view = "init.login_auth"
+        manager_login.init_app(app)
+>>>>>>> Stashed changes
 
-    manager_login = LoginManager()
-    manager_login.login_view = "auth.login"
-    manager_login.init_app(app)
+        @manager_login.user_loader
+        def user_load(id):
+            return User.query.get(id)
 
-    @manager_login.user_loader
-    def user_load(id):
-        return User.query.get(id)
+        from app import init_bp
+
+        # Register blueprints
+        app.register_blueprint(init_bp)
+
+
+
+    # @app.route('/login', methods=['GET', 'POST'])
+    # def login():
+    #     form = LoginIn()  # Initialize your form
+    #     if form.validate_on_submit():
+    #         # Handle form submission
+    #         pass
+    #     return render_template("Login_page.html", form=form)  # Pass the form to the template
 
     # Register blueprints
     app.register_blueprint(init_bp)
