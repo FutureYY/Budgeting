@@ -5,27 +5,12 @@ from wtforms.fields.simple import EmailField, PasswordField, StringField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email, Optional, Length, EqualTo
 import re
 
+#ZAK'S FORMS
 class SpendingForm(FlaskForm):
     category = SelectField(
         'Category',
-        choices=[
-            ('salary', 'Salary'),
-            ('allowance', 'Allowance'),
-            ('other-income', 'Other Income'),
-            ('transport', 'Transport'),
-            ('entertainment', 'Entertainment'),
-            ('technology', 'Technology'),
-            ('medical', 'Medical'),
-            ('food_beverages', 'Food and Beverages'),
-            ('books', 'Books'),
-            ('stationary', 'Stationary'),
-            ('gifts', 'Gifts'),
-            ('pets', 'Pets'),
-            ('other-expense', 'Other Expense')
-        ],
         validators=[DataRequired(message="Please select a category.")]
     )
-
     amount = DecimalField(
         'Amount',
         places=2,
@@ -34,15 +19,11 @@ class SpendingForm(FlaskForm):
             NumberRange(min=0.01, message="Amount must be greater than zero.")
         ]
     )
-
-    # HiddenField to automatically capture the selected date
     date = HiddenField(
         'Date',
         validators=[DataRequired(message="Please select a date.")]
     )
-
     submit = SubmitField('Submit')
-
 
 class Login(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Email(message='Invalid Email')])
