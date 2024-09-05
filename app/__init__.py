@@ -231,7 +231,7 @@ def income():
 
     if form.validate_on_submit():
         # User ID (replace with actual user ID)
-        user_id = 1
+        user_id = current_user.id
 
         # Create a list to store entries to be added
         entries_to_add = []
@@ -239,19 +239,19 @@ def income():
         # Process predefined income categories
         if form.amount_from_allowance.data:
             entries_to_add.append(Income(
-                user_id=user_id,
+                user_id=current_user.id,
                 category='Allowance',
                 amount=form.amount_from_allowance.data
             ))
         if form.amount_from_salary.data:
             entries_to_add.append(Income(
-                user_id=user_id,
+                user_id=current_user.id,
                 category='Salary',
                 amount=form.amount_from_salary.data
             ))
         if form.amount_from_angpao.data:
             entries_to_add.append(Income(
-                user_id=user_id,
+                user_id=current_user.id,
                 category='Angpao',
                 amount=form.amount_from_angpao.data
             ))
@@ -263,7 +263,7 @@ def income():
 
             if income_type and amount:
                 entries_to_add.append(Income(
-                    user_id=user_id,
+                    user_id=current_user.id,
                     category='Others',
                     custom_category=income_type,
                     amount=amount
@@ -281,7 +281,7 @@ def income():
             flash(f'An error occurred: {str(e)}', 'danger')
 
     # Fetch all incomes for the current user
-    user_id = 1  # Replace with actual user ID
+    user_id = current_user.id  # Replace with actual user ID
     income_data = Income.query.filter_by(user_id=user_id).all()
 
     return render_template('income.html', form=form, income_data=income_data)
@@ -297,21 +297,21 @@ def new_expense():
 
     if form.validate_on_submit():
         # User ID (replace with actual user ID)
-        user_id = 1
+        user_id = current_user.id
 
         # Create a list to store entries to be added
         entries_to_add = []
 
         # Process predefined expense categories
-        if form.transport_expense.data:entries_to_add.append(Expense( user_id=user_id,category='Transport', amount=form.transport_expense.data ))
-        if form.entertainment_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Entertainment', amount=form.entertainment_expense.data))
-        if form.technology_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Technology', amount=form.technology_expense.data))
-        if form.medical_expense.data:entries_to_add.append(Expense( user_id=user_id,category='Medical', amount=form.medical_expense.data ))
-        if form.food_beverages_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Food & Beverages', amount=form.food_beverages_expense.data))
-        if form.books_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Books', amount=form.books_expense.data))
-        if form.stationary_expense.data:entries_to_add.append(Expense( user_id=user_id,category='Stationary', amount=form.stationary_expense.data ))
-        if form.gifts_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Gifts', amount=form.gifts_expense.data))
-        if form.pets_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Pets', amount=form.pets_expense.data))
+        if form.transport_expense.data:entries_to_add.append(Expense( user_id=current_user.id ,category='Transport', amount=form.transport_expense.data ))
+        if form.entertainment_expense.data: entries_to_add.append(Expense(user_id=current_user.id , category='Entertainment', amount=form.entertainment_expense.data))
+        if form.technology_expense.data: entries_to_add.append(Expense(user_id=current_user.id , category='Technology', amount=form.technology_expense.data))
+        if form.medical_expense.data:entries_to_add.append(Expense( user_id=current_user.id ,category='Medical', amount=form.medical_expense.data ))
+        if form.food_beverages_expense.data: entries_to_add.append(Expense(user_id=current_user.id , category='Food & Beverages', amount=form.food_beverages_expense.data))
+        if form.books_expense.data: entries_to_add.append(Expense(user_id=current_user.id , category='Books', amount=form.books_expense.data))
+        if form.stationary_expense.data:entries_to_add.append(Expense( user_id=current_user.id ,category='Stationary', amount=form.stationary_expense.data ))
+        if form.gifts_expense.data: entries_to_add.append(Expense(user_id=current_user.id , category='Gifts', amount=form.gifts_expense.data))
+        if form.pets_expense.data: entries_to_add.append(Expense(user_id=current_user.id , category='Pets', amount=form.pets_expense.data))
 
         for i in range(len(form.custom_expenses)):
             expense_type = form.custom_expenses[i].expense_type.data
@@ -319,7 +319,7 @@ def new_expense():
 
             if expense_type and amount:
                 entries_to_add.append(Expense(
-                    user_id=user_id,
+                    user_id=current_user.id,
                     category='Others',
                     custom_category=expense_type,
                     amount=amount
@@ -337,7 +337,7 @@ def new_expense():
             flash(f'An error occurred: {str(e)}', 'danger')
 
     # Fetch all expenses for the current user
-    user_id = 1  # Replace with actual user ID
+    user_id = current_user.id  # Replace with actual user ID
     expense_data = Expense.query.filter_by(user_id=user_id).all()
     return render_template('new_expense.html', form=form, expense_data=expense_data)
 
