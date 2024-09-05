@@ -8,6 +8,9 @@
             margin-left: auto;
             margin-right: auto;
         }
+        header{
+            margin-top:50px;
+            margin-left:20px}
         div{
             border: blue solid 1px;
             margin-top: 50px;
@@ -103,7 +106,25 @@
 
             </div>
             <div id="commentsList"></div>
-            <script src="testing.js"></script>
+            <script>
+                const publishBtn = document.getElementById("publishBtn");
+                const commentInput = document.getElementById("commentInput");
+                const commentList = document.getElementById("commentsList");
+
+                publishBtn.addEventListener("click", function() {
+                     const commenttext = commentInput.value.trim();  // Use 'value' instead of 'ariaValueMax'
+
+                if (commenttext !== "") {
+                    const newcomment = document.createElement("div");
+                    newcomment.classList.add("comment");
+                    newcomment.textContent = commenttext;
+
+                    commentList.appendChild(newcomment);
+
+                    commentInput.value = "";  // Clear the input field after publishing
+                     }
+                    });
+            </script>
         </div>
 
     </div>
