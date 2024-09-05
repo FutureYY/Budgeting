@@ -3,6 +3,10 @@ from pyexpat.errors import messages
 from wtforms import SelectField, DecimalField, DateField, SubmitField, HiddenField, FieldList, FormField
 from wtforms.fields.simple import EmailField, PasswordField, StringField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Email, Optional, Length, EqualTo
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired
+
 import re
 
 #ZAK'S FORMS
@@ -73,3 +77,13 @@ class ExpensesForm(FlaskForm):
     gifts_expense = DecimalField('Gifts', validators=[Optional()])
     pets_expense = DecimalField('Pets', validators=[Optional()])
     custom_expenses = FieldList(FormField(CustomExpensesForm), min_entries=0)
+
+class CommentForm(FlaskForm):
+    comment = TextAreaField('Comment', validators=[DataRequired()])
+    submit = SubmitField('Post Comment')
+
+class ReplyForm(FlaskForm):
+    reply = TextAreaField('Reply', validators=[DataRequired()])
+    submit = SubmitField('Post Reply')
+
+
