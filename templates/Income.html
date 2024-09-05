@@ -135,17 +135,17 @@
         {{ form.hidden_tag() }}
         <fieldset id="income" class="container">
             <div class="section">
-                <img src="../app/static/images/Pocket Money.png" alt="allowance" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/Allowance.png') }}" alt="Salary" width="300" height="320">
                 <label>Allowance from parents</label><br>
                 {{ form.amount_from_allowance(size=20) }}<br>
             </div>
             <div class="section">
-                <img src="../app/static/images/Salary.png" alt="salary" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/Salary.png') }}" alt="salary" width="300" height="320">
                 <label>Salary</label><br>
                 {{ form.amount_from_salary(size=20) }}<br>
             </div>
             <div class="section">
-                <img src="../app/static/images/angpao.png" alt="angpao" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/angpao.png') }}" alt="angpao" width="300" height="320">
                 <label>Angpao</label><br>
                 {{ form.amount_from_angpao(size=20) }}<br>
             </div>

@@ -71,10 +71,12 @@
         <a href="{{ url_for('init.goalsetting') }}"><div class="section section2"><h2>Expenses</h2></div></a>
         <div class="section section3"><h2>Savings</h2></div>
         <div class="section section4">
-            {% if selected_section and amount %}
-            <p>{{ selected_section }}: ${{ amount }}</p>
+            {% if income_data %}
+                {% for income in income_data %}
+                    <p>{{ income.category }}: ${{ income.amount }}</p>
+                {% endfor %}
             {% else %}
-            <p>No data selected yet.</p>
+                <p>No data selected yet.</p>
             {% endif %}
         </div>
         <div class="section section5">
