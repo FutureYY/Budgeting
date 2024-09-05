@@ -25,10 +25,21 @@ from wtforms.validators import DataRequired
 # Budget Model: Tracks the monthly goals for income, savings, and expenses, unchanged from the previous implementation.
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    def get_id(self):
-        return self.email
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    # def is_active(self):
+    #     return True  # Modify this if you have a field to handle account deactivation
+    #
+    # def get_id(self):
+    #     return str(self.id)
+    #
+    # def is_authenticated(self):
+    #     return True
+    #
+    # def is_anonymous(self):
+    #     return False
+
     email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
     incomes = db.relationship('Income', backref='user', lazy=True)
     expenses = db.relationship('Expense', backref='user', lazy=True)
     transactions = db.relationship('Transaction', backref='user', lazy=True)

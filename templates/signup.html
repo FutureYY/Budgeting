@@ -51,7 +51,7 @@
             <h1>Ready to Start your Budgeting Experience!</h1>
         </div>
 
-        <form method="POST" class="Signing" action="{{ url_for('auth.signup') }}">
+        <form method="POST" class="Signing" action="{{ url_for('auth.register') }}">
             {{ form.csrf_token }}
             <h3>Please proceed to create your account</h3>
             <div class="Sign_Input">
@@ -113,10 +113,11 @@
                 {% endfor %}
             {% endif %}
 
-            <button type="submit"><a href="{{ url_for('auth.signup') }}">Sign Up</a></button>
+            <button type="submit"><a href="">Sign Up</a></button>
+<!--            {{ url_for('auth.register') }}-->
             <br><br>
             <div>
-                <a href="{{ url_for('auth.login') }}">Already have an existing account? Click here to Sign In → </a>
+                <a href="/login">Already have an existing account? Click here to Sign In → </a>
             </div>
         </form>
     </div>
