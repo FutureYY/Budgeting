@@ -8,6 +8,10 @@ from app.models import db
 from flask_login import LoginManager
 from app.models import User,Budget,Transaction,Income,Expense
 from app import init_bp
+from flask_migrate import Migrate
+from app import app
+
+migrate = Migrate(app, db)
 
 def create_app(config_class=Config):
     app = Flask(__name__, static_folder='app/static')

@@ -26,24 +26,27 @@ from wtforms.validators import DataRequired
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
-    # def is_active(self):
-    #     return True  # Modify this if you have a field to handle account deactivation
-    #
-    # def get_id(self):
-    #     return str(self.id)
-    #
-    # def is_authenticated(self):
-    #     return True
-    #
-    # def is_anonymous(self):
-    #     return False
-
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     incomes = db.relationship('Income', backref='user', lazy=True)
     expenses = db.relationship('Expense', backref='user', lazy=True)
     transactions = db.relationship('Transaction', backref='user', lazy=True)
     budgets = db.relationship('Budget', backref='user', lazy=True)
+    is_active = db.Column(db.Boolean, default=True)
+
+    def get_id(self):
+        return str(self.user_id)
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.id
 
 class Income(db.Model):
     id = db.Column(db.Integer, primary_key=True)
