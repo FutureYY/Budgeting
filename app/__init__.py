@@ -295,61 +295,60 @@ def income():
 
     return render_template('income.html', form=form, income_data=income_data)
 
-@init_bp.route('/savings')
-def savings():
-    return render_template("savings.html")
-
-@init_bp.route('/goalsetting' , methods=['GET', 'POST'])
-def goalsetting():
-    form = ExpensesForm()
-
-    if form.validate_on_submit():
-
-        user_id = 1
-
-        expenses_data = {
-        'Transport' : form.transport_expense.data,
-        'Entertainment' : form.entertainment_expense.data,
-        'Technology' : form.technology_expense.data,
-        'Medical' : form.medical_expense.data,
-        'Food & beverages' : form.food_beverages_expense.data,
-        'Books' : form.books_expense.data,
-        'Stationary' : form.stationary_expense.data,
-        'Gifts' : form.gifts_expense.data,
-        'Pets' : form.pets_expense.data
-        }
-
-        for category, amount in expenses_data.items():
-            if amount:
-                expense = Expense(user_id=user_id, category=category, amount=float(amount))
-                db.session.add(expense)
-
-        # Handle custom expenses
-        for custom_expense in form.custom_expenses.entries:
-            expense_type = custom_expense.expense_type.data
-            amount = custom_expense.amount.data
-            if expense_type and amount:
-                custom_expense = Expense(user_id=user_id, category=expense_type, amount=float(amount))
-                db.session.add(custom_expense)
-
-        try:
-            db.session.commit()
-            flash('Expenses added successfully!', 'success')
-        except Exception as e:
-            db.session.rollback()  # Rollback if there is an error
-            flash(f'An error occurred: {str(e)}', 'danger')
-
-            # Fetch all expenses for the current user
-        expenses_data = Expense.query.filter_by(user_id=user_id).all()
-        return render_template('GoalHome.html', form=form, expenses_data=expenses_data)
-
-        # Fetch all expenses for the current user if the form is not submitted
-    user_id = 1  # Adjust this as needed
-    expenses_data = Expense.query.filter_by(user_id=user_id).all()
-    return render_template('goalsetting.html', form=form, expenses_data=expenses_data)
 
 
 # YENYI'S ROUTES (END)
+
+
+@init_bp.route('/new_expense', methods=['GET', 'POST'])
+def new_expense():
+    form = ExpensesForm()
+
+    if form.validate_on_submit():
+        # User ID (replace with actual user ID)
+        user_id = 1
+
+        # Create a list to store entries to be added
+        entries_to_add = []
+
+        # Process predefined expense categories
+        if form.transport_expense.data:entries_to_add.append(Expense( user_id=user_id,category='Transport', amount=form.transport_expense.data ))
+        if form.entertainment_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Entertainment', amount=form.entertainment_expense.data))
+        if form.technology_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Technology', amount=form.technology_expense.data))
+        if form.medical_expense.data:entries_to_add.append(Expense( user_id=user_id,category='Medical', amount=form.medical_expense.data ))
+        if form.food_beverages_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Food & Beverages', amount=form.food_beverages_expense.data))
+        if form.books_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Books', amount=form.books_expense.data))
+        if form.stationary_expense.data:entries_to_add.append(Expense( user_id=user_id,category='Stationary', amount=form.stationary_expense.data ))
+        if form.gifts_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Gifts', amount=form.gifts_expense.data))
+        if form.pets_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Pets', amount=form.pets_expense.data))
+
+        for i in range(len(form.custom_expenses)):
+            expense_type = form.custom_expenses[i].expense_type.data
+            amount = form.custom_expenses[i].amount.data
+
+            if expense_type and amount:
+                entries_to_add.append(Expense(
+                    user_id=user_id,
+                    category='Others',
+                    custom_category=expense_type,
+                    amount=amount
+                ))
+
+        # Save all expense entries to the database
+        try:
+            for entry in entries_to_add:
+                db.session.add(entry)
+            db.session.commit()
+            flash('Expense added successfully!', 'success')
+            return redirect(url_for('init.goal'))  # Redirect after successful submission
+        except Exception as e:
+            db.session.rollback()  # Rollback if something goes wrong
+            flash(f'An error occurred: {str(e)}', 'danger')
+
+    # Fetch all expenses for the current user
+    user_id = 1  # Replace with actual user ID
+    expense_data = Expense.query.filter_by(user_id=user_id).all()
+    return render_template('new_expense.html', form=form, expense_data=expense_data)
 
 
 # CHRISTEL'S ROUTES (START)

@@ -49,13 +49,6 @@ def insert_dummy_data():
         db.session.add(user)
         db.session.commit()
 
-        income1 = Income(amount=1000.00, category='salary', user_id=user.id)
-        income2 = Income(amount=200.00, category='allowance', user_id=user.id)
-        db.session.add_all([income1, income2])
-
-        expense1 = Expense(amount=50.00, category='food_beverages', user_id=user.id)
-        expense2 = Expense(amount=30.00, category='transport', user_id=user.id)
-        db.session.add_all([expense1, expense2])
 
         budget = Budget(month='2024-09', income_goal=1500.00, savings_goal=500.00, expense_goal=1000.00,
                         user_id=user.id)

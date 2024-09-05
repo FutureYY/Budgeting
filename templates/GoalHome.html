@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expenses template</title>
+    <title>Budgets</title>
     <style>
         body {
             margin: 0;
@@ -68,7 +68,7 @@
     <h1>Budgeting with us!</h1>
     <div id="template">
         <a href="{{ url_for('init.income') }}"><div class="section section1"><h2>Income</h2></div></a>
-        <a href="{{ url_for('init.goalsetting') }}"><div class="section section2"><h2>Expenses</h2></div></a>
+        <a href="{{ url_for('init.new_expense') }}"><div class="section section2"><h2>Expenses</h2></div></a>
         <div class="section section3"><h2>Savings</h2></div>
         <div class="section section4">
             {% if income_data %}

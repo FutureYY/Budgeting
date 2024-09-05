@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Income</title>
+    <title>Expenses</title>
     <style>
         body {
             margin: 0;
@@ -131,7 +131,7 @@
 
     <h1>Expenses</h1>
 
-    <form method="post">
+    <form method="post" action="{{ url_for('init.goalsetting') }}">
         {{ form.csrf_token }}
         {{ form.hidden_tag() }}
         <fieldset id="expenses" class="container">
@@ -230,23 +230,23 @@
         });
 
              document.addEventListener("DOMContentLoaded", function () {
-            let customIncomeCounter = document.querySelectorAll('.section').length - 3;
+            let customExpensesCounter = document.querySelectorAll('.section').length - 3;
 
             const addButton = document.querySelector('.add-button');
             addButton.addEventListener('click', function () {
-                const incomeContainer = document.getElementById('income');
+                const expensesContainer = document.getElementById('expenses');
                 const newSection = document.createElement('div');
                 newSection.className = 'section';
                 newSection.innerHTML = `
-                    <label>New Income Type:</label>
-                    <input type="text" name="custom_incomes-${customIncomeCounter}-income_type" size="20">
+                    <label>New Expense Type:</label>
+                    <input type="text" name="custom_expenses-${customExpensesCounter}-expenses_type" size="20">
                     <label>Amount:</label>
-                    <input type="number" name="custom_incomes-${customIncomeCounter}-amount" min="0" size="20">
+                    <input type="number" name="custom_expenses-${customExpensesCounter}-amount" min="0" size="20">
                 `;
 
                 const othersSection = document.querySelector('.others');
-                incomeContainer.insertBefore(newSection, othersSection);
-                customIncomeCounter++;
+                expensesContainer.insertBefore(newSection, othersSection);
+                customExpensesCounter++;
                 animateItemsSequentially(document.querySelectorAll('.section'));
             });
 
@@ -324,7 +324,7 @@
 
         function loadCustomItems() {
             const customItems = JSON.parse(localStorage.getItem('customItems')) || [];
-            const expensesContainer = document.getElementById('income');
+            const expensesContainer = document.getElementById('expenses');
             const othersSection = document.querySelector('.others');
 
             customItems.forEach(item => {
