@@ -197,11 +197,19 @@ def goal():
 
     selected_section = None
     amount = None
+    user_id = 1
 
     if request.method == 'POST':
         # Assuming your form has fields 'section' and 'amount'
         selected_section = request.form.get('section')
         amount = request.form.get('amount')
+
+    # current_income = db.session.query(db.func.sum(Income.amount)).filter_by(
+    #     user_id=user_id, type='income')
+
+    expenses_now = db.session.query(db.func.sum(Expense.amount))
+
+    savings_now = expenses_now
 
     return render_template('GoalHome.html', selected_section=selected_section, amount=amount)
 
