@@ -1,19 +1,16 @@
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-<<<<<<< Updated upstream
 from datetime import datetime, date
 from .forms import SpendingForm, SignUp, Login, IncomeForm, ExpensesForm
-=======
-from datetime import datetime
-from .forms import SpendingForm, SignUp, LoginIn, IncomeForm, ExpensesForm
->>>>>>> Stashed changes
 from app.config import Config
-from flask import Blueprint, flash, render_template, request, url_for, redirect, jsonify
+from flask import Blueprint, flash, render_template, request, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 db = SQLAlchemy()
+csrf = CSRFProtect()
 
 init_bp = Blueprint('init', __name__)
 
@@ -23,43 +20,45 @@ init_bp = Blueprint('init', __name__)
 def home():
     return render_template("home_page.html")
 
-@init_bp.route('/login')
+
+@init_bp.route('/Login_page')
 def login():
     return render_template("Login_page.html")
 
-@init_bp.route('/signup')
+
+@init_bp.route('/Signup_page')
 def signup():
     return render_template("Signup_page.html")
 
 @init_bp.route('/')
 def home_auth():
     if current_user.is_active:
-        return redirect((url_for("init.expensescontent")))
+        return redirect((url_for("#")))
     return render_template("home_page.html")
 
-@init_bp.route('/signup_auth', methods=['GET','POST'])
+@init_bp.route('/signup', methods=['GET','POST'])
 def signup_auth():
     if current_user.is_active:
-        return redirect(url_for("init.expensescontent"))
+        return redirect(url_for("#"))
 
     form = SignUp(request.form)
     if form.validate_on_submit():
-        name = form.name.data.strip() if form.name.data.strip() else ''
+        name = form.name.data.strip()
         new_user = User(name=name, email=form.email.data.lower(), password=generate_password_hash(form.password.date))
         db.session.add(new_user)
         db.session.commit()
 
         flash('Account created successfully!', category='success')
-        return render_template("init.login_auth")
+        return render_template("#", form=form)
 
-    return render_template("Signup_page.html", form=form)
+    return render_template("signup.html", form=form)
 
-@init_bp.route('/login_auth', methods=['GET','POST'])
+@init_bp.route('/login', methods=['GET','POST'])
 def login_auth():
-    if current_user.is_active:
-        return redirect(url_for("init.expensescontent"))
+    if current_user.us_active:
+        return redirect(url_for("#"))
 
-    form = LoginIn(request.form)
+    form = Login(request.form)
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.lower()).first()
 
@@ -67,19 +66,20 @@ def login_auth():
             if check_password_hash(user.password, form.password.data):
                 flash('Logged in successfully', category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('init.expensescontent'))
+                return redirect(url_for('views.show_expenses'))
+
             else:
                 flash('Incorrect password, please try again.', category='error')
         else:
             flash('No account with that email address.', category='error')
 
-    return render_template('Login_page.html', form=form, email=email, password=password)
+    return render_template('login.html', form=form)
 
-@init_bp.route('/logout_auth')
+@init_bp.route('/logout')
 @login_required
 def logout_auth():
     logout_user()
-    return redirect(url_for('init.home_auth'))
+    return redirect(url_for('#'))
 
 
 #ZAK'S ROUTES START

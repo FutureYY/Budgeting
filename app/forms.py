@@ -25,18 +25,13 @@ class SpendingForm(FlaskForm):
     )
     submit = SubmitField('Submit')
 
-<<<<<<< Updated upstream
 class Login(FlaskForm):
-=======
-
-class LoginIn(FlaskForm):
->>>>>>> Stashed changes
     email = EmailField('Email', validators=[DataRequired(), Email(message='Invalid Email')])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log In')
 
 class SignUp(FlaskForm):
-    name = StringField('name', validators=[Optional(), Length(min=8, max=32)])
+    name = StringField('Email', validators=[Optional(), Length(min=8, max=32)])
     email = EmailField('Email*', validators=[DataRequired(), Email(message='Invalid Email')])
     # phone
     password = PasswordField('Password*', validators=[DataRequired(), Length(min=8, max=24)])
