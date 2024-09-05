@@ -15,6 +15,7 @@
             border: 1px solid #ccc;
             background-color: cornsilk;
             width: auto;
+            border-radius: 15px;
         }
         .container {
             display: grid;
@@ -24,14 +25,17 @@
         }
         .calendar-container {
             margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 15px;
         }
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+            gap: 10px;
             text-align: center;
             background-color: darkseagreen;
             color: white;
+            padding: 15px;
         }
         .calendar .day-label {
             font-weight: bold;
@@ -53,6 +57,28 @@
         }
         .input-form {
             display: none;
+        }
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transaction-table th, .transaction-table td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .transaction-table th {
+            background-color: lightpink;
+        }
+
+        .transaction-table td {
+            background-color: #f9f9f9;
+        }
+
+        .transaction-table tbody tr:nth-child(even) td {
+            background-color: #eaeaea;
         }
     </style>
 </head>

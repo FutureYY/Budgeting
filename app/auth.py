@@ -7,9 +7,6 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/')
 def home():
-    if current_user.is_authenticated:
-        return render_template("user_home.html")
-    else:
         return render_template("main_home.html")
 
 @auth_bp.route('/guest')
