@@ -2,11 +2,11 @@ from os import path
 from datetime import date
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
+from app.auth import auth_bp
 from app.config import Config
 from app.models import db
 from flask_login import LoginManager
 from app.models import User,Budget,Transaction,Income,Expense
-
 from app import init_bp
 
 def create_app(config_class=Config):
@@ -33,8 +33,9 @@ def create_app(config_class=Config):
     def user_load(id):
         return User.query.get(id)
 
-    # Register blueprints
+    # Register blueprints for init and authentication(auth)
     app.register_blueprint(init_bp)
+    app.register_blueprint(auth_bp)
 
     return app
 

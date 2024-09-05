@@ -10,11 +10,11 @@
         a {
             text-decoration: none; list-style-type: none;}
 
-         .line-input {
-            border: none; border-bottom: 1px solid grey; padding: 5px;
-            width: 300px; /* Adjust the width as needed */
-            font-size: 16px; /* Adjust font size as needed */
-            outline: none; /* Removes the outline when clicking on the input */ }
+        .line-input {
+           border: none; border-bottom: 1px solid grey; padding: 5px;
+           width: 300px; /* Adjust the width as needed */
+           font-size: 16px; /* Adjust font size as needed */
+           outline: none; /* Removes the outline when clicking on the input */ }
 
         .line-input::placeholder {
             color: transparent; /* Hide the placeholder text */ }
@@ -63,7 +63,7 @@
                 <input type="radio" id="signin-checkbox"> <label for="signin-checkbox">Remember Me</label>
                 <br><br>
                 <div>
-                    <a href="{ url_for('init.goal') }}" type="button" class="btn-signin"><button>Sign In</button></a>
+                    <a href="user_home.html" type="button" class="btn-signin"><button>Sign In</button></a>
                 </div>
                  {% if form.email.errors %}
                     {% for error in form.email.errors %}
@@ -71,7 +71,7 @@
                     {% endfor %}
                 {% endif %}
                 <br>
-                <a href="{{ url_for('init.signup') }}" >Not a member yet? Sign Up now!</a>
+                <a href="signup.html" >Not a member yet? Sign Up now!</a>
                 {{ form.submit }}
             </form>
         </div>
