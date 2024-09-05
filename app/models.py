@@ -41,7 +41,7 @@ class Expense(db.Model):
     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
     category = db.Column(db.String(50), nullable=False)  # e.g., 'transport', 'entertainment', etc.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    custom_category = db.Column(db.String(100))  # Only used if category is 'others'
+    custom_category = db.relationship('User', back_populates='expenses')
 
 class Budget(db.Model):
     id = db.Column(db.Integer, primary_key=True)

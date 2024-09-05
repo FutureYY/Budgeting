@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime, date
-from .forms import SpendingForm, SignUp, Login, IncomeForm, ExpensesForm
+from .forms import SpendingForm, SignUp, Login, IncomeForm, ExpensesForm, CustomExpensesForm
 from app.config import Config
 from flask import Blueprint, flash, render_template, request, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
@@ -237,29 +237,22 @@ def expensescontent():
 
 # YENYI'S ROUTES (START)
 
-@init_bp.route('/goal', methods=['GET', 'POST'])
+@init_bp.route('/goal', methods=['GET'])
 def goal():
-    # if not current_user.is_authenticated:
-    #     # Redirect to login page or handle unauthenticated access
-    #     return redirect(url_for('init.login'))
+    user_id = 1  # Assuming this is the current user
 
-    selected_section = None
-    amount = None
-    user_id = 1
+    # Fetch total expenses for the current user
+    expenses_now = db.session.query(db.func.sum(Expense.amount)).filter_by(user_id=user_id).scalar()
 
-    if request.method == 'POST':
-        # Assuming your form has fields 'section' and 'amount'
-        selected_section = request.form.get('section')
-        amount = request.form.get('amount')
+    # Fetch total income for the current user
+    income_now = db.session.query(db.func.sum(Income.amount)).filter_by(user_id=user_id).scalar()
 
-    # current_income = db.session.query(db.func.sum(Income.amount)).filter_by(
-    #     user_id=user_id, type='income')
+    # Calculate savings (Income - Expenses)
+    savings_now = income_now - expenses_now if income_now and expenses_now else 0
 
-    expenses_now = db.session.query(db.func.sum(Expense.amount))
-    income_now = db.session.query(db.func.sum(Income.amount))
-    savings_now = expenses_now
+    # Render the template with the fetched data
+    return render_template('GoalHome.html', expenses_now=expenses_now, income_now=income_now, savings_now=savings_now)
 
-    return render_template('GoalHome.html', selected_section=selected_section, amount=amount)
 
 @init_bp.route('/income', methods=['GET', 'POST'])
 def income():
@@ -310,6 +303,7 @@ def income():
     user_id = 1  # Adjust this as needed
     income_data = Income.query.filter_by(user_id=user_id).all()
     return render_template('income.html', form=form, income_data=income_data)
+
 @init_bp.route('/savings')
 def savings():
     return render_template("savings.html")
@@ -320,55 +314,32 @@ def goalsetting():
 
     if form.validate_on_submit():
 
-        salary = form.salary_expense.data
-        allowance = form.allowance_expense.data
-        transport = form.transport_expense.data
-        entertainment = form.entertainment_expense.data
-        technology = form.technology_expense.data
-        medical = form.medical_expense.data
-        food_beverages = form.food_beverages_expense.data
-        books = form.books_expense.data
-        stationary = form.stationary_expense.data
-        gifts = form.gifts_expense.data
-        pets = form.pets_expense.data
-
-        custom_expenses = []
-        for custom_expense in form.custom_expenses:
-            expenses_type = custom_expense.expenses_type.data
-            amount = custom_expense.amount.data
-            if expenses_type and amount:
-                custom_expenses.append({'expenses_type': expenses_type, 'amount': amount})
-
-        # Handle predefined expenses
-        expenses_to_add = []
         user_id = 1
 
-        if transport:
-            expenses_to_add.append(Expense(user_id=user_id, category='Transport', amount=transport))
-        if entertainment:
-            expenses_to_add.append(Expense(user_id=user_id, category='Entertainment', amount=entertainment))
-        if technology:
-            expenses_to_add.append(Expense(user_id=user_id, category='Technology', amount=technology))
-        if medical:
-            expenses_to_add.append(Expense(user_id=user_id, category='Medical', amount=medical))
-        if food_beverages:
-            expenses_to_add.append(Expense(user_id=user_id, category='Food & Beverages', amount=food_beverages))
-        if books:
-            expenses_to_add.append(Expense(user_id=user_id, category='Books', amount=books))
-        if stationary:
-            expenses_to_add.append(Expense(user_id=user_id, category='Stationary', amount=stationary))
-        if gifts:
-            expenses_to_add.append(Expense(user_id=user_id, category='Gifts', amount=gifts))
-        if pets:
-            expenses_to_add.append(Expense(user_id=user_id, category='Pets', amount=pets))
+        expenses_data = {
+        'Transport' : form.transport_expense.data,
+        'Entertainment' : form.entertainment_expense.data,
+        'Technology' : form.technology_expense.data,
+        'Medical' : form.medical_expense.data,
+        'Food & beverages' : form.food_beverages_expense.data,
+        'Books' : form.books_expense.data,
+        'Stationary' : form.stationary_expense.data,
+        'Gifts' : form.gifts_expense.data,
+        'Pets' : form.pets_expense.data
+        }
 
-        #Handle custom expenses
-        for custom in custom_expenses:
-            expenses_to_add.append(Expense(category=custom['expenses_type'], amount=custom['amount']))
+        for category, amount in expenses_data.items():
+            if amount:
+                expense = Expense(user_id=user_id, category=category, amount=float(amount))
+                db.session.add(expense)
 
-        # Add all expenses to the session
-        for expense in expenses_to_add:
-            db.session.add(expense)
+        # Handle custom expenses
+        for custom_expense in form.custom_expenses.entries:
+            expense_type = custom_expense.expense_type.data
+            amount = custom_expense.amount.data
+            if expense_type and amount:
+                custom_expense = Expense(user_id=user_id, category=expense_type, amount=float(amount))
+                db.session.add(custom_expense)
 
         try:
             db.session.commit()
