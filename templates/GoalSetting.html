@@ -132,6 +132,7 @@
     <h1>Expenses</h1>
 
     <form method="post">
+        {{ form.csrf_token }}
         {{ form.hidden_tag() }}
         <fieldset id="expenses" class="container">
 
@@ -187,13 +188,13 @@
                 {{ form.stationary_expense(size=20) }}<br>
             </div>
             <!-- Displaying dynamic expense fields -->
-            {% for custom_expenses in form.custom_expenses %}
-            <div class="section">
-                <label>{{ custom_expenses.expenses_type.label }}:</label>
-                {{ custom_expenses.expenses_type(size=20) }}<br>
-                <label>{{ custom_expenses.expenses.label }}:</label>
-                {{ custom_expenses.amount(size=20) }}<br>
-            </div>
+            {% for custom_expense in form.custom_expenses %}
+                <div class="section">
+                    <label>{{ custom_expense.expense_type.label }}:</label>
+                    {{ custom_expense.expense_type(size=20) }}<br>
+                    <label>{{ custom_expense.amount.label }}:</label>
+                    {{ custom_expense.amount(size=20) }}<br>
+                </div>
             {% endfor %}
 
             <!-- Add new custom expense field -->
@@ -208,16 +209,16 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            let customExpensesCounter = document.querySelectorAll('.section').length - 3;
+            let customExpensesCounter = document.querySelectorAll('.section').length - 3; // Adjust for existing fields
 
             const addButton = document.querySelector('.add-button');
             addButton.addEventListener('click', function () {
-                const expensesContainer = document.getElementById('income');
+                const expensesContainer = document.getElementById('expenses');
                 const newSection = document.createElement('div');
                 newSection.className = 'section';
                 newSection.innerHTML = `
                     <label>New Expense Type:</label>
-                    <input type="text" name="custom_expenses-${customExpensesCounter}-expenses_type" size="20">
+                    <input type="text" name="custom_expenses-${customExpensesCounter}-expense_type" size="20">
                     <label>Amount:</label>
                     <input type="number" name="custom_expenses-${customExpensesCounter}-amount" min="0" size="20">
                 `;
@@ -227,6 +228,29 @@
                 customExpensesCounter++;
                 animateItemsSequentially(document.querySelectorAll('.section'));
             });
+        });
+
+             document.addEventListener("DOMContentLoaded", function () {
+            let customIncomeCounter = document.querySelectorAll('.section').length - 3;
+
+            const addButton = document.querySelector('.add-button');
+            addButton.addEventListener('click', function () {
+                const incomeContainer = document.getElementById('income');
+                const newSection = document.createElement('div');
+                newSection.className = 'section';
+                newSection.innerHTML = `
+                    <label>New Income Type:</label>
+                    <input type="text" name="custom_incomes-${customIncomeCounter}-income_type" size="20">
+                    <label>Amount:</label>
+                    <input type="number" name="custom_incomes-${customIncomeCounter}-amount" min="0" size="20">
+                `;
+
+                const othersSection = document.querySelector('.others');
+                incomeContainer.insertBefore(newSection, othersSection);
+                customIncomeCounter++;
+                animateItemsSequentially(document.querySelectorAll('.section'));
+            });
+
 
             // Handle animation for existing items
             const sections = document.querySelectorAll('.section');
@@ -262,7 +286,7 @@
         }
 
         function addNewItem(itemName) {
-            const expensesContainer = document.getElementById('income');
+            const expensesContainer = document.getElementById('expenses');
             const newSection = document.createElement('div');
             newSection.className = 'section';
             newSection.innerHTML = `
