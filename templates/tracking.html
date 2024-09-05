@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TESTING</title>
+    <title>Expenditure tracking</title>
     <style>
-        body {
+        .body2 {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
@@ -14,7 +14,14 @@
             margin-bottom: 20px;
             padding: 10px;
             border: 1px solid #ccc;
-            background-color: #f9f9f9;
+            background-color: cornsilk;
+            width: auto;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: auto auto;
+            grid-template-rows: auto;
+            gap: 20px;
         }
         .calendar-container {
             margin-bottom: 20px;
@@ -24,15 +31,17 @@
             grid-template-columns: repeat(7, 1fr);
             gap: 5px;
             text-align: center;
+            background-color: darkseagreen;
+            color: white;
         }
         .calendar .day-label {
             font-weight: bold;
-            background-color: #e0e0e0;
+            background-color: lightpink;
             padding: 5px;
         }
         .calendar .day {
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 2px solid #ccc;
             cursor: pointer;
         }
         .calendar .today {
@@ -50,18 +59,21 @@
 <body>
     {% extends "base.html" %}
     {% block body %}
-        <div class="goals">
-            <h2>Monthly Goals Overview</h2>
-            <p id="income-goal">Income Goal: ${{ income_goal }}</p>
-            <p id="expense-goal">Expense Goal: ${{ expense_goal }}</p>
-            <p id="savings-goal">Savings Goal: ${{ savings_goal }}</p>
-        </div>
+    <div class="body2">
+        <div class="container">
+            <div class="goals">
+                <h2>Monthly Goals Overview</h2>
+                <p id="income-goal">Income Goal: ${{ income_goal }}</p>
+                <p id="expense-goal">Expense Goal: ${{ expense_goal }}</p>
+                <p id="savings-goal">Savings Goal: ${{ savings_goal }}</p>
+            </div>
 
-        <div class="current-overview">
-            <h2>Current Overview</h2>
-            <p id="current-income">Current Income: ${{ current_income }}</p>
-            <p id="current-expenses">Current Expenses: ${{ current_expenses }}</p>
-            <p id="current-savings">Remaining Savings: ${{ remaining_savings }}</p>
+            <div class="current-overview">
+                <h2>Current Overview</h2>
+                <p id="current-income">Current Income: ${{ current_income }}</p>
+                <p id="current-expenses">Current Expenses: ${{ current_expenses }}</p>
+                <p id="current-savings">Remaining Savings: ${{ remaining_savings }}</p>
+            </div>
         </div>
 
         <div class="calendar-container">
@@ -89,6 +101,25 @@
                 </div>
             </form>
         </div>
+
+        <div class="transaction-container">
+            <h2>Transactions for the Month</h2>
+            <table id="transaction-table" class="transaction-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Amount ($)</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-table-body">
+                    <tr>
+                        <td colspan="3" id="no-transactions">No transactions to show</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -215,7 +246,57 @@
                 generateCalendar(currentYear, parseInt(initialMonth, 10));
                 updateOverview(currentYear, initialMonth);
             });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const monthSelect = document.getElementById('month-select');
+                const transactionTableBody = document.getElementById('transaction-table-body');
+                const noTransactionsRow = document.getElementById('no-transactions');
+
+                // Fetch transactions for the selected month and update the table
+                function fetchTransactions(year, month) {
+                    fetch(`/get_transactions/${year}-${month}`)
+                        .then(response => response.json())
+                        .then(transactions => {
+                            // Clear the table body
+                            transactionTableBody.innerHTML = '';
+
+                            if (transactions.length > 0) {
+                                transactions.forEach(transaction => {
+                                    const row = document.createElement('tr');
+                                    row.innerHTML = `
+                                        <td>${transaction.date}</td>
+                                        <td>${transaction.category}</td>
+                                        <td>${transaction.amount.toFixed(2)}</td>
+                                    `;
+                                    transactionTableBody.appendChild(row);
+                                });
+                            } else {
+                                // If no transactions, display a "No transactions to show" row
+                                const row = document.createElement('tr');
+                                row.innerHTML = `<td colspan="3">No transactions to show</td>`;
+                                transactionTableBody.appendChild(row);
+                            }
+                        })
+                        .catch(error => console.error('Error fetching transactions:', error));
+                }
+
+                // Handle month selection change
+                monthSelect.addEventListener('change', function () {
+                    const [year, month] = this.value.split('-');
+                    fetchTransactions(year, month);
+                });
+
+                // Initialize the page with the current month
+                const currentDate = new Date();
+                const initialYear = currentDate.getFullYear();
+                const initialMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                monthSelect.value = `${initialYear}-${initialMonth}`;
+
+                // Fetch transactions for the current month
+                fetchTransactions(initialYear, initialMonth);
+            });
         </script>
+    </div>
     {% endblock body %}
 </body>
 </html>

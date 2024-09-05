@@ -14,73 +14,22 @@ csrf = CSRFProtect()
 
 init_bp = Blueprint('init', __name__)
 
-
-# for yoshana's home route - thank you :)
-@init_bp.route('/')
-def home():
-    return render_template("home_page.html")
-
-
-@init_bp.route('/Login_page')
-def login():
-    return render_template("Login_page.html")
-
-
-@init_bp.route('/Signup_page')
-def signup():
-    return render_template("Signup_page.html")
-
-@init_bp.route('/')
-def home_auth():
-    if current_user.is_active:
-        return redirect((url_for("#")))
-    return render_template("home_page.html")
-
-@init_bp.route('/signup', methods=['GET','POST'])
-def signup_auth():
-    if current_user.is_active:
-        return redirect(url_for("#"))
-
-    form = SignUp(request.form)
-    if form.validate_on_submit():
-        name = form.name.data.strip()
-        new_user = User(name=name, email=form.email.data.lower(), password=generate_password_hash(form.password.date))
-        db.session.add(new_user)
-        db.session.commit()
-
-        flash('Account created successfully!', category='success')
-        return render_template("#", form=form)
-
-    return render_template("signup.html", form=form)
-
-@init_bp.route('/login', methods=['GET','POST'])
-def login_auth():
-    if current_user.us_active:
-        return redirect(url_for("#"))
-
-    form = Login(request.form)
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.lower()).first()
-
-        if user:
-            if check_password_hash(user.password, form.password.data):
-                flash('Logged in successfully', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('views.show_expenses'))
-
-            else:
-                flash('Incorrect password, please try again.', category='error')
-        else:
-            flash('No account with that email address.', category='error')
-
-    return render_template('login.html', form=form)
-
-@init_bp.route('/logout')
-@login_required
-def logout_auth():
-    logout_user()
-    return redirect(url_for('#'))
-
+# Yoshana's Routing :)
+# @init_bp.route('/')
+# def main_home():
+#     return render_template("main_home.html")
+#
+# @init_bp.route('/user')
+# def user_home():
+#     return render_template("user_home.html")
+#
+# @init_bp.route('/login')
+# def login():
+#     return redirect(url_for("auth.login"))
+#
+# @init_bp.route('/signup')
+# def signup():
+#     return render_template("signup.html")
 
 #ZAK'S ROUTES START
 @init_bp.route('/tracker', methods=['GET', 'POST'])
@@ -202,6 +151,27 @@ def get_overview(month):
         'remaining_savings': float(remaining_savings)
     })
 
+@init_bp.route('/get_transactions/<month>', methods=['GET'])
+def get_transactions(month):
+    user_id = 1  # Replace with session ID
+
+    # Query for all transactions of the user for the selected month, ordered by date
+    transactions = Transaction.query.filter_by(user_id=user_id).filter(
+        db.func.strftime('%Y-%m', Transaction.date) == month).order_by(Transaction.date).all()
+
+    # Format the transactions to be returned as JSON
+    transactions_data = [
+        {
+            'date': transaction.date.strftime('%Y-%m-%d'),
+            'category': transaction.category,
+            'amount': float(transaction.amount)
+        }
+        for transaction in transactions
+    ]
+
+    return jsonify(transactions_data)
+
+
 @init_bp.route('/get_categories/<month>', methods=['GET'])
 def get_categories(month):
     user_id = 1  # Replace with session ID
@@ -239,69 +209,90 @@ def expensescontent():
 
 @init_bp.route('/goal', methods=['GET'])
 def goal():
-    user_id = 1  # Assuming this is the current user
+    # if not current_user.is_authenticated:
+    #     # Redirect to login page or handle unauthenticated access
+    #     return redirect(url_for('init.login'))
 
-    # Fetch total expenses for the current user
-    expenses_now = db.session.query(db.func.sum(Expense.amount)).filter_by(user_id=user_id).scalar()
+    selected_section = None
+    amount = None
+    user_id = 1
 
-    # Fetch total income for the current user
-    income_now = db.session.query(db.func.sum(Income.amount)).filter_by(user_id=user_id).scalar()
+    if request.method == 'POST':
+        # Assuming your form has fields 'section' and 'amount'
+        selected_section = request.form.get('section')
+        amount = request.form.get('amount')
 
-    # Calculate savings (Income - Expenses)
+    # current_income = db.session.query(db.func.sum(Income.amount)).filter_by(
+    #     user_id=user_id, type='income')
+
+    expenses_now = db.session.query(db.func.sum(Expense.amount)).filter_by(user_id=user_id).scalar() or 0
+    income_now = db.session.query(db.func.sum(Income.amount)).filter_by(user_id=user_id).scalar() or 0
     savings_now = income_now - expenses_now if income_now and expenses_now else 0
 
-    # Render the template with the fetched data
-    return render_template('GoalHome.html', expenses_now=expenses_now, income_now=income_now, savings_now=savings_now)
+    income_data = Income.query.filter_by(user_id=user_id).all()
+    expenses_data = Expense.query.filter_by(user_id=user_id).all()
 
+    return render_template('GoalHome.html', selected_section=selected_section, amount=amount, income_data=income_data, expenses_data=expenses_data, savings_now=savings_now, expenses_now=expenses_now, income_now=income_now)
 
 @init_bp.route('/income', methods=['GET', 'POST'])
 def income():
     form = IncomeForm()
+
     if form.validate_on_submit():
-        allowance = form.amount_from_allowance.data
-        salary = form.amount_from_salary.data
-        angpao = form.amount_from_angpao.data
-
-        # Handle custom incomes
-        custom_income = []
-        for custom_income in form.custom_income:
-            income_type = custom_income.income_type.data
-            amount = custom_income.amount.data
-            if income_type and amount:
-                custom_income.append({'income_type': income_type, 'amount': amount})
-
-        income_to_add = []
+        # User ID (replace with actual user ID)
         user_id = 1
 
-        if allowance:
-            income_to_add.append(Income(user_id=user_id, category='Allowance', amount=allowance))
-        if salary:
-            income_to_add.append(Income(user_id=user_id, category='Salary', amount=salary))
-        if angpao:
-            income_to_add.append(Income(user_id=user_id, category='Angpao', amount=angpao))
+        # Create a list to store entries to be added
+        entries_to_add = []
 
-        #Handle custom Income
-        for custom in custom_income:
-            income_to_add.append(Income(category=custom['income_type'], amount=custom['amount']))
+        # Process predefined income categories
+        if form.amount_from_allowance.data:
+            entries_to_add.append(Income(
+                user_id=user_id,
+                category='Allowance',
+                amount=form.amount_from_allowance.data
+            ))
+        if form.amount_from_salary.data:
+            entries_to_add.append(Income(
+                user_id=user_id,
+                category='Salary',
+                amount=form.amount_from_salary.data
+            ))
+        if form.amount_from_angpao.data:
+            entries_to_add.append(Income(
+                user_id=user_id,
+                category='Angpao',
+                amount=form.amount_from_angpao.data
+            ))
 
-        # Add all income to the session
-        for income in income_to_add:
-            db.session.add(income)
+        # Process custom income fields
+        for i in range(len(form.custom_income)):
+            income_type = form.custom_income[i].income_type.data
+            amount = form.custom_income[i].amount.data
 
+            if income_type and amount:
+                entries_to_add.append(Income(
+                    user_id=user_id,
+                    category='Others',
+                    custom_category=income_type,
+                    amount=amount
+                ))
+
+        # Save all income entries to the database
         try:
+            for entry in entries_to_add:
+                db.session.add(entry)
             db.session.commit()
             flash('Income added successfully!', 'success')
+            return redirect(url_for('init.goal'))  # Redirect after successful submission
         except Exception as e:
-            db.session.rollback()  # Rollback if there is an error
+            db.session.rollback()  # Rollback if something goes wrong
             flash(f'An error occurred: {str(e)}', 'danger')
 
-            # Fetch all expenses for the current user
-        income_data = Income.query.filter_by(user_id=user_id).all()
-        return render_template('GoalHome.html', form=form, income_data=income_data)
-
-            # Fetch all expenses for the current user if the form is not submitted
-    user_id = 1  # Adjust this as needed
+    # Fetch all incomes for the current user
+    user_id = 1  # Replace with actual user ID
     income_data = Income.query.filter_by(user_id=user_id).all()
+
     return render_template('income.html', form=form, income_data=income_data)
 
 @init_bp.route('/savings')
@@ -369,7 +360,9 @@ def forum():
 
 
 # CHRISTEL'S ROUTES (END)
-
+@init_bp.route('/comments')
+def comments():
+    return render_template("comments.html")
 
 
 @init_bp.errorhandler(404)

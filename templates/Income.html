@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +9,6 @@
             margin: 0;
             padding: 0;
         }
-
         .close-button {
             position: absolute;
             top: 10px;
@@ -21,12 +19,10 @@
             font-weight: bold;
             cursor: pointer;
         }
-
         .close-button:hover {
             color: white;
             background-color: red;
         }
-
         #income {
             width: 70%;
             margin-left: auto;
@@ -37,12 +33,10 @@
             row-gap: 20px;
             position: relative;
         }
-
         .container img {
             padding: 10px;
             transition: transform 0.5s ease, opacity 0.5s ease;
         }
-
         .section {
             border: 1px blue solid;
             border-radius: 10px;
@@ -57,16 +51,13 @@
             justify-content: center;
             text-align: center;
         }
-
         .visible {
             opacity: 1;
             transform: scale(1);
         }
-
         .section h3 {
             margin-top: 10px;
         }
-
         .add-button {
             position: absolute;
             bottom: 10px;
@@ -81,49 +72,11 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-
         .add-button:hover {
             background-color: #45a049;
         }
-
-        #new-item-input {
-            display: none;
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translate(-50%, 0);
-            width: 80%;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .active #new-item-input {
-            display: block;
-        }
-
-        .delete-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .delete-button:hover {
-            background-color: darkred;
-        }
     </style>
 </head>
-
 <body>
     {% extends "base.html" %}
     {% block body %}
@@ -131,27 +84,33 @@
 
     <h1>Income</h1>
 
-    <form method="post">
+    <form method="POST" action="{{ url_for('init.income') }}">
+        {{ form.csrf_token }}
         {{ form.hidden_tag() }}
         <fieldset id="income" class="container">
+            <!-- Section for Allowance -->
             <div class="section">
                 <img src="{{ url_for('static', filename='images/Allowance.png') }}" alt="Salary" width="300" height="320">
                 <label>Allowance from parents</label><br>
                 {{ form.amount_from_allowance(size=20) }}<br>
             </div>
+
+            <!-- Section for Salary -->
             <div class="section">
                 <img src="{{ url_for('static', filename='images/Salary.png') }}" alt="salary" width="300" height="320">
                 <label>Salary</label><br>
                 {{ form.amount_from_salary(size=20) }}<br>
             </div>
+
+            <!-- Section for Angpao -->
             <div class="section">
                 <img src="{{ url_for('static', filename='images/angpao.png') }}" alt="angpao" width="300" height="320">
                 <label>Angpao</label><br>
                 {{ form.amount_from_angpao(size=20) }}<br>
             </div>
 
-            <!-- Displaying dynamic income fields -->
-            {% for custom_income in form.custom_incomes %}
+            <!-- Display dynamic income fields -->
+            {% for custom_income in form.custom_income %}
             <div class="section">
                 <label>{{ custom_income.income_type.label }}:</label>
                 {{ custom_income.income_type(size=20) }}<br>
@@ -160,7 +119,7 @@
             </div>
             {% endfor %}
 
-            <!-- Add new custom income field -->
+            <!-- Add new custom income field dynamically -->
             <div class="section others">
                 <button type="button" class="add-button">+</button>
             </div>
@@ -170,125 +129,41 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            let customIncomeCounter = document.querySelectorAll('.section').length - 3;
+            // Set custom income counter based on existing fields
+            let customIncomeCounter = {{ form.custom_income|length }};
 
             const addButton = document.querySelector('.add-button');
+            const incomeContainer = document.getElementById('income');
+            const othersSection = document.querySelector('.others');
+
+            // Handle adding new custom income fields
             addButton.addEventListener('click', function () {
-                const incomeContainer = document.getElementById('income');
                 const newSection = document.createElement('div');
                 newSection.className = 'section';
                 newSection.innerHTML = `
                     <label>New Income Type:</label>
-                    <input type="text" name="custom_incomes-${customIncomeCounter}-income_type" size="20">
+                    <input type="text" name="custom_income-${customIncomeCounter}-income_type" size="20">
                     <label>Amount:</label>
-                    <input type="number" name="custom_incomes-${customIncomeCounter}-amount" min="0" size="20">
+                    <input type="number" name="custom_income-${customIncomeCounter}-amount" min="0" size="20">
                 `;
-
-                const othersSection = document.querySelector('.others');
                 incomeContainer.insertBefore(newSection, othersSection);
                 customIncomeCounter++;
                 animateItemsSequentially(document.querySelectorAll('.section'));
             });
 
-            // Handle animation for existing items
+            // Animate sections on page load
             const sections = document.querySelectorAll('.section');
             animateItemsSequentially(sections);
 
-            // Load saved items from local storage
-            loadCustomItems();
-
-            // Handle adding new custom items
-            const inputBox = document.getElementById('new-item-input');
-            const othersSection = document.querySelector('.others');
-
-            addButton.addEventListener('click', () => {
-                othersSection.classList.toggle('active');
-                inputBox.focus();
-            });
-
-            inputBox.addEventListener('keypress', (event) => {
-                if (event.key === 'Enter' && inputBox.value.trim() !== '') {
-                    addNewItem(inputBox.value.trim());
-                    inputBox.value = '';
-                    othersSection.classList.remove('active');
-                }
-            });
-        });
-
-        function animateItemsSequentially(items) {
-            items.forEach((item, index) => {
-                setTimeout(() => {
-                    item.classList.add('visible');
-                }, index * 100);
-            });
-        }
-
-        function addNewItem(itemName) {
-            const incomeContainer = document.getElementById('income');
-            const newSection = document.createElement('div');
-            newSection.className = 'section';
-            newSection.innerHTML = `
-                <img src="../app/static/images/Others.png" alt="${itemName}" height="100" width="100">
-                <h3>${itemName}</h3>
-                <button class="delete-button">×</button>
-            `;
-
-            // Insert the new item before the "Others" section
-            const othersSection = document.querySelector('.others');
-            incomeContainer.insertBefore(newSection, othersSection);
-
-            // Re-animate all items including the newly added one
-            animateItemsSequentially(document.querySelectorAll('.section'));
-
-            // Add event listener for delete button
-            newSection.querySelector('.delete-button').addEventListener('click', () => {
-                newSection.remove();
-                removeItemFromLocalStorage(itemName);
-            });
-
-            saveItemToLocalStorage(itemName);
-        }
-
-        function saveItemToLocalStorage(itemName) {
-            let customItems = JSON.parse(localStorage.getItem('customItems')) || [];
-            customItems.push(itemName);
-            localStorage.setItem('customItems', JSON.stringify(customItems));
-        }
-
-        function removeItemFromLocalStorage(itemName) {
-            let customItems = JSON.parse(localStorage.getItem('customItems')) || [];
-            customItems = customItems.filter(item => item !== itemName);
-            localStorage.setItem('customItems', JSON.stringify(customItems));
-        }
-
-        function loadCustomItems() {
-            const customItems = JSON.parse(localStorage.getItem('customItems')) || [];
-            const incomeContainer = document.getElementById('income');
-            const othersSection = document.querySelector('.others');
-
-            customItems.forEach(item => {
-                const newSection = document.createElement('div');
-                newSection.className = 'section';
-                newSection.innerHTML = `
-                    <img src="../app/static/images/Others.png" alt="${item}" height="100" width="100">
-                    <h3>${item}</h3>
-                    <button class="delete-button">×</button>
-                `;
-                // Insert the new item before the "Others" section
-                incomeContainer.insertBefore(newSection, othersSection);
-
-                // Add event listener for delete button
-                newSection.querySelector('.delete-button').addEventListener('click', () => {
-                    newSection.remove();
-                    removeItemFromLocalStorage(item);
+            function animateItemsSequentially(items) {
+                items.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('visible');
+                    }, index * 100);
                 });
-            });
-
-            // Re-animate all items including the loaded ones
-            animateItemsSequentially(document.querySelectorAll('.section'));
-        }
+            }
+        });
     </script>
     {% endblock body %}
 </body>
 </html>
-
