@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +9,6 @@
             margin: 0;
             padding: 0;
         }
-
         .close-button {
             position: absolute;
             top: 10px;
@@ -21,12 +19,10 @@
             font-weight: bold;
             cursor: pointer;
         }
-
         .close-button:hover {
             color: white;
             background-color: red;
         }
-
         #income {
             width: 70%;
             margin-left: auto;
@@ -37,12 +33,10 @@
             row-gap: 20px;
             position: relative;
         }
-
         .container img {
             padding: 10px;
             transition: transform 0.5s ease, opacity 0.5s ease;
         }
-
         .section {
             border: 1px blue solid;
             border-radius: 10px;
@@ -57,16 +51,13 @@
             justify-content: center;
             text-align: center;
         }
-
         .visible {
             opacity: 1;
             transform: scale(1);
         }
-
         .section h3 {
             margin-top: 10px;
         }
-
         .add-button {
             position: absolute;
             bottom: 10px;
@@ -81,49 +72,11 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-
         .add-button:hover {
             background-color: #45a049;
         }
-
-        #new-item-input {
-            display: none;
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translate(-50%, 0);
-            width: 80%;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .active #new-item-input {
-            display: block;
-        }
-
-        .delete-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .delete-button:hover {
-            background-color: darkred;
-        }
     </style>
 </head>
-
 <body>
     {% extends "base.html" %}
     {% block body %}

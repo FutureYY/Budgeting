@@ -190,7 +190,7 @@ def expensescontent():
 def goal():
     selected_section = None
     amount = None
-    user_id = 1
+    user_id = 1  # Replace with actual user authentication
 
     if request.method == 'POST':
         selected_section = request.form.get('section')
@@ -214,40 +214,54 @@ def goal():
         expenses_data=expenses_data,
         savings_now=savings_now
     )
-
 @init_bp.route('/income', methods=['GET', 'POST'])
 def income():
     form = IncomeForm()
 
     if form.validate_on_submit():
-        # Get standard incomes from form
-        allowance = form.amount_from_allowance.data
-        salary = form.amount_from_salary.data
-        angpao = form.amount_from_angpao.data
+        # User ID (replace with actual user ID)
+        user_id = 1
 
-        income_to_add = []
-        user_id = 1  # Replace with actual user ID
+        # Create a list to store entries to be added
+        entries_to_add = []
 
-        # Add standard incomes
-        if allowance:
-            income_to_add.append(Income(user_id=user_id, category='Allowance', amount=allowance))
-        if salary:
-            income_to_add.append(Income(user_id=user_id, category='Salary', amount=salary))
-        if angpao:
-            income_to_add.append(Income(user_id=user_id, category='Angpao', amount=angpao))
+        # Process predefined income categories
+        if form.amount_from_allowance.data:
+            entries_to_add.append(Income(
+                user_id=user_id,
+                category='Allowance',
+                amount=form.amount_from_allowance.data
+            ))
+        if form.amount_from_salary.data:
+            entries_to_add.append(Income(
+                user_id=user_id,
+                category='Salary',
+                amount=form.amount_from_salary.data
+            ))
+        if form.amount_from_angpao.data:
+            entries_to_add.append(Income(
+                user_id=user_id,
+                category='Angpao',
+                amount=form.amount_from_angpao.data
+            ))
 
-        # Process custom incomes
-        for custom_income in form.custom_income:
-            income_type = custom_income.income_type.data
-            amount = custom_income.amount.data
+        # Process custom income fields
+        for i in range(len(form.custom_income)):
+            income_type = form.custom_income[i].income_type.data
+            amount = form.custom_income[i].amount.data
 
             if income_type and amount:
-                income_to_add.append(Income(user_id=user_id, category='Others', custom_category=income_type, amount=amount))
+                entries_to_add.append(Income(
+                    user_id=user_id,
+                    category='Others',
+                    custom_category=income_type,
+                    amount=amount
+                ))
 
         # Save all income entries to the database
         try:
-            for income in income_to_add:
-                db.session.add(income)
+            for entry in entries_to_add:
+                db.session.add(entry)
             db.session.commit()
             flash('Income added successfully!', 'success')
             return redirect(url_for('init.goal'))  # Redirect after successful submission
@@ -260,6 +274,7 @@ def income():
     income_data = Income.query.filter_by(user_id=user_id).all()
 
     return render_template('income.html', form=form, income_data=income_data)
+
 
 @init_bp.route('/savings')
 def savings():
