@@ -52,51 +52,74 @@
         </div>
 
         <form method="POST" class="Signing">
+            {{ form.csrf_token }}
             <h3>Please proceed to create your account</h3>
             <div class="Sign_Input">
                 <label for="username">Username</label>
                 <br>
                 <input id=username type="text" class="line-input" placeholder="_________">
+                {{ form.name }}
             </div>
+            {% if form.name.errors %}
+                {% for error in form.name.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            {% endif %}
 
             <div class="Sign_Input">
                 <label for="Email">Email Address</label>
                 <br>
                 <input  id="Email" type="email" class="line-input" placeholder="_________">
+                {{ form.email }}
             </div>
+
+            {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+
 
             <div class="Sign_Input">
                 <label for="P_number">Phone Number</label>
                 <br>
                 <input id=P_number type="number" class="line-input" placeholder="_________">
-
+                {{ form.password }}
             </div>
 
-            <div class="Sign_Input">
-                <label for="age">Age</label>
-                <br>
-                <input id=age type="number" class="line-input" placeholder="_________">
-            </div>
+<!--            need phone number-->
 
             <div class="Sign_Input">
                 <label for="password">Password</label>
                 <br>
                 <input id=password type="password" class="line-input" placeholder="_________">
+                {{ form.password }}
             </div>
+
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            {% endif %}
 
             <div class="Sign_Input">
                 <label for="R_password">Repeat Password</label>
                 <br>
                 <input id=R_password type="password" class="line-input" placeholder="_________">
+                {{ form.repeat_password }}
             </div>
+
+             {% if form.repeat_password.errors %}
+                {% for error in form.repeat_password.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            {% endif %}
 
             <button type="submit"><a href="GoalHome.html">Sign Up</a></button>
             <br><br>
             <div>
-                <a href="Login_page.html">Already have an existing account? Click here to Sign In → </a>
+                <a href="{{ url_for('init.login') }}">Already have an existing account? Click here to Sign In → </a>
             </div>
-
-<!--            <button type="reset">Reset</button>-->
         </form>
     </div>
     {% endblock body %}
