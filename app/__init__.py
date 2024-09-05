@@ -151,6 +151,27 @@ def get_overview(month):
         'remaining_savings': float(remaining_savings)
     })
 
+@init_bp.route('/get_transactions/<month>', methods=['GET'])
+def get_transactions(month):
+    user_id = 1  # Replace with session ID
+
+    # Query for all transactions of the user for the selected month, ordered by date
+    transactions = Transaction.query.filter_by(user_id=user_id).filter(
+        db.func.strftime('%Y-%m', Transaction.date) == month).order_by(Transaction.date).all()
+
+    # Format the transactions to be returned as JSON
+    transactions_data = [
+        {
+            'date': transaction.date.strftime('%Y-%m-%d'),
+            'category': transaction.category,
+            'amount': float(transaction.amount)
+        }
+        for transaction in transactions
+    ]
+
+    return jsonify(transactions_data)
+
+
 @init_bp.route('/get_categories/<month>', methods=['GET'])
 def get_categories(month):
     user_id = 1  # Replace with session ID

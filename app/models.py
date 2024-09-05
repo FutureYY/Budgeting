@@ -62,25 +62,3 @@ class Transaction(db.Model):
 
     #to link this transaction to a specific budget
     budget_id = db.Column(db.Integer, db.ForeignKey('budget.id'), nullable=True)
-
-
-
-# class Income(db.Model):
-#     __tablename__ = 'incomes'
-#     id = db.Column(db.Integer, primary_key=True)
-#     category = db.Column(db.String(50), nullable=False)
-#     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
-#     date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
-#
-# class Expense(db.Model):
-#     __tablename__ = 'expenses'
-#     id = db.Column(db.Integer, primary_key=True)
-#     category = db.Column(db.String(50), nullable=False)
-#     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
-#     date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
-#
-# class SavingsGoal(db.Model):
-#     __tablename__ = 'savings_goals'
-#     id = db.Column(db.Integer, primary_key=True)
-#     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
-#     date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
