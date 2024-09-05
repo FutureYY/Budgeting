@@ -2,12 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>SignUp</title>
     <style>
         * {
             margin: 0; padding: 0; }
-        a {
-            text-decoration: none; list-style-type: none;}
 
         .Sign_Input{ padding: 10px; }
 
@@ -23,7 +21,7 @@
             background-color: #c1edcc;
             position: absolute;
             left: 380px;
-            top: 170px;
+            top: 120px;
             width: 500px; height 200px;
             justify: centre; border-radius: 40px; }
 
@@ -31,8 +29,18 @@
           border-radius: 1px;
           padding: 20px;}
 
-<!--        a {-->
-<!--            text-decoration: none; list-style-type: none;}-->
+        .sign_up_sub a {
+            text-decoration: none; list-style-type: none;
+            border-radius: 10px; }
+
+        .sign_up_sub {
+            border-radius: 20px; }
+
+        .signs a {
+            position: absolute;
+            left: 55px; bottom: 5px;
+            color: navy; font-size:1.12em;
+            text-decoration: none; list-style-type: none; }
 
     </style>
 </head>
@@ -44,9 +52,7 @@
         <div class="Sign_Header">
             <h1>Ready to Start your Budgeting Experience!</h1>
         </div>
-        <h3>Please proceed to create your account</h3>
-
-        <form method="POST" class="Signing" action="{{ url_for('auth.register') }}">
+        <form method="POST" class="Signing" action="{{ url_for('auth.login') }}">
             {{ form.csrf_token }}
             <div class="Sign_Input">
                 <label>Username</label>
@@ -95,12 +101,14 @@
                 {% endfor %}
             {% endif %}
 
-            <button type="submit" class="sign_up_sub"><a href="#">Sign Up</a></button>
+            <button class="sign_up_sub"><a type="submit">Sign Up</a></button>
             <br><br>
-            <div>
-                <a href="#">Already have an existing account? Click here to Sign In → </a>
+            <div class="signs">
+                <a href="{{ url_for('auth.login') }}">Already have an existing account? Click here to Sign In →</a>
             </div>
+
         </form>
+
     </div>
     {% endblock body %}
 

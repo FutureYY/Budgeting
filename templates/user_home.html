@@ -17,6 +17,15 @@
     dashboard of the users would be here!
     overall summary of the user! all the features!
     </div>
+    <div class="section section5">
+            {% if expenses_data %}
+                {% for expense in expenses_data %}
+                    <p>{{ expense.category }}: ${{ expense.amount }}</p>
+                {% endfor %}
+            {% else %}
+                <p>No data selected yet.</p>
+            {% endif %}
+        </div>
 
 
     {% endblock body %}

@@ -1,6 +1,4 @@
 from flask import Blueprint, flash, render_template, request, url_for, redirect, session
-from . import db
-from .models import User
 from .forms import SignUp, Login
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -16,7 +14,7 @@ def home():
 
 @auth_bp.route('/guest')
 def guest_home():
-    return render_template("main_home.html")  # If not logged in, show main home
+    return render_template("main_home.html")  # If not logged in, show main home ska my cover page
 
 from flask_login import login_user
 from . import db
@@ -28,17 +26,18 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email').lower()
         password = request.form.get('password')
+
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
                 login_user(user)
                 flash('Logged in successfully', category='success')
-                return redirect(url_for('auth.home'))
+                return redirect(url_for('auth.home')) # sent to user_home
             else:
                 flash('Incorrect password, please try again.', category='error')
         else:
             flash('Email does not exist, please try again.', category='error')
-    return render_template('login.html', form = form)
+    return render_template('login.html', form = form) # sent to login page
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -54,10 +53,10 @@ def register():
             db.session.add(user)
             db.session.commit()
             flash("Your account has been created!", "success")
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.login')) # sent to login page
         else:
             flash("Form validation failed. Please check your input.", "error")
-    return render_template("signup.html", form=form)
+    return render_template("signup.html", form=form) # signup was unsuccessful
 
 
 @auth_bp.route('/logout')

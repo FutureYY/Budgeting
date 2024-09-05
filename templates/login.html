@@ -22,21 +22,16 @@
             left: 250px; }
 
         .Login_Page {
-            background-color: #c1edcc;
-            position: absolute;
-            left: 380px;
-            bottom: 50px;
-            width: 500px; height 200px;
+            background-color: #c1edcc; position: absolute;
+            left: 380px; bottom: 100px;
+            width: 550px; height 250px;
             justify: centre; border-radius: 40px; }
 
 
         .regs a {
             position: absolute;
-            left: 100px;
-            bottom: 5px; }
-
-        .Login_Input {
-<!--            border: 2px red solid; }-->
+            left: 75px; bottom: 0px;
+            color: navy; font-size:1.3em; }
 
         .change {
             border-radius: 20px;}
@@ -45,9 +40,10 @@
           border-radius: 1px;
           padding: 20px;}
 
+        .btn-signin {
+            border-radius: 20px; }
+
     </style>
-
-
 
 </head>
 <body>
@@ -63,7 +59,7 @@
         </header>
 
         <div class="Login_Page">
-            <form method="post" action="">
+            <form method="post" action="{{ url_for('auth.login') }}">
                 {{ form.csrf_token }}
 
                  <div class="Login_Input">
@@ -80,17 +76,16 @@
 
                 <input type="radio" id="signin-checkbox"> <label for="signin-checkbox">Remember Me</label>
                 <br><br>
-                <div>
-                    <a href="/login" type="button" class="btn-signin"><button>Log In</button></a>
-                </div>
+                <button type="submit" class="btn-signin">Log In</button>
                  {% if form.email.errors %}
                     {% for error in form.email.errors %}
                         <span>{{ error }}</span>
                     {% endfor %}
                 {% endif %}
                 <br>
+                <br>
                 <div class="regs">
-                    <a href="/register" >Not a member yet? Click here to sign up → </a>
+                    <a href="{{ url_for('auth.register') }}">Not a member yet? Click here to sign up → </a>
                 </div>
             </form>
         </div>
