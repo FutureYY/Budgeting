@@ -136,7 +136,7 @@ def Expenditure_Tracking():
 
     remaining_savings = savings_goal - current_expenses if savings_goal else 0
 
-    return render_template('FTest1.html', form=form, income_goal=income_goal, expense_goal=expense_goal,
+    return render_template('tracking.html', form=form, income_goal=income_goal, expense_goal=expense_goal,
                            savings_goal=savings_goal, current_income=current_income,
                            current_expenses=current_expenses, remaining_savings=remaining_savings)
 
