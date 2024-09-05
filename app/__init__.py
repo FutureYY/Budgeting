@@ -1,27 +1,25 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime, date
 from .forms import SpendingForm, SignUp, Login, IncomeForm, ExpensesForm, CustomExpensesForm
 from app.config import Config
-from flask import Blueprint, flash, render_template, request, url_for, redirect
-from flask import Flask, render_template, request, redirect
-from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
-
+from flask import Flask, render_template, request, redirect, url_for, Blueprint, flash, jsonify
+from flask_login import login_required, current_user
 
 db = SQLAlchemy()
 csrf = CSRFProtect()
 
 init_bp = Blueprint('init', __name__)
 
+
 #ZAK'S ROUTES START
 @init_bp.route('/tracker', methods=['GET', 'POST'])
+@login_required
 def Expenditure_Tracking():
     form = SpendingForm()
 
     #Load dropdown categories based on user and current month
-    user_id = 1  # REPLACE WITH SESSION ID
+    user_id = current_user.id
     current_month = date.today().strftime('%Y-%m')
     categories = load_categories(user_id, current_month)
     form.category.choices = categories
@@ -40,7 +38,7 @@ def Expenditure_Tracking():
             amount=float(amount),
             date=datetime.strptime(transaction_date, '%Y-%m-%d'),
             type=transaction_type,
-            user_id=user_id  # Replace with actual user ID from session
+            user_id=user_id
         )
         db.session.add(transaction)
         db.session.commit()
@@ -62,16 +60,19 @@ def Expenditure_Tracking():
 
     # Calculate current income and expenses for the month
     current_income = db.session.query(db.func.sum(Transaction.amount)).filter_by(
-        user_id=user_id, type='income').filter(db.func.strftime('%Y-%m', Transaction.date) == current_month).scalar() or 0
+        user_id=user_id, type='income').filter(
+        db.func.strftime('%Y-%m', Transaction.date) == current_month).scalar() or 0
 
     current_expenses = db.session.query(db.func.sum(Transaction.amount)).filter_by(
-        user_id=user_id, type='expense').filter(db.func.strftime('%Y-%m', Transaction.date) == current_month).scalar() or 0
+        user_id=user_id, type='expense').filter(
+        db.func.strftime('%Y-%m', Transaction.date) == current_month).scalar() or 0
 
     remaining_savings = savings_goal - current_expenses if savings_goal else 0
 
     return render_template('tracking.html', form=form, income_goal=income_goal, expense_goal=expense_goal,
                            savings_goal=savings_goal, current_income=current_income,
                            current_expenses=current_expenses, remaining_savings=remaining_savings)
+
 
 def load_categories(user_id, month):
     categories = [
@@ -91,7 +92,8 @@ def load_categories(user_id, month):
     ]
 
     #Retrieve custom categories
-    custom_income = Income.query.filter_by(user_id=user_id).filter(Income.category=='other-income', Income.custom_category.isnot(None)).all()
+    custom_income = Income.query.filter_by(user_id=user_id).filter(Income.category == 'other-income',
+                                                                   Income.custom_category.isnot(None)).all()
     custom_expenses = Expense.query.filter_by(user_id=user_id).filter(
         Expense.category == 'other-expense',
         Expense.custom_category != None  # This checks if custom_category is NOT NULL
@@ -107,40 +109,36 @@ def load_categories(user_id, month):
 
 @init_bp.route('/get_overview/<month>', methods=['GET'])
 def get_overview(month):
-    # CHANGE
-    user_id = 1
+    user_id = current_user.id
 
-    # retrieve goals/budget for selected month
+    # Retrieve goals/budget for selected month
     budget = Budget.query.filter_by(user_id=user_id, month=month).first()
     if budget:
         income_goal = budget.income_goal
         expense_goal = budget.expense_goal
-        savings_goal = budget.savings_goal
     else:
-        income_goal = expense_goal = savings_goal = 0
+        income_goal = expense_goal = 0
 
-    # current income and expense for selected month (caluclate)
+    # Calculate current income and expenses for selected month
     current_income = db.session.query(db.func.sum(Transaction.amount)).filter_by(
         user_id=user_id, type='income').filter(db.func.strftime('%Y-%m', Transaction.date) == month).scalar() or 0
 
     current_expenses = db.session.query(db.func.sum(Transaction.amount)).filter_by(
         user_id=user_id, type='expense').filter(db.func.strftime('%Y-%m', Transaction.date) == month).scalar() or 0
 
-    remaining_savings = savings_goal - current_expenses if savings_goal else 0
+    # Calculate remaining expenses
+    remaining_expenses = float(expense_goal - current_expenses)
 
-    # Return the data as JSON
     return jsonify({
         'income_goal': float(income_goal),
         'expense_goal': float(expense_goal),
-        'savings_goal': float(savings_goal),
         'current_income': float(current_income),
-        'current_expenses': float(current_expenses),
-        'remaining_savings': float(remaining_savings)
+        'current_expenses': remaining_expenses,
     })
 
 @init_bp.route('/get_transactions/<month>', methods=['GET'])
 def get_transactions(month):
-    user_id = 1  # Replace with session ID
+    user_id = current_user.id
 
     # Query for all transactions of the user for the selected month, ordered by date
     transactions = Transaction.query.filter_by(user_id=user_id).filter(
@@ -157,9 +155,10 @@ def get_transactions(month):
     ]
     return jsonify(transactions_data)
 
+
 @init_bp.route('/get_categories/<month>', methods=['GET'])
 def get_categories(month):
-    user_id = 1  # Replace with session ID
+    user_id = current_user.id
     categories = load_categories(user_id, month)
     return jsonify(categories)
 
@@ -187,12 +186,14 @@ def saving():
 def expensescontent():
     return render_template("expensescontent.html")
 
+
 # JIAWEN'S ROUTES (END)
 
 
 # YENYI'S ROUTES (START)
 
 @init_bp.route('/goal', methods=['GET'])
+@login_required
 def goal():
     # if not current_user.is_authenticated:
     #     # Redirect to login page or handle unauthenticated access
@@ -200,7 +201,7 @@ def goal():
 
     selected_section = None
     amount = None
-    user_id = 1
+    user_id = current_user.id
 
     if request.method == 'POST':
         # Assuming your form has fields 'section' and 'amount'
@@ -213,9 +214,9 @@ def goal():
     expenses_now = db.session.query(db.func.sum(Expense.amount)).filter_by(user_id=user_id).scalar() or 0
     income_now = db.session.query(db.func.sum(Income.amount)).filter_by(user_id=user_id).scalar() or 0
 
-    if income_now == 0 and expenses_now !=0:
+    if income_now == 0 and expenses_now != 0:
         savings_now = - expenses_now
-    elif income_now!=0 and expenses_now == 0:
+    elif income_now != 0 and expenses_now == 0:
         savings_now = income_now
     else:
         savings_now = income_now - expenses_now if income_now and expenses_now else 0
@@ -223,15 +224,20 @@ def goal():
     income_data = Income.query.filter_by(user_id=user_id).all()
     expenses_data = Expense.query.filter_by(user_id=user_id).all()
 
-    return render_template('GoalHome.html', selected_section=selected_section, amount=amount, income_data=income_data, expenses_data=expenses_data, savings_now=savings_now, expenses_now=expenses_now, income_now=income_now)
+    return render_template('GoalHome.html', selected_section=selected_section, amount=amount, income_data=income_data,
+                           expenses_data=expenses_data, savings_now=savings_now, expenses_now=expenses_now,
+                           income_now=income_now)
+
 
 @init_bp.route('/income', methods=['GET', 'POST'])
+@login_required
 def income():
     form = IncomeForm()
+    current_month = datetime.now().strftime('%Y-%m')
 
     if form.validate_on_submit():
         # User ID (replace with actual user ID)
-        user_id = 1
+        user_id = current_user.id
 
         # Create a list to store entries to be added
         entries_to_add = []
@@ -274,6 +280,25 @@ def income():
             for entry in entries_to_add:
                 db.session.add(entry)
             db.session.commit()
+
+            # Update total income goal for the current month
+            total_income = db.session.query(db.func.sum(Income.amount)).filter_by(
+                user_id=user_id).scalar() or 0
+
+            budget = Budget.query.filter_by(user_id=user_id, month=current_month).first()
+            if budget:
+                budget.income_goal = total_income
+            else:
+                budget = Budget(
+                    user_id=user_id,
+                    month=current_month,
+                    income_goal=total_income,
+                    expense_goal=0,
+                    savings_goal=0
+                )
+                db.session.add(budget)
+            db.session.commit()
+
             flash('Income added successfully!', 'success')
             return redirect(url_for('init.goal'))  # Redirect after successful submission
         except Exception as e:
@@ -281,37 +306,46 @@ def income():
             flash(f'An error occurred: {str(e)}', 'danger')
 
     # Fetch all incomes for the current user
-    user_id = 1  # Replace with actual user ID
+    user_id = current_user.id
     income_data = Income.query.filter_by(user_id=user_id).all()
 
     return render_template('income.html', form=form, income_data=income_data)
-
 
 
 # YENYI'S ROUTES (END)
 
 
 @init_bp.route('/new_expense', methods=['GET', 'POST'])
+@login_required
 def new_expense():
     form = ExpensesForm()
+    current_month = datetime.now().strftime('%Y-%m')
 
     if form.validate_on_submit():
-        # User ID (replace with actual user ID)
-        user_id = 1
+        user_id = current_user.id
 
         # Create a list to store entries to be added
         entries_to_add = []
 
         # Process predefined expense categories
-        if form.transport_expense.data:entries_to_add.append(Expense( user_id=user_id,category='Transport', amount=form.transport_expense.data ))
-        if form.entertainment_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Entertainment', amount=form.entertainment_expense.data))
-        if form.technology_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Technology', amount=form.technology_expense.data))
-        if form.medical_expense.data:entries_to_add.append(Expense( user_id=user_id,category='Medical', amount=form.medical_expense.data ))
-        if form.food_beverages_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Food & Beverages', amount=form.food_beverages_expense.data))
-        if form.books_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Books', amount=form.books_expense.data))
-        if form.stationary_expense.data:entries_to_add.append(Expense( user_id=user_id,category='Stationary', amount=form.stationary_expense.data ))
-        if form.gifts_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Gifts', amount=form.gifts_expense.data))
-        if form.pets_expense.data: entries_to_add.append(Expense(user_id=user_id, category='Pets', amount=form.pets_expense.data))
+        if form.transport_expense.data: entries_to_add.append(
+            Expense(user_id=user_id, category='Transport', amount=form.transport_expense.data))
+        if form.entertainment_expense.data: entries_to_add.append(
+            Expense(user_id=user_id, category='Entertainment', amount=form.entertainment_expense.data))
+        if form.technology_expense.data: entries_to_add.append(
+            Expense(user_id=user_id, category='Technology', amount=form.technology_expense.data))
+        if form.medical_expense.data: entries_to_add.append(
+            Expense(user_id=user_id, category='Medical', amount=form.medical_expense.data))
+        if form.food_beverages_expense.data: entries_to_add.append(
+            Expense(user_id=user_id, category='Food & Beverages', amount=form.food_beverages_expense.data))
+        if form.books_expense.data: entries_to_add.append(
+            Expense(user_id=user_id, category='Books', amount=form.books_expense.data))
+        if form.stationary_expense.data: entries_to_add.append(
+            Expense(user_id=user_id, category='Stationary', amount=form.stationary_expense.data))
+        if form.gifts_expense.data: entries_to_add.append(
+            Expense(user_id=user_id, category='Gifts', amount=form.gifts_expense.data))
+        if form.pets_expense.data: entries_to_add.append(
+            Expense(user_id=user_id, category='Pets', amount=form.pets_expense.data))
 
         for i in range(len(form.custom_expenses)):
             expense_type = form.custom_expenses[i].expense_type.data
@@ -330,6 +364,24 @@ def new_expense():
             for entry in entries_to_add:
                 db.session.add(entry)
             db.session.commit()
+            # Update total expense goal for the current month
+            total_expenses = db.session.query(db.func.sum(Expense.amount)).filter_by(
+                user_id=user_id).scalar() or 0
+
+            budget = Budget.query.filter_by(user_id=user_id, month=current_month).first()
+            if budget:
+                budget.expense_goal = total_expenses
+            else:
+                budget = Budget(
+                    user_id=user_id,
+                    month=current_month,
+                    income_goal=0,  # Only updating expenses now
+                    expense_goal=total_expenses,
+                    savings_goal=0
+                )
+                db.session.add(budget)
+            db.session.commit()
+
             flash('Expense added successfully!', 'success')
             return redirect(url_for('init.goal'))  # Redirect after successful submission
         except Exception as e:
@@ -337,7 +389,7 @@ def new_expense():
             flash(f'An error occurred: {str(e)}', 'danger')
 
     # Fetch all expenses for the current user
-    user_id = 1  # Replace with actual user ID
+    user_id = current_user.id
     expense_data = Expense.query.filter_by(user_id=user_id).all()
     return render_template('new_expense.html', form=form, expense_data=expense_data)
 
