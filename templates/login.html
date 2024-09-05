@@ -2,45 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to the login Page</title>
+    <title>login In</title>
     <style>
         * {
             margin: 0; padding: 0; }
 
-        a {
-            text-decoration: none; list-style-type: none;}
-
-        .line-input {
-           border: none; border-bottom: 1px solid grey; padding: 5px;
-           width: 300px; /* Adjust the width as needed */
-           font-size: 16px; /* Adjust font size as needed */
-           outline: none; /* Removes the outline when clicking on the input */ }
-
-        .line-input::placeholder {
-            color: transparent; /* Hide the placeholder text */ }
-
-        .line-input:focus {
-            border-bottom: 2px solid black; /* Optional: to make the line thicker when focused */ }
-
+        .Login_Page a {
+            text-decoration: none; list-style-type: none; }
+}
         .Login_Input{
             padding: 10px;}
 
         button {
             width: 80px; height: 50px;
-            border-radius: 20px; border: none;  }
+            border-radius: 60px; border: none;  }
+
+        Header {
+            position: absolute;
+            left: 250px; }
+
+        .Login_Page {
+            background-color: #c1edcc;
+            position: absolute;
+            left: 380px;
+            bottom: 50px;
+            width: 500px; height 200px;
+            justify: centre; border-radius: 40px; }
+
+
+        .regs a {
+            position: absolute;
+            left: 100px;
+            bottom: 5px; }
+
+        .Login_Input {
+<!--            border: 2px red solid; }-->
+
+        .change {
+            border-radius: 20px;}
+
+        form {
+          border-radius: 1px;
+          padding: 20px;}
 
     </style>
+
+
 
 </head>
 <body>
     {% extends "base.html" %}
     {% block body %}
     <div class="Login_Container">
-        <h1>Please sign in to your Account :) </h1>
-        <br>
-         <div class="Login_Header">
-            <p>Welcome to Budgeting :)</p>
-         </div>
+        <header>
+            <h1>Please sign in to your Account: </h1>
+
+            <div class="Login_Header">
+                Welcome to Budget4You!
+            </div>
+        </header>
 
         <div class="Login_Page">
             <form method="post" action="">
@@ -49,7 +69,7 @@
                  <div class="Login_Input">
                      <label>Email address</label>
                      <br>
-                     {{ form.email }}
+                     <div class="change">{{ form.email }}</div>
                 </div>
 
                  <div class="Login_Input">
@@ -69,7 +89,9 @@
                     {% endfor %}
                 {% endif %}
                 <br>
-                <a href="/register" >Not a member yet? Click here to sign up → </a>
+                <div class="regs">
+                    <a href="/register" >Not a member yet? Click here to sign up → </a>
+                </div>
             </form>
         </div>
     </div>
