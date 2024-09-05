@@ -5,6 +5,7 @@ from datetime import datetime, date
 from .forms import SpendingForm, SignUp, Login, IncomeForm, ExpensesForm, CustomExpensesForm
 from app.config import Config
 from flask import Blueprint, flash, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, redirect
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -362,6 +363,30 @@ def forum():
 @init_bp.route('/comments')
 def comments():
     return render_template("comments.html")
+
+
+app = Flask(__name__)
+
+# In-memory list to store comments (for simplicity)
+comments_list = []
+
+
+# Route to display the comments page
+@app.route('/comments', methods=['GET', 'POST'])
+def comments():
+    if request.method == 'POST':
+        # Get the comment from the form data
+        new_comment = request.form.get('comment')
+        if new_comment:
+            comments_list.append(new_comment)  # Add comment to the list
+        return redirect('/comments')  # Redirect to prevent form resubmission
+
+    # Send the comments list to the HTML template
+    return render_template('comments.html', comments=comments_list)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 @init_bp.errorhandler(404)
