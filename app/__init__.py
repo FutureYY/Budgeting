@@ -18,23 +18,23 @@ init_bp = Blueprint('init', __name__)
 # for yoshana's home route - thank you :)
 @init_bp.route('/')
 def home():
-    return render_template("home_page.html")
+    return render_template("user_home.html")
 
 
 @init_bp.route('/Login_page')
 def login():
-    return render_template("Login_page.html")
+    return render_template("login.html")
 
 
 @init_bp.route('/Signup_page')
 def signup():
-    return render_template("Signup_page.html")
+    return render_template("signup.html")
 
 @init_bp.route('/')
 def home_auth():
     if current_user.is_active:
         return redirect((url_for("#")))
-    return render_template("home_page.html")
+    return render_template("user_home.html")
 
 @init_bp.route('/signup', methods=['GET','POST'])
 def signup_auth():
