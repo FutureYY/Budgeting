@@ -9,6 +9,11 @@
             margin: 0;
             padding: 0;
         }
+        h1, h5 {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            text-align: center;
+        }
         .close-button {
             position: absolute;
             top: 10px;
@@ -75,6 +80,30 @@
         .add-button:hover {
             background-color: #45a049;
         }
+        #button {
+          display: flex;
+          justify-content: center;
+          margin-top: 20px;
+          margin-bottom: 30px;
+        }
+        #button button {
+            margin-top: 20px;
+            cursor: pointer;
+            width: 100px;
+            background-color: lightblue;
+            border: none;
+            border-radius: 10px;
+        }
+        .section{
+            padding-top: 20px;
+            height: 250px;
+        }
+        input[type="number"], input[type="text"] {
+            border: none;
+            border-radius: 10px;
+            padding: 8px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -83,7 +112,7 @@
     <a href="GoalHome.html" class="close-button">&times;</a>
 
     <h1>Income</h1>
-
+    <h5>Fill up the income per month under the categories, add on others if needed</h5>
     <form method="POST" action="{{ url_for('init.income') }}">
         {{ form.csrf_token }}
         {{ form.hidden_tag() }}
@@ -127,7 +156,9 @@
                 <button type="button" class="add-button">+</button>
             </div>
         </fieldset>
-        <button type="submit">Save</button>
+        <div id="button">
+            <button type="submit">Save</button>
+        </div>
     </form>
 
     <script>
@@ -147,7 +178,7 @@
                     <label>New Income Type:</label>
                     <input type="text" name="custom_income-${customIncomeCounter}-income_type" size="20">
                     <label>Amount:</label>
-                    <input type="number" name="custom_income-${customIncomeCounter}-amount" min="0" size="20">
+                    <input type="number" name="custom_income-${customIncomeCounter}-amount" min="0" size="20" step="0.01">
                 `;
                 incomeContainer.insertBefore(newSection, othersSection);
                 customIncomeCounter++;
