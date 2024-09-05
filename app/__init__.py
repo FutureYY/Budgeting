@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime, date
-from .forms import SpendingForm, SignUp, Login, IncomeForm, ExpensesForm
+from .forms import SpendingForm, SignUp, Login, IncomeForm, ExpensesForm, CustomExpensesForm
 from app.config import Config
 from flask import Blueprint, flash, render_template, request, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
@@ -151,6 +151,27 @@ def get_overview(month):
         'remaining_savings': float(remaining_savings)
     })
 
+@init_bp.route('/get_transactions/<month>', methods=['GET'])
+def get_transactions(month):
+    user_id = 1  # Replace with session ID
+
+    # Query for all transactions of the user for the selected month, ordered by date
+    transactions = Transaction.query.filter_by(user_id=user_id).filter(
+        db.func.strftime('%Y-%m', Transaction.date) == month).order_by(Transaction.date).all()
+
+    # Format the transactions to be returned as JSON
+    transactions_data = [
+        {
+            'date': transaction.date.strftime('%Y-%m-%d'),
+            'category': transaction.category,
+            'amount': float(transaction.amount)
+        }
+        for transaction in transactions
+    ]
+
+    return jsonify(transactions_data)
+
+
 @init_bp.route('/get_categories/<month>', methods=['GET'])
 def get_categories(month):
     user_id = 1  # Replace with session ID
@@ -186,7 +207,7 @@ def expensescontent():
 
 # YENYI'S ROUTES (START)
 
-@init_bp.route('/goal', methods=['GET', 'POST'])
+@init_bp.route('/goal', methods=['GET'])
 def goal():
     # if not current_user.is_authenticated:
     #     # Redirect to login page or handle unauthenticated access
@@ -204,61 +225,76 @@ def goal():
     # current_income = db.session.query(db.func.sum(Income.amount)).filter_by(
     #     user_id=user_id, type='income')
 
-    expenses_now = db.session.query(db.func.sum(Expense.amount))
-    income_now = db.session.query(db.func.sum(Income.amount))
-    savings_now = expenses_now
+    expenses_now = db.session.query(db.func.sum(Expense.amount)).filter_by(user_id=user_id).scalar() or 0
+    income_now = db.session.query(db.func.sum(Income.amount)).filter_by(user_id=user_id).scalar() or 0
+    savings_now = income_now - expenses_now if income_now and expenses_now else 0
 
-    return render_template('GoalHome.html', selected_section=selected_section, amount=amount)
+    income_data = Income.query.filter_by(user_id=user_id).all()
+    expenses_data = Expense.query.filter_by(user_id=user_id).all()
+
+    return render_template('GoalHome.html', selected_section=selected_section, amount=amount, income_data=income_data, expenses_data=expenses_data, savings_now=savings_now, expenses_now=expenses_now, income_now=income_now)
 
 @init_bp.route('/income', methods=['GET', 'POST'])
 def income():
     form = IncomeForm()
+
     if form.validate_on_submit():
-        allowance = form.amount_from_allowance.data
-        salary = form.amount_from_salary.data
-        angpao = form.amount_from_angpao.data
-
-        # Handle custom incomes
-        custom_income = []
-        for custom_income in form.custom_income:
-            income_type = custom_income.income_type.data
-            amount = custom_income.amount.data
-            if income_type and amount:
-                custom_income.append({'income_type': income_type, 'amount': amount})
-
-        income_to_add = []
+        # User ID (replace with actual user ID)
         user_id = 1
 
-        if allowance:
-            income_to_add.append(Income(user_id=user_id, category='Allowance', amount=allowance))
-        if salary:
-            income_to_add.append(Income(user_id=user_id, category='Salary', amount=salary))
-        if angpao:
-            income_to_add.append(Income(user_id=user_id, category='Angpao', amount=angpao))
+        # Create a list to store entries to be added
+        entries_to_add = []
 
-        #Handle custom Income
-        for custom in custom_income:
-            income_to_add.append(Income(category=custom['income_type'], amount=custom['amount']))
+        # Process predefined income categories
+        if form.amount_from_allowance.data:
+            entries_to_add.append(Income(
+                user_id=user_id,
+                category='Allowance',
+                amount=form.amount_from_allowance.data
+            ))
+        if form.amount_from_salary.data:
+            entries_to_add.append(Income(
+                user_id=user_id,
+                category='Salary',
+                amount=form.amount_from_salary.data
+            ))
+        if form.amount_from_angpao.data:
+            entries_to_add.append(Income(
+                user_id=user_id,
+                category='Angpao',
+                amount=form.amount_from_angpao.data
+            ))
 
-        # Add all income to the session
-        for income in income_to_add:
-            db.session.add(income)
+        # Process custom income fields
+        for i in range(len(form.custom_income)):
+            income_type = form.custom_income[i].income_type.data
+            amount = form.custom_income[i].amount.data
 
+            if income_type and amount:
+                entries_to_add.append(Income(
+                    user_id=user_id,
+                    category='Others',
+                    custom_category=income_type,
+                    amount=amount
+                ))
+
+        # Save all income entries to the database
         try:
+            for entry in entries_to_add:
+                db.session.add(entry)
             db.session.commit()
             flash('Income added successfully!', 'success')
+            return redirect(url_for('init.goal'))  # Redirect after successful submission
         except Exception as e:
-            db.session.rollback()  # Rollback if there is an error
+            db.session.rollback()  # Rollback if something goes wrong
             flash(f'An error occurred: {str(e)}', 'danger')
 
-            # Fetch all expenses for the current user
-        income_data = Income.query.filter_by(user_id=user_id).all()
-        return render_template('GoalHome.html', form=form, income_data=income_data)
-
-            # Fetch all expenses for the current user if the form is not submitted
-    user_id = 1  # Adjust this as needed
+    # Fetch all incomes for the current user
+    user_id = 1  # Replace with actual user ID
     income_data = Income.query.filter_by(user_id=user_id).all()
+
     return render_template('income.html', form=form, income_data=income_data)
+
 @init_bp.route('/savings')
 def savings():
     return render_template("savings.html")
@@ -269,55 +305,32 @@ def goalsetting():
 
     if form.validate_on_submit():
 
-        salary = form.salary_expense.data
-        allowance = form.allowance_expense.data
-        transport = form.transport_expense.data
-        entertainment = form.entertainment_expense.data
-        technology = form.technology_expense.data
-        medical = form.medical_expense.data
-        food_beverages = form.food_beverages_expense.data
-        books = form.books_expense.data
-        stationary = form.stationary_expense.data
-        gifts = form.gifts_expense.data
-        pets = form.pets_expense.data
-
-        custom_expenses = []
-        for custom_expense in form.custom_expenses:
-            expenses_type = custom_expense.expenses_type.data
-            amount = custom_expense.amount.data
-            if expenses_type and amount:
-                custom_expenses.append({'expenses_type': expenses_type, 'amount': amount})
-
-        # Handle predefined expenses
-        expenses_to_add = []
         user_id = 1
 
-        if transport:
-            expenses_to_add.append(Expense(user_id=user_id, category='Transport', amount=transport))
-        if entertainment:
-            expenses_to_add.append(Expense(user_id=user_id, category='Entertainment', amount=entertainment))
-        if technology:
-            expenses_to_add.append(Expense(user_id=user_id, category='Technology', amount=technology))
-        if medical:
-            expenses_to_add.append(Expense(user_id=user_id, category='Medical', amount=medical))
-        if food_beverages:
-            expenses_to_add.append(Expense(user_id=user_id, category='Food & Beverages', amount=food_beverages))
-        if books:
-            expenses_to_add.append(Expense(user_id=user_id, category='Books', amount=books))
-        if stationary:
-            expenses_to_add.append(Expense(user_id=user_id, category='Stationary', amount=stationary))
-        if gifts:
-            expenses_to_add.append(Expense(user_id=user_id, category='Gifts', amount=gifts))
-        if pets:
-            expenses_to_add.append(Expense(user_id=user_id, category='Pets', amount=pets))
+        expenses_data = {
+        'Transport' : form.transport_expense.data,
+        'Entertainment' : form.entertainment_expense.data,
+        'Technology' : form.technology_expense.data,
+        'Medical' : form.medical_expense.data,
+        'Food & beverages' : form.food_beverages_expense.data,
+        'Books' : form.books_expense.data,
+        'Stationary' : form.stationary_expense.data,
+        'Gifts' : form.gifts_expense.data,
+        'Pets' : form.pets_expense.data
+        }
 
-        #Handle custom expenses
-        for custom in custom_expenses:
-            expenses_to_add.append(Expense(category=custom['expenses_type'], amount=custom['amount']))
+        for category, amount in expenses_data.items():
+            if amount:
+                expense = Expense(user_id=user_id, category=category, amount=float(amount))
+                db.session.add(expense)
 
-        # Add all expenses to the session
-        for expense in expenses_to_add:
-            db.session.add(expense)
+        # Handle custom expenses
+        for custom_expense in form.custom_expenses.entries:
+            expense_type = custom_expense.expense_type.data
+            amount = custom_expense.amount.data
+            if expense_type and amount:
+                custom_expense = Expense(user_id=user_id, category=expense_type, amount=float(amount))
+                db.session.add(custom_expense)
 
         try:
             db.session.commit()

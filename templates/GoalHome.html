@@ -73,12 +73,13 @@
         <div class="section section4">
             {% if income_data %}
                 {% for income in income_data %}
-                    <p>{{ income.category }}: ${{ income.amount }}</p>
+                    <p>{{ income.category }}{% if income.custom_category %} - {{ income.custom_category }}{% endif %}: ${{ income.amount }}</p>
                 {% endfor %}
             {% else %}
                 <p>No data selected yet.</p>
             {% endif %}
         </div>
+
         <div class="section section5">
             {% if expenses_data %}
                 {% for expense in expenses_data %}
@@ -88,6 +89,7 @@
                 <p>No data selected yet.</p>
             {% endif %}
         </div>
+
         <div class="section section6">
             <p id="savings-goal">Savings now: ${{ savings_now }}</p>
         </div>

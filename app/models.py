@@ -37,16 +37,16 @@ class User(db.Model):
 class Income(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
-    category = db.Column(db.String(50), nullable=False)  # e.g., 'salary', 'allowance', or 'others'
+    category = db.Column(db.String(50), nullable=False)  # e.g., 'Salary', 'Allowance', 'Others'
+    custom_category = db.Column(db.String(100))  # Used if category is 'Others'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    custom_category = db.Column(db.String(100))  # Only used if category is 'others'
 
 class Expense(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
     category = db.Column(db.String(50), nullable=False)  # e.g., 'transport', 'entertainment', etc.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    custom_category = db.Column(db.String(100))  # Only used if category is 'others'
+    custom_category = db.relationship('User', back_populates='expenses')
 
 class Budget(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -67,6 +67,7 @@ class Transaction(db.Model):
 
     #to link this transaction to a specific budget
     budget_id = db.Column(db.Integer, db.ForeignKey('budget.id'), nullable=True)
+
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # Unique ID for each comment
@@ -106,3 +107,4 @@ class Reply(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     amount = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
 #     date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
+
