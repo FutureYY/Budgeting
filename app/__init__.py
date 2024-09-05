@@ -108,7 +108,10 @@ def load_categories(user_id, month):
 
     #Retrieve custom categories
     custom_income = Income.query.filter_by(user_id=user_id).filter(Income.category=='other-income', Income.custom_category.isnot(None)).all()
-    custom_expenses = Expense.query.filter_by(user_id=user_id).filter(Expense.category=='other-expense', Expense.custom_category.isnot(None)).all()
+    custom_expenses = Expense.query.filter_by(user_id=user_id).filter(
+        Expense.category == 'other-expense',
+        Expense.custom_category != None  # This checks if custom_category is NOT NULL
+    ).all()
 
     for income in custom_income:
         categories.append((income.custom_category, income.custom_category))
