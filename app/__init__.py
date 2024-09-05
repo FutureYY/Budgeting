@@ -256,7 +256,7 @@ def goal():
     #     user_id=user_id, type='income')
 
     expenses_now = db.session.query(db.func.sum(Expense.amount))
-
+    income_now = db.session.query(db.func.sum(Income.amount))
     savings_now = expenses_now
 
     return render_template('GoalHome.html', selected_section=selected_section, amount=amount)
@@ -270,18 +270,46 @@ def income():
         angpao = form.amount_from_angpao.data
 
         # Handle custom incomes
-        custom_incomes = []
-        for custom_income in form.custom_incomes:
+        custom_income = []
+        for custom_income in form.custom_income:
             income_type = custom_income.income_type.data
             amount = custom_income.amount.data
             if income_type and amount:
-                custom_incomes.append({'income_type': income_type, 'amount': amount})
+                custom_income.append({'income_type': income_type, 'amount': amount})
 
+        income_to_add = []
+        user_id = 1
 
-        return redirect(url_for('init.goal'))
+        if allowance:
+            income_to_add.append(Income(user_id=user_id, category='Allowance', amount=allowance))
+        if salary:
+            income_to_add.append(Income(user_id=user_id, category='Salary', amount=salary))
+        if angpao:
+            income_to_add.append(Income(user_id=user_id, category='Angpao', amount=angpao))
 
-    return render_template('income.html', form=form)
+        #Handle custom Income
+        for custom in custom_income:
+            income_to_add.append(Income(category=custom['income_type'], amount=custom['amount']))
 
+        # Add all income to the session
+        for income in income_to_add:
+            db.session.add(income)
+
+        try:
+            db.session.commit()
+            flash('Income added successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()  # Rollback if there is an error
+            flash(f'An error occurred: {str(e)}', 'danger')
+
+            # Fetch all expenses for the current user
+        income_data = Income.query.filter_by(user_id=user_id).all()
+        return render_template('GoalHome.html', form=form, income_data=income_data)
+
+            # Fetch all expenses for the current user if the form is not submitted
+    user_id = 1  # Adjust this as needed
+    income_data = Income.query.filter_by(user_id=user_id).all()
+    return render_template('income.html', form=form, income_data=income_data)
 @init_bp.route('/savings')
 def savings():
     return render_template("savings.html")

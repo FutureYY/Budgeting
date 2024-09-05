@@ -136,44 +136,54 @@
         <fieldset id="expenses" class="container">
 
             <div class="section">
-                <img src="/app/static/images/Transport.png" alt="transport" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/Transport.png') }}" alt="transport" width="300" height="320">
                 <label>Transport</label><br>
                 {{ form.transport_expense(size=20) }}<br>
             </div>
 
             <div class="section">
-                <img src="/app/static/images/Entertainment.png" alt="entertainment" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/Entertainment.png') }}" alt="entertainment" width="300" height="320">
                 <label>Entertainment</label><br>
                 {{ form.entertainment_expense(size=20) }}<br>
             </div>
 
             <div class="section">
-                <img src="/app/static/images/Technology.png" alt="Technology" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/Technology.png') }}" alt="Technology" width="300" height="320">
                 <label>Technology</label><br>
                 {{ form.technology_expense(size=20) }}<br>
             </div>
 
             <div class="section">
-                <img src="/app/static/images/Medical.png" alt="medical" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/Medical.png') }}" alt="medical" width="300" height="320">
                 <label>Medical</label><br>
                 {{ form.medical_expense(size=20) }}<br>
             </div>
 
             <div class="section">
-                <img src="/app/static/images/F&B.png" alt="food&beverages" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/F&B.png') }}" alt="food&beverages" width="300" height="320">
                 <label>Food & Beverages</label><br>
                 {{ form.food_beverages_expense(size=20) }}<br>
             </div>
 
             <div class="section">
-                <img src="/app/static/images/Gifts.png" alt="gifts" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/Gifts.png') }}" alt="gifts" width="300" height="320">
                 <label>Gifts</label><br>
                 {{ form.gifts_expense(size=20) }}<br>
             </div>
 
             <div class="section">
-                <img src="/app/static/images/Pets.png" alt="pets" width="300" height="320">
+                <img src="{{ url_for('static', filename='images/Pets.png') }}" alt="pets" width="300" height="320">
                 <label>Pets</label><br>
+                {{ form.pets_expense(size=20) }}<br>
+            </div>
+            <div class="section">
+                <img src="{{ url_for('static', filename='images/Books.png') }}" alt="books" width="300" height="320">
+                <label>Books</label><br>
+                {{ form.pets_expense(size=20) }}<br>
+            </div>
+            <div class="section">
+                <img src="{{ url_for('static', filename='images/Stationery.png') }}" alt="stationery" width="300" height="320">
+                <label>Stationery</label><br>
                 {{ form.pets_expense(size=20) }}<br>
             </div>
 

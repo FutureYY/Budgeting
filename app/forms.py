@@ -54,7 +54,7 @@ class IncomeForm(FlaskForm):
     amount_from_allowance = DecimalField('Allowance from parents', validators=[Optional()])
     amount_from_salary = DecimalField('Salary', validators=[Optional()])
     amount_from_angpao = DecimalField('Angpao', validators=[Optional()])
-    custom_incomes = FieldList(FormField(CustomIncomeForm), min_entries=0)
+    custom_income = FieldList(FormField(CustomIncomeForm), min_entries=0)
 
 class CustomExpensesForm(FlaskForm):
     expense_type = StringField('Expense Type', validators=[Optional()])
