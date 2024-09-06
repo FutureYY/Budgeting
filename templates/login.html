@@ -2,57 +2,124 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>login In</title>
+    <title>Login In</title>
     <style>
         * {
-            margin: 0; padding: 0; }
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+        }
 
-        .Login_Page a {
-            text-decoration: none; list-style-type: none; }
-}
-        .Login_Input{
-            padding: 10px;}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
 
-        button {
-            width: 80px; height: 50px;
-            border-radius: 60px; border: none;  }
+        .flash {
+            padding: 10px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 5px;
+            text-align: center;
+            color: #fff;
+        }
 
-        Header {
-            position: absolute;
-            left: 250px; }
+        .flash.success {
+            background-color: #4caf50; /* Green */
+        }
+
+        .flash.error {
+            background-color: #f44336; /* Red */
+        }
 
         .Login_Page {
-            background-color: #c1edcc; position: absolute;
-            left: 380px; bottom: 100px;
-            width: 550px; height 250px;
-            justify: centre; border-radius: 40px; }
+            background-color: #c1edcc;
+            padding: 20px;
+            border-radius: 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 90%;
+            max-width: 500px;
+        }
 
+        .Login_Page a {
+            text-decoration: none;
+            color: navy;
+            font-size: 1.3em;
+        }
 
-        .regs a {
-            position: absolute;
-            left: 75px; bottom: 0px;
-            color: navy; font-size:1.3em; }
+        .Login_Input {
+            margin-bottom: 20px;
+        }
+
+        .Login_Input label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
 
         .change {
-            border-radius: 20px;}
+            border-radius: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
 
-        form {
-          border-radius: 1px;
-          padding: 20px;}
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-        .btn-signin {
-            border-radius: 20px; }
+        button:hover {
+            background-color: #45a049;
+        }
 
+        .regs {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .Login_Page {
+                padding: 15px;
+                width: 90%;
+            }
+
+            .Login_Page a {
+                font-size: 1.1em;
+            }
+
+            button {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+        }
     </style>
-
 </head>
 <body>
     {% extends "base.html" %}
     {% block body %}
     <div class="Login_Container">
-        <header>
-            <h1>Please sign in to your Account: </h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
+        <header>
+            <h1>Please sign in to your Account:</h1>
             <div class="Login_Header">
                 Welcome to Budget4You!
             </div>
@@ -61,29 +128,17 @@
         <div class="Login_Page">
             <form method="post" action="{{ url_for('auth.login') }}">
                 {{ form.csrf_token }}
-
-                 <div class="Login_Input">
-                     <label>Email address</label>
-                     <br>
-                     <div class="change">{{ form.email }}</div>
+                <div class="Login_Input">
+                    <label>Email address</label>
+                    <div class="change">{{ form.email }}</div>
                 </div>
-
-                 <div class="Login_Input">
+                <div class="Login_Input">
                     <label>Password</label>
-                     <br>
-                     {{ form.password }}
-                </div> <br>
-
-                <input type="radio" id="signin-checkbox"> <label for="signin-checkbox">Remember Me</label>
-                <br><br>
+                    <div class="change">{{ form.password }}</div>
+                </div>
+                <input type="radio" id="signin-checkbox">
+                <label for="signin-checkbox">Remember Me</label>
                 <button type="submit" class="btn-signin">Log In</button>
-                 {% if form.email.errors %}
-                    {% for error in form.email.errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
-                {% endif %}
-                <br>
-                <br>
                 <div class="regs">
                     <a href="{{ url_for('auth.register') }}">Not a member yet? Click here to sign up → </a>
                 </div>
