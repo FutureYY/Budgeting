@@ -4,95 +4,193 @@
     <meta charset="UTF-8">
     <title>Welcome to Budgeting</title>
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
         .Main_Container {
-            display: grid; grid-template-rows: 170px 220px auto; }
+            display: grid;
+            grid-template-rows: auto auto 100px;
+            grid-gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
 
-        .Log_Button a {
-            text-decoration: none; list-style-type: none;
-            border-radius: 10px; }
+        .Main_Container section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
 
-        .Log_Button {
-            border-radius: 20px;}
+        .Container h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: darkseagreen;
+        }
 
-        button {
-            width: 80px; height: 50px;
-            border-radius: 20px; border: none; }
+        .Container h3 {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: darkgreen;
+        }
 
         .intro {
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-            color: }
+            font-family: 'Georgia', serif;
+            font-size: 1.2em;
+            line-height: 1.6em;
+        }
+
+        .Container ul {
+            padding-left: 20px;
+            list-style-type: disc;
+            margin-top: 10px;
+        }
+
+        .Container li {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
 
         .C3 {
             background-color: darkseagreen;
-            position: absolute;
-            width: 100%;
-            bottom:0;
-            height: 100px; }
-
-        .C1 {
-            position: absolute;
-            left: 10px; }
-
-        .C2 {
-            position: absolute;
-            left: 10px;
-            bottom: 100px;
-            padding-bottom: 10px;        }
-
-        .size{
-        font-size: 1.5em;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            color: white;
+            position: relative;
         }
 
-<!--        section .Container {-->
-<!--            display: flex}-->
+        .C3 .size {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
 
+        .Log_Button {
+            margin-top: 20px;
+        }
+
+        .Log_Button a {
+            display: inline-block;
+            background-color: darkgreen;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .Log_Button a:hover {
+            background-color: seagreen;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+
+        /* Media Queries for responsiveness */
+        @media screen and (max-width: 768px) {
+            .Container h1 {
+                font-size: 2em;
+            }
+
+            .Container h3 {
+                font-size: 1.3em;
+            }
+
+            .intro {
+                font-size: 1.1em;
+            }
+
+            .C3 .size {
+                font-size: 1.5em;
+            }
+
+            .Log_Button a {
+                font-size: 0.9em;
+                padding: 8px 15px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .Container h1 {
+                font-size: 1.8em;
+            }
+
+            .Container h3 {
+                font-size: 1.2em;
+            }
+
+            .intro {
+                font-size: 1em;
+            }
+
+            .C3 .size {
+                font-size: 1.3em;
+            }
+
+            .Log_Button a {
+                font-size: 0.8em;
+                padding: 7px 12px;
+            }
+        }
     </style>
 </head>
 <body>
     {% extends "base.html" %}
     {% block body %}
-    <div class=" Main_Container">
+    <div class="Main_Container">
         <section class="Container C1">
             <h1>Welcome to Budget4You</h1>
             <p class="intro">
-                HEY TEENS! Need help in managing your budgets! Say no more <3
+                Hey Teens! Need help managing your budgets? Say no more <3
                 <br>
-                Here we help you to keep track of your budget, monitor you savings and many more to come!
+                Here, we help you keep track of your budget, monitor your savings, and much more to come!
             </p>
         </section>
-        <br>
-        <p></p>
-        <br>
-        <section class=" Container C2">
-            <div><b><h3>OUR FEATURES! </h3></b></div>
+
+        <section class="Container C2">
             <div>
-                <li> A Goal Set</li>
-                <li> A Financial Tracker </li>
-                <li> Educational content for our teenagers <3! </li>
-                <li> Community Forum </li>
+                <h3>Our Features!</h3>
+                <ul>
+                    <li>A Goal Set</li>
+                    <li>A Financial Tracker</li>
+                    <li>Educational content for our teenagers <3!</li>
+                    <li>Community Forum</li>
+                </ul>
             </div>
 
-            <div><b><h3>OUR FINANCIAL PROFILE! </h3></b></div>
             <div>
-                Here we cultivate savings habit in our teens regardless of it being the allowance received from parents or money earned from part-time jobs for teenagers above 16.
-                <br> We would demonstrate the importance of saving via our Educational Content
-                <br> For Example:
-                <li>Savings = Income - Expenses</li>
+                <h3>Our Financial Profile!</h3>
+                <p>
+                    We cultivate saving habits in our teens, whether it's the allowance received from parents or money earned from part-time jobs for teenagers above 16.
+                    <br> We demonstrate the importance of saving via our Educational Content.
+                    <br> For example:
+                </p>
+                <ul>
+                    <li>Savings = Income - Expenses</li>
+                </ul>
             </div>
         </section>
-        <br>
-        <br>
-        <footer class=" C3">
-            <p class="size">Join us on the Journey TODAY!!</p>
-            <div>
-<!--                 <button class="Log_Button"><a href="/login"> Log In </a></button>-->
-<!--                <button class="Log_Button" ><a href="/register"> Sign Up </a></button>-->
-                    @CopyRights By TEAM 1! ALL RIGHTS RESERVED!
+
+        <footer class="C3">
+            <p class="size">Join us on the journey TODAY!!</p>
+            <div class="Log_Button">
+                <a href="/login">Log In</a>
+                <a href="/register">Sign Up</a>
             </div>
+            <p>@CopyRights By TEAM 1! ALL RIGHTS RESERVED!</p>
         </footer>
     </div>
-
     {% endblock body %}
-
 </body>
 </html>
