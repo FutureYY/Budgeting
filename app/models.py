@@ -34,8 +34,8 @@ class User(db.Model):
     budgets = db.relationship('Budget', backref='user', lazy=True)
     is_active = db.Column(db.Boolean, default=True)
 
-    def get_id(self):
-        return str(self.user_id)
+    # def get_id(self):
+    #     return str(self.user_id)
 
     @property
     def is_authenticated(self):

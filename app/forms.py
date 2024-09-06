@@ -42,16 +42,16 @@ class SignUp(FlaskForm):
     repeat_password = PasswordField('Confirm Password*', validators=[DataRequired(), EqualTo(fieldname="password", message="Passwords must match")])
     submit = SubmitField('Sign Up')
 
-    def validate_email(self, email):
-        from .models import User
-        user = User.query.filter_by(email=email.data.lower()).first()
-        if user:
-            raise ValidationError("Email is already in use, please use a different one.")
-
-    def validate_password(self, password):
-        if not re.fullmatch(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$', password.data):
-            raise ValidationError(
-                "Password must contain at least 8 characters, including one letter, one number, and one special character.")
+    # def validate_email(self, email):
+    #     from .models import User
+    #     user = User.query.filter_by(email=email.data.lower()).first()
+    #     if user:
+    #         raise ValidationError("Email is already in use, please use a different one.")
+    #
+    # def validate_password(self, password):
+    #     if not re.fullmatch(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$', password.data):
+    #         raise ValidationError(
+    #             "Password must contain at least 8 characters, including one letter, one number, and one special character.")
 
 
 class CustomIncomeForm(FlaskForm):
